@@ -13,8 +13,8 @@ interface CharacterState {
 
 export const useCharacterStore = create<CharacterState>()((set) => ({
   name: "Untitled",
-  race: undefined,
-  class: undefined,
+  raceId: undefined,
+  classId: undefined,
   setName: (name) => set(() => ({ name })),
   setRace: (raceId) => set(() => ({ raceId })),
   setClass: (classId) => set(() => ({ classId })),
