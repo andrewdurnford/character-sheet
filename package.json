@@ -2,6 +2,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build": "vite build --base=/character-sheet",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -34,7 +35,7 @@
     "**/*.{ts,tsx,js}": [
       "eslint --fix"
     ],
-    "**/*.{ts,tsx,js,cjs,json,css,md,yaml,html}": [
+    "**/*.{ts,tsx,js,cjs,json,css,md,yml,yaml,html}": [
       "prettier --write"
     ]
   }
