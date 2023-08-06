@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import { races } from "../utils/races"
+import { classes } from "../utils/classes"
 
 export function Character() {
   return (
@@ -8,40 +9,92 @@ export function Character() {
       <div className="flex flex-col gap-4">
         <CharacterNameForm />
         <CharacterRaceForm />
+        <CharacterClassForm />
       </div>
       <CharacterData />
     </main>
   )
 }
 
-type CharacterRaceFormValues = {
-  race: keyof typeof races
+type CharacterClassFormValues = {
+  classId: keyof typeof classes
 }
 
-export function CharacterRaceForm() {
-  const race = useCharacterStore((state) => state.race)
-  const setRace = useCharacterStore((state) => state.setRace)
-  const { handleSubmit, register } = useForm<CharacterRaceFormValues>({
+export function CharacterClassForm() {
+  const classId = useCharacterStore((state) => state.classId)
+  const setClass = useCharacterStore((state) => state.setClass)
+  const { handleSubmit, register } = useForm<CharacterClassFormValues>({
     mode: "onSubmit",
     defaultValues: {
-      race,
+      classId,
     },
   })
 
-  function onSubmit(data: CharacterRaceFormValues) {
-    setRace(data.race)
+  function onSubmit(data: CharacterClassFormValues) {
+    setClass(data.classId)
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <label htmlFor="race" className="mb-1 inline-block font-medium">
+        <label htmlFor="classId" className="mb-1 inline-block font-medium">
+          Class
+        </label>
+        {Object.entries(classes).map(([classId, name]) => (
+          <div key={classId}>
+            <input
+              id={classId}
+              type="radio"
+              value={classId}
+              {...register("classId")}
+            />{" "}
+            <label htmlFor={classId}>{name}</label>
+          </div>
+        ))}
+        <button
+          type="submit"
+          className="mt-4 rounded border border-black bg-gray-200 px-1"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  )
+}
+
+type CharacterRaceFormValues = {
+  raceId: keyof typeof races
+}
+
+export function CharacterRaceForm() {
+  const raceId = useCharacterStore((state) => state.raceId)
+  const setRace = useCharacterStore((state) => state.setRace)
+  const { handleSubmit, register } = useForm<CharacterRaceFormValues>({
+    mode: "onSubmit",
+    defaultValues: {
+      raceId,
+    },
+  })
+
+  function onSubmit(data: CharacterRaceFormValues) {
+    setRace(data.raceId)
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label htmlFor="raceId" className="mb-1 inline-block font-medium">
           Race
         </label>
-        {Object.entries(races).map(([race, name]) => (
-          <div key={race}>
-            <input id={race} type="radio" value={race} {...register("race")} />{" "}
-            <label htmlFor={race}>{name}</label>
+        {Object.entries(races).map(([raceId, name]) => (
+          <div key={raceId}>
+            <input
+              id={raceId}
+              type="radio"
+              value={raceId}
+              {...register("raceId")}
+            />{" "}
+            <label htmlFor={raceId}>{name}</label>
           </div>
         ))}
         <button
@@ -101,7 +154,8 @@ export function CharacterNameForm() {
 
 function CharacterData() {
   const name = useCharacterStore((state) => state.name)
-  const race = useCharacterStore((state) => state.race)
+  const raceId = useCharacterStore((state) => state.raceId)
+  const classId = useCharacterStore((state) => state.classId)
 
   return (
     <div className="flex flex-col gap-2">
@@ -109,10 +163,16 @@ function CharacterData() {
         <span>Name</span>
         <h2 className="text-2xl font-medium">{name}</h2>
       </div>
-      {race && (
+      {raceId && (
         <div>
           <span>Race</span>
-          <h2 className="text-2xl font-medium">{races[race]}</h2>
+          <h2 className="text-2xl font-medium">{races[raceId]}</h2>
+        </div>
+      )}
+      {classId && (
+        <div>
+          <span>Class</span>
+          <h2 className="text-2xl font-medium">{classes[classId]}</h2>
         </div>
       )}
     </div>
