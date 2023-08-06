@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import { raceAbilityScoreIncreases, races } from "./utils/races"
 import { classes } from "./utils/classes"
-import { abilities } from "./utils/abilities"
+import { abilities, skills } from "./utils/abilities"
 
 interface CharacterState {
   name: string
@@ -14,6 +14,10 @@ interface CharacterState {
     keyof typeof abilities,
     { score: number; modifier: number }
   >
+  abilityChecks: () => Record<
+    keyof typeof skills,
+    { modifier: number; proficient: boolean }
+  >
 }
 
 export const useCharacterStore = create<CharacterState>()((set, get) => ({
@@ -25,20 +29,36 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
   setClass: (classId) => set(() => ({ classId })),
   abilityScores: () =>
     Object.keys(abilities).reduce(
-      (acc, cur) => {
-        const raceId = get().raceId
-        const score =
-          10 +
-          (raceId
-            ? raceAbilityScoreIncreases.find(
-                (x) => x.raceId === raceId && x.abilityId === cur,
-              )?.increase ?? 0
-            : 0)
+      (acc, abilityId) => {
+        const increase =
+          raceAbilityScoreIncreases.find(
+            (x) => x.raceId === get().raceId && x.abilityId === abilityId,
+          )?.increase ?? 0
+
+        const score = 10 + increase
         const modifier = Math.floor((score - 10) / 2)
 
-        acc[cur as keyof typeof abilities] = { score, modifier }
+        acc[abilityId as keyof typeof abilities] = { score, modifier }
         return acc
       },
       {} as Record<keyof typeof abilities, { score: number; modifier: number }>,
+    ),
+  abilityChecks: () =>
+    Object.entries(skills).reduce(
+      (acc, [skillId, { abilityId }]) => {
+        // TODO: move to class
+        const proficiencyBonus = 2
+        // TODO: calculate from class proficiencies
+        const proficient = false
+        const abilityModifier = get().abilityScores()[abilityId].modifier
+        const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
+
+        acc[skillId] = { modifier, proficient }
+        return acc
+      },
+      {} as Record<
+        keyof typeof skills,
+        { modifier: number; proficient: boolean }
+      >,
     ),
 }))

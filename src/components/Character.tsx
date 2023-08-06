@@ -5,7 +5,7 @@ import { classes } from "../utils/classes"
 import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
-import { abilities } from "../utils/abilities"
+import { abilities, skills } from "../utils/abilities"
 
 export function Character() {
   const [tab, setTab] = useState<"name" | "race" | "class" | null>(null)
@@ -64,7 +64,10 @@ export function Character() {
           </div>
         )}
       </div>
-      <CharacterAbilities />
+      <div>
+        <CharacterAbilities />
+        <CharacterSkills />
+      </div>
     </div>
   )
 }
@@ -87,6 +90,29 @@ function CharacterAbilities() {
             </li>
           ),
         )}
+      </ul>
+    </div>
+  )
+}
+
+function CharacterSkills() {
+  const abilityChecks = useCharacterStore((state) => state.abilityChecks)
+
+  return (
+    <div className="mt-4">
+      <h2>Skills</h2>
+      <ul>
+        {Object.entries(abilityChecks()).map(([skillId, { modifier }]) => (
+          <li key={skillId}>
+            <div className="flex justify-between gap-4">
+              <span>{skills[skillId as keyof typeof skills].name}</span>
+              <span>
+                {modifier >= 0 && "+"}
+                {modifier}
+              </span>
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   )
