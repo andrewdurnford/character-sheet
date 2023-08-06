@@ -14,9 +14,10 @@ export function Character() {
   const name = useCharacterStore((state) => state.name)
   const raceId = useCharacterStore((state) => state.raceId)
   const classId = useCharacterStore((state) => state.classId)
+  const level = useCharacterStore((state) => state.level)
 
   const raceName = raceId ? races[raceId].name : null
-  const className = classId ? classes[classId] : null
+  const className = classId ? `${classes[classId]} (${level})` : null
 
   return (
     <div className="flex justify-between">

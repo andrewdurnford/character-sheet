@@ -7,9 +7,10 @@ interface CharacterState {
   name: string
   raceId?: keyof typeof races
   classId?: keyof typeof classes
+  level: number
   setName: (name: string) => void
   setRace: (raceId: keyof typeof races) => void
-  setClass: (classId: keyof typeof classes) => void
+  setClass: (classId: keyof typeof classes, level: number) => void
   abilityScores: () => Record<
     keyof typeof abilities,
     { score: number; modifier: number }
@@ -24,9 +25,10 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
   name: "Untitled",
   raceId: undefined,
   classId: undefined,
+  level: 1,
   setName: (name) => set(() => ({ name })),
   setRace: (raceId) => set(() => ({ raceId })),
-  setClass: (classId) => set(() => ({ classId })),
+  setClass: (classId, level) => set(() => ({ classId, level })),
   abilityScores: () =>
     Object.keys(abilities).reduce(
       (acc, abilityId) => {
