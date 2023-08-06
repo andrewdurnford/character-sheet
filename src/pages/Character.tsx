@@ -6,6 +6,7 @@ import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../utils/abilities"
+import { Button } from "../components/Button"
 
 export function Character() {
   const [tab, setTab] = useState<"name" | "race" | "class" | null>(null)
@@ -13,6 +14,9 @@ export function Character() {
   const name = useCharacterStore((state) => state.name)
   const raceId = useCharacterStore((state) => state.raceId)
   const classId = useCharacterStore((state) => state.classId)
+
+  const raceName = raceId ? races[raceId].name : null
+  const className = classId ? classes[classId] : null
 
   return (
     <div className="flex justify-between">
@@ -24,43 +28,21 @@ export function Character() {
         )}
         {!tab && (
           <div className="flex flex-col gap-4">
-            <div>
-              <span>Name</span>{" "}
-              <button
-                type="button"
-                onClick={() => setTab("name")}
-                className="rounded border border-black bg-gray-200 px-1"
-              >
-                Edit
-              </button>
-              <h2 className="text-2xl font-medium">{name}</h2>
-            </div>
-            <div>
-              <span>Race</span>{" "}
-              <button
-                type="button"
-                onClick={() => setTab("race")}
-                className="rounded border border-black bg-gray-200 px-1"
-              >
-                Edit
-              </button>
-              {raceId && (
-                <h2 className="text-2xl font-medium">{races[raceId].name}</h2>
-              )}
-            </div>
-            <div>
-              <span>Class</span>{" "}
-              <button
-                type="button"
-                onClick={() => setTab("class")}
-                className="rounded border border-black bg-gray-200 px-1"
-              >
-                Edit
-              </button>
-              {classId && (
-                <h2 className="text-2xl font-medium">{classes[classId]}</h2>
-              )}
-            </div>
+            <CharacterTab
+              label="Name"
+              value={name}
+              onCancel={() => setTab("name")}
+            />
+            <CharacterTab
+              label="Race"
+              value={raceName}
+              onCancel={() => setTab("race")}
+            />
+            <CharacterTab
+              label="Class"
+              value={className}
+              onCancel={() => setTab("class")}
+            />
           </div>
         )}
       </div>
@@ -68,6 +50,24 @@ export function Character() {
         <CharacterAbilities />
         <CharacterSkills />
       </div>
+    </div>
+  )
+}
+
+interface CharacterTabProps {
+  label: string
+  value: string | null
+  onCancel: () => void
+}
+
+function CharacterTab({ label: name, value, onCancel }: CharacterTabProps) {
+  return (
+    <div>
+      <span>{name}</span>{" "}
+      <Button type="button" onClick={() => onCancel()}>
+        Edit
+      </Button>
+      {value && <h2 className="text-2xl font-medium">{value}</h2>}
     </div>
   )
 }

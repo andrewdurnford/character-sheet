@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import { classes } from "../utils/classes"
+import { Button, LinkButton } from "../components/Button"
+import { RadioGroup } from "../components/Input"
 
 type CharacterClassFormValues = {
   classId: keyof typeof classes
@@ -27,34 +29,17 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="mb-4 block hover:underline"
-        >
-          Back
-        </button>
-        <label htmlFor="classId" className="mb-1 inline-block font-medium">
-          Class
-        </label>
-        {Object.entries(classes).map(([classId, name]) => (
-          <div key={classId}>
-            <input
-              id={classId}
-              type="radio"
-              value={classId}
-              {...register("classId")}
-            />{" "}
-            <label htmlFor={classId}>{name}</label>
-          </div>
-        ))}
-        <button
-          type="submit"
-          className="mt-6 rounded border border-black bg-gray-200 px-1"
-        >
-          Save
-        </button>
+      <div className="flex flex-col items-start gap-6">
+        <LinkButton onClick={onCancel}>Back</LinkButton>
+        <RadioGroup
+          label="Class"
+          options={Object.entries(classes).map(([classId, name]) => ({
+            label: name,
+            value: classId,
+          }))}
+          {...register("classId")}
+        />
+        <Button type="submit">Save</Button>
       </div>
     </form>
   )

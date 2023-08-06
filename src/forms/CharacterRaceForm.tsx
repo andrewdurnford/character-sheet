@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import { raceAbilityScoreIncreases, races } from "../utils/races"
 import { abilities } from "../utils/abilities"
+import { Button, LinkButton } from "../components/Button"
+import { RadioGroup } from "../components/Input"
 
 type CharacterRaceFormValues = {
   raceId: keyof typeof races
@@ -14,13 +16,13 @@ interface CharacterRaceFormProps {
 export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
   const raceId = useCharacterStore((state) => state.raceId)
   const setRace = useCharacterStore((state) => state.setRace)
+
   const { watch, handleSubmit, register } = useForm<CharacterRaceFormValues>({
     mode: "onSubmit",
     defaultValues: {
       raceId,
     },
   })
-
   const selectedId = watch("raceId")
 
   function onSubmit(data: CharacterRaceFormValues) {
@@ -30,31 +32,19 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="mb-4 block hover:underline"
-        >
-          Back
-        </button>
-        <label htmlFor="raceId" className="mb-1 inline-block font-medium">
-          Race
-        </label>
-        {Object.entries(races).map(([raceId, { name }]) => (
-          <div key={raceId}>
-            <input
-              id={raceId}
-              type="radio"
-              value={raceId}
-              disabled={raceId === "half-elf"}
-              {...register("raceId")}
-            />{" "}
-            <label htmlFor={raceId}>{name}</label>
-          </div>
-        ))}
+      <div className="flex flex-col items-start gap-6">
+        <LinkButton onClick={onCancel}>Back</LinkButton>
+        <RadioGroup
+          label="Race"
+          options={Object.entries(races).map(([raceId, { name }]) => ({
+            label: name,
+            value: raceId,
+            disabled: raceId === "half-elf",
+          }))}
+          {...register("raceId")}
+        />
         {selectedId && (
-          <div className="mt-4">
+          <section>
             <h3>Ability Score Increases</h3>
             <ul>
               {raceAbilityScoreIncreases
@@ -69,14 +59,9 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                   </li>
                 ))}
             </ul>
-          </div>
+          </section>
         )}
-        <button
-          type="submit"
-          className="mt-6 rounded border border-black bg-gray-200 px-1"
-        >
-          Save
-        </button>
+        <Button type="submit">Save</Button>
       </div>
     </form>
   )
