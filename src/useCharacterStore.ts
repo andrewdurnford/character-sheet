@@ -5,7 +5,7 @@ import {
   subraceAbilityScoreIncreases,
   subraces,
 } from "./utils/races"
-import { classes } from "./utils/classes"
+import { classSavingThrowProficiencies, classes } from "./utils/classes"
 import { abilities, skills } from "./utils/abilities"
 
 interface CharacterState {
@@ -22,6 +22,10 @@ interface CharacterState {
   >
   abilityChecks: () => Record<
     keyof typeof skills,
+    { modifier: number; proficient: boolean }
+  >
+  savingThrows: () => Record<
+    keyof typeof abilities,
     { modifier: number; proficient: boolean }
   >
 }
@@ -74,6 +78,27 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
       },
       {} as Record<
         keyof typeof skills,
+        { modifier: number; proficient: boolean }
+      >,
+    ),
+  savingThrows: () =>
+    Object.keys(get().abilityScores()).reduce(
+      (acc, abilityId) => {
+        // TODO: move to class
+        const proficiencyBonus = 2
+        const proficient = classSavingThrowProficiencies.some(
+          (x) => x.classId === get().classId && x.abilityId === abilityId,
+        )
+        const abilityModifier =
+          get().abilityScores()[abilityId as keyof typeof abilities].modifier
+
+        const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
+
+        acc[abilityId as keyof typeof abilities] = { modifier, proficient }
+        return acc
+      },
+      {} as Record<
+        keyof typeof abilities,
         { modifier: number; proficient: boolean }
       >,
     ),

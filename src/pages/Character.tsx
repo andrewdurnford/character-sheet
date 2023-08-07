@@ -20,7 +20,7 @@ export function Character() {
   const className = classId ? `${classes[classId]} (${level})` : null
 
   return (
-    <div className="flex justify-between">
+    <div className="flex flex-col justify-between gap-6 sm:flex-row">
       <div>
         {tab === "name" && <CharacterNameForm onCancel={() => setTab(null)} />}
         {tab === "race" && <CharacterRaceForm onCancel={() => setTab(null)} />}
@@ -47,7 +47,8 @@ export function Character() {
           </div>
         )}
       </div>
-      <div>
+      <div className="flex flex-col gap-4">
+        <CharacterSavingThrows />
         <CharacterAbilities />
         <CharacterSkills />
       </div>
@@ -78,16 +79,51 @@ function CharacterAbilities() {
 
   return (
     <div>
-      <h2>Abilities</h2>
+      <h2 className="font-medium">Abilities</h2>
       <ul>
         {Object.entries(abilityScores()).map(
           ([abilityId, { score, modifier }]) => (
-            <li key={abilityId} className="ml-4 list-disc">
-              <span className="font-medium uppercase">
-                {abilities[abilityId as keyof typeof abilities].substr(0, 3)}
-              </span>{" "}
-              {score} ({modifier >= 0 && "+"}
-              {modifier})
+            <li
+              key={abilityId}
+              className="ml-4"
+              style={{ listStyleType: "circle" }}
+            >
+              <div className="flex justify-between gap-4">
+                <span>{abilities[abilityId as keyof typeof abilities]}</span>
+                <div className="flex gap-2">
+                  {score} ({modifier >= 0 && "+"}
+                  {modifier})
+                </div>
+              </div>
+            </li>
+          ),
+        )}
+      </ul>
+    </div>
+  )
+}
+
+function CharacterSavingThrows() {
+  const savingThrows = useCharacterStore((state) => state.savingThrows)
+
+  return (
+    <div>
+      <h2 className="font-medium">Saving Throws</h2>
+      <ul>
+        {Object.entries(savingThrows()).map(
+          ([abilityId, { modifier, proficient }]) => (
+            <li
+              key={abilityId}
+              className={`ml-4 ${proficient && "font-semibold"}`}
+              style={{ listStyleType: proficient ? "disc" : "circle" }}
+            >
+              <div className="flex justify-between gap-4">
+                {abilities[abilityId as keyof typeof abilities]}
+                <span>
+                  ({modifier >= 0 && "+"}
+                  {modifier})
+                </span>
+              </div>
             </li>
           ),
         )}
@@ -100,20 +136,26 @@ function CharacterSkills() {
   const abilityChecks = useCharacterStore((state) => state.abilityChecks)
 
   return (
-    <div className="mt-4">
-      <h2>Skills</h2>
+    <div>
+      <h2 className="font-medium">Skills</h2>
       <ul>
-        {Object.entries(abilityChecks()).map(([skillId, { modifier }]) => (
-          <li key={skillId}>
-            <div className="flex justify-between gap-4">
-              <span>{skills[skillId as keyof typeof skills].name}</span>
-              <span>
-                {modifier >= 0 && "+"}
-                {modifier}
-              </span>
-            </div>
-          </li>
-        ))}
+        {Object.entries(abilityChecks()).map(
+          ([skillId, { modifier, proficient }]) => (
+            <li
+              key={skillId}
+              className={`ml-4 ${proficient && "font-semibold"}`}
+              style={{ listStyleType: proficient ? "disc" : "circle" }}
+            >
+              <div className="flex justify-between gap-4">
+                <span>{skills[skillId as keyof typeof skills].name}</span>
+                <span>
+                  {modifier >= 0 && "+"}
+                  {modifier}
+                </span>
+              </div>
+            </li>
+          ),
+        )}
       </ul>
     </div>
   )
