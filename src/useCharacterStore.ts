@@ -1,5 +1,10 @@
 import { create } from "zustand"
-import { raceAbilityScoreIncreases, races } from "./utils/races"
+import {
+  raceAbilityScoreIncreases,
+  races,
+  subraceAbilityScoreIncreases,
+  subraces,
+} from "./utils/races"
 import { classes } from "./utils/classes"
 import { abilities, skills } from "./utils/abilities"
 
@@ -33,9 +38,18 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
     Object.keys(abilities).reduce(
       (acc, abilityId) => {
         const increase =
-          raceAbilityScoreIncreases.find(
+          // calculate race ability score increase
+          (raceAbilityScoreIncreases.find(
             (x) => x.raceId === get().raceId && x.abilityId === abilityId,
-          )?.increase ?? 0
+          )?.increase ?? 0) +
+          // calculate subrace ability score increase
+          (subraceAbilityScoreIncreases.find(
+            (x) =>
+              x.subraceId ===
+                Object.entries(subraces).find(
+                  (x) => x[1].raceId === get().raceId,
+                )?.[0] && x.abilityId === abilityId,
+          )?.increase ?? 0)
 
         const score = 10 + increase
         const modifier = Math.floor((score - 10) / 2)

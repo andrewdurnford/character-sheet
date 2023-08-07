@@ -37,3 +37,31 @@ export const raceAbilityScoreIncreases: RaceAbilityScoreIncrease[] = [
   { raceId: "tiefling", abilityId: "intelligence", increase: 2 },
   { raceId: "tiefling", abilityId: "charisma", increase: 1 },
 ]
+
+interface Subrace {
+  name: string
+  raceId: keyof typeof races
+}
+
+export const subraces: Record<
+  "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome",
+  Subrace
+> = {
+  "hill-dwarf": { raceId: "dwarf", name: "Hill Dwarf" },
+  "high-elf": { raceId: "elf", name: "High Elf" },
+  lightfoot: { raceId: "halfling", name: "Lightfoot" },
+  "rock-gnome": { raceId: "gnome", name: "Rock Gnome" },
+}
+
+interface SubraceAbilityScoreIncrease {
+  subraceId: keyof typeof subraces
+  abilityId: keyof typeof abilities
+  increase: number
+}
+
+export const subraceAbilityScoreIncreases: SubraceAbilityScoreIncrease[] = [
+  { subraceId: "hill-dwarf", abilityId: "wisdom", increase: 1 },
+  { subraceId: "high-elf", abilityId: "intelligence", increase: 1 },
+  { subraceId: "lightfoot", abilityId: "charisma", increase: 1 },
+  { subraceId: "rock-gnome", abilityId: "constitution", increase: 1 },
+]
