@@ -6,7 +6,7 @@ import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../utils/abilities"
-import { Button } from "../components/Button"
+import { LinkButton } from "../components/Button"
 
 export function Character() {
   const [tab, setTab] = useState<"name" | "race" | "class" | null>(null)
@@ -65,11 +65,13 @@ interface CharacterTabProps {
 function CharacterTab({ label: name, value, onCancel }: CharacterTabProps) {
   return (
     <div>
-      <span>{name}</span>{" "}
-      <Button type="button" onClick={() => onCancel()}>
-        Edit
-      </Button>
-      {value && <h2 className="text-2xl font-medium">{value}</h2>}
+      <span>{name}</span>
+      <div className="flex items-center gap-2">
+        {value && <h2 className="text-2xl font-medium">{value}</h2>}
+        <LinkButton onClick={onCancel} className="text-sm">
+          Edit
+        </LinkButton>
+      </div>
     </div>
   )
 }

@@ -6,7 +6,7 @@ import {
   classes,
 } from "../utils/classes"
 import { Button, LinkButton } from "../components/Button"
-import { Input, RadioGroup } from "../components/Input"
+import { RadioGroup, Select } from "../components/Input"
 import { abilities, skills } from "../utils/abilities"
 
 type CharacterClassFormValues = {
@@ -42,7 +42,16 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col items-start gap-6">
         <LinkButton onClick={onCancel}>Back</LinkButton>
-        <Input type="number" label="Level" {...register("level")} />
+        <Select label="Level" {...register("level")}>
+          {[
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+            20,
+          ].map((level) => (
+            <option key={level} value={level}>
+              {level}
+            </option>
+          ))}
+        </Select>
         <RadioGroup
           label="Class"
           options={Object.entries(classes).map(([classId, name]) => ({

@@ -33,6 +33,28 @@ export const Input = React.forwardRef(
   ),
 )
 
+type SelectProps = UseFormRegisterReturn &
+  React.SelectHTMLAttributes<HTMLSelectElement> & {
+    label: string
+  }
+
+export const Select = React.forwardRef(
+  (
+    { className, label, ...props }: SelectProps,
+    ref: React.ForwardedRef<HTMLSelectElement>,
+  ) => (
+    <div className={className}>
+      <label htmlFor={props.name}>{label}</label>
+      <select
+        id={props.name}
+        className="block w-full rounded border border-black bg-white px-1"
+        {...props}
+        ref={ref}
+      />
+    </div>
+  ),
+)
+
 type RadioProps = Omit<InputProps, "type"> & {
   options: { label: string; value: string; disabled?: boolean }[]
 }
