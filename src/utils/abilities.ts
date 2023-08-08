@@ -7,11 +7,41 @@ export const abilities = {
   charisma: "Charisma",
 }
 
-interface Skill {
-  [name: string]: { name: string; abilityId: keyof typeof abilities }
-}
-
-export const skills: Skill = {
+export const skills: Record<
+  | "acrobatics"
+  | "animal-handling"
+  | "athletics"
+  | "arcana"
+  | "deception"
+  | "athletics"
+  | "history"
+  | "deception"
+  | "insight"
+  | "history"
+  | "intimidation"
+  | "insight"
+  | "investigation"
+  | "intimidation"
+  | "medicine"
+  | "investigation"
+  | "nature"
+  | "medicine"
+  | "perception"
+  | "nature"
+  | "performance"
+  | "perception"
+  | "persuasion"
+  | "performance"
+  | "religion"
+  | "persuasion"
+  | "sleight-of-hand"
+  | "stealth"
+  | "religion"
+  | "survival"
+  | "stealth"
+  | "survival",
+  { name: string; abilityId: keyof typeof abilities }
+> = {
   acrobatics: { name: "Acrobatics", abilityId: "dexterity" },
   "animal-handling": { name: "Animal Handling", abilityId: "wisdom" },
   arcana: { name: "Arcana", abilityId: "intelligence" },

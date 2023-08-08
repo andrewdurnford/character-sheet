@@ -1,8 +1,13 @@
 import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
-import { classes } from "../utils/classes"
+import {
+  classSavingThrowProficiencies,
+  classSkillProficiencyChoices,
+  classes,
+} from "../utils/classes"
 import { Button, LinkButton } from "../components/Button"
 import { Input, RadioGroup } from "../components/Input"
+import { abilities, skills } from "../utils/abilities"
 
 type CharacterClassFormValues = {
   classId: keyof typeof classes
@@ -17,13 +22,16 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   const classId = useCharacterStore((state) => state.classId)
   const level = useCharacterStore((state) => state.level)
   const setClass = useCharacterStore((state) => state.setClass)
-  const { handleSubmit, register } = useForm<CharacterClassFormValues>({
+  const { watch, handleSubmit, register } = useForm<CharacterClassFormValues>({
     mode: "onSubmit",
     defaultValues: {
       classId,
       level,
     },
   })
+  const selectedId = watch("classId")
+  const { select, filter } =
+    classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
 
   function onSubmit(data: CharacterClassFormValues) {
     setClass(data.classId, data.level)
@@ -43,6 +51,39 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
           }))}
           {...register("classId")}
         />
+        {selectedId && (
+          <section>
+            <h2 className="mb-2 font-medium">Proficiencies</h2>
+            <div>
+              <h3 className="italic">Saving Throws</h3>
+              <ul>
+                {classSavingThrowProficiencies
+                  .filter((x) => x.classId === selectedId)
+                  .map(({ abilityId }) => (
+                    <li
+                      key={`class-saving-throw-${abilityId}-proficiency`}
+                      className="ml-4 list-disc"
+                    >
+                      {abilities[abilityId]}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            {select && (
+              <div>
+                <h3 className="mt-4 italic">Skills</h3>
+                <span>Choose {select} from</span>
+                {filter && (
+                  <ul>
+                    {filter.map((x) => (
+                      <li className="ml-4 list-disc">{skills[x].name}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </section>
+        )}
         <Button type="submit">Save</Button>
       </div>
     </form>

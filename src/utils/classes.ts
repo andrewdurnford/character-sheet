@@ -1,4 +1,4 @@
-import { abilities } from "./abilities"
+import { abilities, skills } from "./abilities"
 
 export const classes = {
   barbarian: "Barbarian",
@@ -14,6 +14,176 @@ export const classes = {
   warlock: "Warlock",
   wizard: "Wizard",
 }
+
+interface ClassSkillProficiencyChoice {
+  classId: keyof typeof classes
+  select: number
+  filter: Array<keyof typeof skills>
+}
+
+export const classSkillProficiencyChoices: ClassSkillProficiencyChoice[] = [
+  {
+    classId: "barbarian",
+    select: 2,
+    filter: [
+      "animal-handling",
+      "athletics",
+      "intimidation",
+      "nature",
+      "perception",
+      "survival",
+    ],
+  },
+  {
+    classId: "bard",
+    select: 3,
+    filter: [
+      "acrobatics",
+      "animal-handling",
+      "arcana",
+      "athletics",
+      "deception",
+      "history",
+      "insight",
+      "intimidation",
+      "investigation",
+      "medicine",
+      "nature",
+      "perception",
+      "performance",
+      "persuasion",
+      "religion",
+      "sleight-of-hand",
+      "stealth",
+      "survival",
+    ],
+  },
+  {
+    classId: "cleric",
+    select: 2,
+    filter: ["history", "insight", "medicine", "persuasion", "religion"],
+  },
+  {
+    classId: "druid",
+    select: 2,
+    filter: [
+      "arcana",
+      "animal-handling",
+      "insight",
+      "medicine",
+      "nature",
+      "perception",
+      "religion",
+      "survival",
+    ],
+  },
+  {
+    classId: "fighter",
+    select: 2,
+    filter: [
+      "acrobatics",
+      "animal-handling",
+      "athletics",
+      "history",
+      "insight",
+      "intimidation",
+      "perception",
+      "survival",
+    ],
+  },
+  {
+    classId: "monk",
+    select: 2,
+    filter: [
+      "acrobatics",
+      "athletics",
+      "history",
+      "insight",
+      "religion",
+      "stealth",
+    ],
+  },
+  {
+    classId: "paladin",
+    select: 2,
+    filter: [
+      "athletics",
+      "insight",
+      "intimidation",
+      "medicine",
+      "persuasion",
+      "religion",
+    ],
+  },
+  {
+    classId: "ranger",
+    select: 3,
+    filter: [
+      "animal-handling",
+      "athletics",
+      "insight",
+      "investigation",
+      "nature",
+      "perception",
+      "stealth",
+      "survival",
+    ],
+  },
+  {
+    classId: "rogue",
+    select: 4,
+    filter: [
+      "acrobatics",
+      "athletics",
+      "deception",
+      "insight",
+      "intimidation",
+      "investigation",
+      "perception",
+      "performance",
+      "persuasion",
+      "sleight-of-hand",
+      "stealth",
+    ],
+  },
+  {
+    classId: "sorcerer",
+    select: 2,
+    filter: [
+      "arcana",
+      "deception",
+      "insight",
+      "intimidation",
+      "persuasion",
+      "religion",
+    ],
+  },
+  {
+    classId: "warlock",
+    select: 2,
+    filter: [
+      "arcana",
+      "deception",
+      "history",
+      "intimidation",
+      "investigation",
+      "nature",
+      "religion",
+    ],
+  },
+  {
+    classId: "wizard",
+    select: 2,
+    filter: [
+      "arcana",
+      "history",
+      "insight",
+      "investigation",
+      "medicine",
+      "religion",
+    ],
+  },
+]
 
 interface ClassSavingThrowProficiency {
   classId: keyof typeof classes

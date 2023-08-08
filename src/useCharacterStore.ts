@@ -80,7 +80,7 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
         const abilityModifier = get().abilityScores()[abilityId].modifier
         const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
-        acc[skillId] = { modifier, proficient }
+        acc[skillId as keyof typeof skills] = { modifier, proficient }
         return acc
       },
       {} as Record<
