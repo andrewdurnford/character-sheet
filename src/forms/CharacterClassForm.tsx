@@ -6,12 +6,14 @@ import {
   classes,
 } from "../utils/classes"
 import { Button, LinkButton } from "../components/Button"
-import { RadioGroup, Select } from "../components/Input"
+import { Checkbox, RadioGroup, Select } from "../components/Input"
 import { abilities, skills } from "../utils/abilities"
+import { useEffect } from "react"
 
 type CharacterClassFormValues = {
   classId: keyof typeof classes
   level: number
+  skillProficiencyChoices?: Array<keyof typeof skills>
 }
 
 interface CharacterClassFormProps {
@@ -21,27 +23,40 @@ interface CharacterClassFormProps {
 export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   const classId = useCharacterStore((state) => state.classId)
   const level = useCharacterStore((state) => state.level)
+  const skillProficiencyChoices = useCharacterStore(
+    (state) => state.skillProficiencyChoices,
+  )
   const setClass = useCharacterStore((state) => state.setClass)
-  const { watch, handleSubmit, register } = useForm<CharacterClassFormValues>({
-    mode: "onSubmit",
-    defaultValues: {
-      classId,
-      level,
-    },
-  })
+  const { watch, handleSubmit, register, setValue } =
+    useForm<CharacterClassFormValues>({
+      mode: "onSubmit",
+      defaultValues: {
+        classId,
+        level,
+        skillProficiencyChoices,
+      },
+    })
   const selectedId = watch("classId")
+  const selectedSkillIds = watch("skillProficiencyChoices")
+
+  // Clear choices if class is changed
+  useEffect(() => {
+    if (selectedId !== classId) {
+      setValue("skillProficiencyChoices", undefined)
+    }
+  }, [selectedId, classId, setValue])
+
   const { select, filter } =
     classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
 
   function onSubmit(data: CharacterClassFormValues) {
-    setClass(data.classId, data.level)
+    setClass(data.classId, data.level, data.skillProficiencyChoices)
     onCancel()
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col items-start gap-6">
-        <LinkButton onClick={onCancel}>Back</LinkButton>
         <Select label="Level" {...register("level")}>
           {[
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -84,8 +99,18 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                 <span>Choose {select} from</span>
                 {filter && (
                   <ul>
-                    {filter.map((x) => (
-                      <li className="ml-4 list-disc">{skills[x].name}</li>
+                    {filter.map((skillId) => (
+                      <Checkbox
+                        key={`${selectedId}-${skillId}`}
+                        value={skillId}
+                        label={skills[skillId].name}
+                        disabled={
+                          selectedSkillIds &&
+                          selectedSkillIds.length >= select &&
+                          !selectedSkillIds?.includes(skillId)
+                        }
+                        {...register("skillProficiencyChoices")}
+                      />
                     ))}
                   </ul>
                 )}
@@ -93,7 +118,20 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             )}
           </section>
         )}
-        <Button type="submit">Save</Button>
+        <div className="flex gap-2">
+          <Button
+            type="submit"
+            disabled={
+              !selectedId ||
+              (select && selectedSkillIds
+                ? selectedSkillIds.length !== select
+                : true)
+            }
+          >
+            Save
+          </Button>
+          <LinkButton onClick={onCancel}>Cancel</LinkButton>
+        </div>
       </div>
     </form>
   )

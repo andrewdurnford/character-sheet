@@ -13,9 +13,14 @@ interface CharacterState {
   raceId?: keyof typeof races
   classId?: keyof typeof classes
   level: number
+  skillProficiencyChoices?: Array<keyof typeof skills>
   setName: (name: string) => void
   setRace: (raceId: keyof typeof races) => void
-  setClass: (classId: keyof typeof classes, level: number) => void
+  setClass: (
+    classId: keyof typeof classes,
+    level: number,
+    skillProficiencyChoices?: Array<keyof typeof skills>,
+  ) => void
   proficiencyBonus: () => number
   abilityScores: () => Record<
     keyof typeof abilities,
@@ -38,7 +43,8 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
   level: 1,
   setName: (name) => set(() => ({ name })),
   setRace: (raceId) => set(() => ({ raceId })),
-  setClass: (classId, level) => set(() => ({ classId, level })),
+  setClass: (classId, level, skillProficiencyChoices) =>
+    set(() => ({ classId, level, skillProficiencyChoices })),
   proficiencyBonus: () => {
     const level = get().level
     if (level % 4 === 0) {
@@ -75,8 +81,9 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
     Object.entries(skills).reduce(
       (acc, [skillId, { abilityId }]) => {
         const proficiencyBonus = get().proficiencyBonus()
-        // TODO: calculate from class proficiency choices
-        const proficient = false
+        const proficient = !!get().skillProficiencyChoices?.some(
+          (x) => x === skillId,
+        )
         const abilityModifier = get().abilityScores()[abilityId].modifier
         const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 

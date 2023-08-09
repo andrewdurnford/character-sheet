@@ -42,7 +42,6 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col items-start gap-6">
-        <LinkButton onClick={onCancel}>Back</LinkButton>
         <RadioGroup
           label="Race"
           options={Object.entries(races).map(([raceId, { name }]) => ({
@@ -94,7 +93,12 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
             )}
           </React.Fragment>
         )}
-        <Button type="submit">Save</Button>
+        <div className="flex gap-2">
+          <Button type="submit" disabled={!selectedId}>
+            Save
+          </Button>
+          <LinkButton onClick={onCancel}>Cancel</LinkButton>
+        </div>
       </div>
     </form>
   )
