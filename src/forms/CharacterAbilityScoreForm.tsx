@@ -100,7 +100,7 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
         type="number"
         label={abilities[abilityId]}
         readOnly
-        {...register(`abilities.${abilityId}`)}
+        {...register(`abilities.${abilityId}`, { valueAsNumber: true })}
       />
       <Button
         type="button"
