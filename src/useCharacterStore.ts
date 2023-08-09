@@ -13,6 +13,8 @@ interface CharacterState {
   raceId?: keyof typeof races
   classId?: keyof typeof classes
   level: number
+  // point buy
+  abilityScoreChoices?: Record<keyof typeof abilities, number>
   skillProficiencyChoices?: Array<keyof typeof skills>
   setName: (name: string) => void
   setRace: (raceId: keyof typeof races) => void
@@ -20,6 +22,9 @@ interface CharacterState {
     classId: keyof typeof classes,
     level: number,
     skillProficiencyChoices?: Array<keyof typeof skills>,
+  ) => void
+  setAbilityScoreChoices: (
+    abilityScoreChoices?: Record<keyof typeof abilities, number>,
   ) => void
   proficiencyBonus: () => number
   abilityScores: () => Record<
@@ -45,6 +50,8 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
   setRace: (raceId) => set(() => ({ raceId })),
   setClass: (classId, level, skillProficiencyChoices) =>
     set(() => ({ classId, level, skillProficiencyChoices })),
+  setAbilityScoreChoices: (abilityScoreChoices) =>
+    set(() => ({ abilityScoreChoices })),
   proficiencyBonus: () => {
     const level = get().level
     if (level % 4 === 0) {
@@ -69,7 +76,10 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
                 )?.[0] && x.abilityId === abilityId,
           )?.increase ?? 0)
 
-        const score = 10 + increase
+        const abilityScore =
+          get().abilityScoreChoices?.[abilityId as keyof typeof abilities] ?? 10
+
+        const score = abilityScore + increase
         const modifier = Math.floor((score - 10) / 2)
 
         acc[abilityId as keyof typeof abilities] = { score, modifier }

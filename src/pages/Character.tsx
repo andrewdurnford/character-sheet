@@ -7,9 +7,12 @@ import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../utils/abilities"
 import { LinkButton } from "../components/Button"
+import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
 
 export function Character() {
-  const [tab, setTab] = useState<"name" | "race" | "class" | null>(null)
+  const [tab, setTab] = useState<
+    "name" | "race" | "class" | "abilities" | null
+  >(null)
 
   const name = useCharacterStore((state) => state.name)
   const raceId = useCharacterStore((state) => state.raceId)
@@ -26,6 +29,9 @@ export function Character() {
         {tab === "race" && <CharacterRaceForm onCancel={() => setTab(null)} />}
         {tab === "class" && (
           <CharacterClassForm onCancel={() => setTab(null)} />
+        )}
+        {tab === "abilities" && (
+          <CharacterAbilityScoreForm onCancel={() => setTab(null)} />
         )}
         {!tab && (
           <div className="flex flex-col gap-4">
@@ -44,12 +50,18 @@ export function Character() {
               value={className}
               onCancel={() => setTab("class")}
             />
+            <CharacterTab
+              label="Ability Scores"
+              value={null}
+              onCancel={() => setTab("abilities")}
+            />
           </div>
         )}
       </div>
+      <hr className="h-px border-0 bg-gray-300 sm:hidden" />
       <div className="flex flex-col gap-4">
-        <CharacterSavingThrows />
         <CharacterAbilities />
+        <CharacterSavingThrows />
         <CharacterSkills />
       </div>
     </div>
