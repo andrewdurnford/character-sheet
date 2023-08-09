@@ -3,6 +3,12 @@ import { useCharacterStore } from "../useCharacterStore"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
 import { abilities } from "../utils/abilities"
+import {
+  raceAbilityScoreIncreases,
+  races,
+  subraceAbilityScoreIncreases,
+  subraces,
+} from "../utils/races"
 
 type CharacterAbilityScoreFormValues = {
   abilities: Record<keyof typeof abilities, number>
@@ -82,6 +88,17 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
   const { watch, register, setValue } =
     useFormContext<CharacterAbilityScoreFormValues>()
 
+  const raceId = useCharacterStore((s) => s.raceId)
+  const subraceId = Object.entries(subraces).find(
+    (x) => x[1].raceId === raceId,
+  )?.[0]
+  const increaseByRace = raceAbilityScoreIncreases.find(
+    (x) => x.raceId === raceId && x.abilityId === abilityId,
+  )?.increase
+  const increaseBySubrace = subraceAbilityScoreIncreases.find(
+    (x) => x.subraceId === subraceId && x.abilityId === abilityId,
+  )?.increase
+
   const points = watch("points")
   const total = watch(`abilities.${abilityId}`)
 
@@ -95,23 +112,36 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
   }
 
   return (
-    <div className="flex items-end gap-2">
-      <Input
-        type="number"
-        label={abilities[abilityId]}
-        readOnly
-        {...register(`abilities.${abilityId}`, { valueAsNumber: true })}
-      />
-      <Button
-        type="button"
-        onClick={increment}
-        disabled={points === 0 || total === 15}
-      >
-        +
-      </Button>
-      <Button type="button" onClick={decrement} disabled={total === 8}>
-        -
-      </Button>
+    <div>
+      <div className="flex items-end gap-2">
+        <Input
+          type="number"
+          label={abilities[abilityId]}
+          readOnly
+          {...register(`abilities.${abilityId}`, { valueAsNumber: true })}
+        />
+        <Button
+          type="button"
+          onClick={increment}
+          disabled={points === 0 || total === 15}
+        >
+          +
+        </Button>
+        <Button type="button" onClick={decrement} disabled={total === 8}>
+          -
+        </Button>
+      </div>
+      {increaseByRace && raceId && (
+        <div className="mt-2">
+          (+{increaseByRace} {races[raceId].name})
+        </div>
+      )}
+      {increaseBySubrace && subraceId && (
+        <div className="mt-2">
+          (+{increaseBySubrace}{" "}
+          {subraces[subraceId as keyof typeof subraces].name})
+        </div>
+      )}
     </div>
   )
 }
