@@ -8,6 +8,7 @@ import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../api/abilities"
 import { LinkButton } from "../components/Button"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
+import { cn } from "../utils"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -128,7 +129,7 @@ function CharacterSavingThrows() {
           ([abilityId, { modifier, proficient }]) => (
             <li
               key={abilityId}
-              className={`ml-4 ${proficient && "font-semibold"}`}
+              className={cn("ml-4", proficient && "font-semibold")}
               style={{ listStyleType: proficient ? "disc" : "circle" }}
             >
               <div className="flex justify-between gap-4">
@@ -157,7 +158,7 @@ function CharacterSkills() {
           ([skillId, { modifier, proficient }]) => (
             <li
               key={skillId}
-              className={`ml-4 ${proficient && "font-semibold"}`}
+              className={cn("ml-4", proficient && "font-semibold")}
               style={{ listStyleType: proficient ? "disc" : "circle" }}
             >
               <div className="flex justify-between gap-4">
