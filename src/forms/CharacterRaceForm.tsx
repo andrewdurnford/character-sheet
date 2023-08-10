@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import {
@@ -10,10 +11,7 @@ import { abilities } from "../api/abilities"
 import { Button, LinkButton } from "../components/Button"
 import { RadioGroup } from "../components/Input"
 import React from "react"
-
-type CharacterRaceFormValues = {
-  raceId: keyof typeof races
-}
+import { CharacterRaceSchema, characterRaceSchema } from "../lib/types"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
@@ -23,18 +21,24 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
   const raceId = useCharacterStore((state) => state.raceId)
   const setRace = useCharacterStore((state) => state.setRace)
 
-  const { watch, handleSubmit, register } = useForm<CharacterRaceFormValues>({
+  const {
+    watch,
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<CharacterRaceSchema>({
     mode: "onSubmit",
     defaultValues: {
       raceId,
     },
+    resolver: zodResolver(characterRaceSchema),
   })
   const selectedId = watch("raceId")
   const subraceId = Object.entries(subraces).find(
     (x) => x[1].raceId === selectedId,
   )?.[0] as keyof typeof subraces
 
-  function onSubmit(data: CharacterRaceFormValues) {
+  function onSubmit(data: CharacterRaceSchema) {
     setRace(data.raceId)
     onCancel()
   }
@@ -49,6 +53,8 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
             value: raceId,
             disabled: raceId === "half-elf",
           }))}
+          error={errors.raceId?.message}
+          required
           {...register("raceId")}
         />
         {selectedId && (
@@ -94,9 +100,7 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
           </React.Fragment>
         )}
         <div className="flex gap-2">
-          <Button type="submit" disabled={!selectedId}>
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
           <LinkButton onClick={onCancel}>Cancel</LinkButton>
         </div>
       </div>

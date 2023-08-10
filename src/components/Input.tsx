@@ -1,31 +1,52 @@
 import React from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
+import { cn } from "../utils"
 
-type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement>
+type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
+  required?: boolean
+}
 
-function Label({ children, ...props }: LabelProps) {
+export function Label({ children, required, className, ...props }: LabelProps) {
   return (
-    <label {...props} className="mb-1 inline-block font-medium">
-      {children}
-    </label>
+    <React.Fragment>
+      <label {...props} className={cn("inline-block font-medium", className)}>
+        {children}
+      </label>
+      {required && <span aria-hidden="true">*</span>}
+    </React.Fragment>
   )
+}
+
+type ErrorProps = {
+  error?: string
+  className?: string
+}
+
+export function Error({ className, error }: ErrorProps) {
+  if (!error) return null
+  return <p className={cn("mb-2 text-sm text-red-400", className)}>{error}</p>
 }
 
 type InputProps = UseFormRegisterReturn &
   React.InputHTMLAttributes<HTMLInputElement> & {
     label: string
+    error?: string
+    required?: boolean
   }
 
 export const Input = React.forwardRef(
   (
-    { className, label, ...props }: InputProps,
+    { className, label, error, required, ...props }: InputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => (
     <div className={className}>
-      <Label htmlFor={props.name}>{label}</Label>
+      <Label htmlFor={props.name} required={required}>
+        {label}
+      </Label>
+      <Error error={error} />
       <input
         id={props.name}
-        className="block w-full rounded border border-black bg-white px-1"
+        className="mt-1 block w-full rounded border border-black bg-white px-1"
         {...props}
         ref={ref}
       />
@@ -36,18 +57,22 @@ export const Input = React.forwardRef(
 type SelectProps = UseFormRegisterReturn &
   React.SelectHTMLAttributes<HTMLSelectElement> & {
     label: string
+    error?: string
   }
 
 export const Select = React.forwardRef(
   (
-    { className, label, ...props }: SelectProps,
+    { className, label, required, error, ...props }: SelectProps,
     ref: React.ForwardedRef<HTMLSelectElement>,
   ) => (
     <div className={className}>
-      <label htmlFor={props.name}>{label}</label>
+      <Label htmlFor={props.name} required={required}>
+        {label}
+      </Label>
+      <Error error={error} />
       <select
         id={props.name}
-        className="block w-full rounded border border-black bg-white px-1"
+        className="mt-1 block w-full rounded border border-black bg-white px-1"
         {...props}
         ref={ref}
       />
@@ -56,16 +81,20 @@ export const Select = React.forwardRef(
 )
 
 type RadioProps = Omit<InputProps, "type"> & {
+  error?: string
   options: { label: string; value: string; disabled?: boolean }[]
 }
 
 export const RadioGroup = React.forwardRef(
   (
-    { label, options, ...props }: RadioProps,
+    { label, error, options, required, ...props }: RadioProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => (
     <div>
-      <Label htmlFor={props.name}>{label}</Label>
+      <Label htmlFor={props.name} required={required} className="mb-1">
+        {label}
+      </Label>
+      <Error error={error} />
       {options.map(({ label, value, disabled }) => (
         <RadioInput
           key={value}

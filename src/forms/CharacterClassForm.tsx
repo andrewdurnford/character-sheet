@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import {
@@ -6,15 +7,10 @@ import {
   classes,
 } from "../api/classes"
 import { Button, LinkButton } from "../components/Button"
-import { Checkbox, RadioGroup, Select } from "../components/Input"
+import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
 import { abilities, skills } from "../api/abilities"
 import { useEffect } from "react"
-
-type CharacterClassFormValues = {
-  classId: keyof typeof classes
-  level: number
-  skillProficiencyChoices?: Array<keyof typeof skills>
-}
+import { CharacterClassSchema, characterClassSchema } from "../lib/types"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -27,15 +23,22 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
     (state) => state.skillProficiencyChoices,
   )
   const setClass = useCharacterStore((state) => state.setClass)
-  const { watch, handleSubmit, register, setValue } =
-    useForm<CharacterClassFormValues>({
-      mode: "onSubmit",
-      defaultValues: {
-        classId,
-        level,
-        skillProficiencyChoices,
-      },
-    })
+  const {
+    watch,
+    handleSubmit,
+    register,
+    setValue,
+    formState: { errors },
+  } = useForm<CharacterClassSchema>({
+    mode: "onSubmit",
+    defaultValues: {
+      classId,
+      level,
+      skillProficiencyChoices,
+      select: 0,
+    },
+    resolver: zodResolver(characterClassSchema),
+  })
   const selectedId = watch("classId")
   const selectedSkillIds = watch("skillProficiencyChoices")
 
@@ -49,7 +52,11 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   const { select, filter } =
     classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
 
-  function onSubmit(data: CharacterClassFormValues) {
+  useEffect(() => {
+    setValue("select", select ?? 0)
+  }, [select, setValue])
+
+  function onSubmit(data: CharacterClassSchema) {
     setClass(data.classId, data.level, data.skillProficiencyChoices)
     onCancel()
   }
@@ -57,7 +64,12 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col items-start gap-6">
-        <Select label="Level" {...register("level")}>
+        <Select
+          label="Level"
+          error={errors.level?.message}
+          {...register("level", { valueAsNumber: true })}
+          required
+        >
           {[
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
             20,
@@ -73,6 +85,8 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             label: name,
             value: classId,
           }))}
+          error={errors?.classId?.message}
+          required
           {...register("classId")}
         />
         {selectedId && (
@@ -95,8 +109,16 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             </div>
             {select && (
               <div>
-                <h3 className="mt-4 italic">Skills</h3>
-                <span>Choose {select} from</span>
+                <div className="mb-1 mt-4 flex items-center gap-1">
+                  <h3 className="font-medium">
+                    Skills<span aria-hidden>*</span>
+                  </h3>
+                  <span className="text-sm">(Choose {select})</span>
+                </div>
+                <Error
+                  error={errors.skillProficiencyChoices?.message}
+                  className="mb-1"
+                />
                 {filter && (
                   <ul>
                     {filter.map((skillId) => (
@@ -119,17 +141,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
           </section>
         )}
         <div className="flex gap-2">
-          <Button
-            type="submit"
-            disabled={
-              !selectedId ||
-              (select && selectedSkillIds
-                ? selectedSkillIds.length !== select
-                : true)
-            }
-          >
-            Save
-          </Button>
+          <Button type="submit">Save</Button>
           <LinkButton onClick={onCancel}>Cancel</LinkButton>
         </div>
       </div>
