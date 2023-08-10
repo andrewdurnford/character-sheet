@@ -2,13 +2,13 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useCharacterStore } from "../useCharacterStore"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
-import { abilities } from "../utils/abilities"
+import { abilities } from "../api/abilities"
 import {
   raceAbilityScoreIncreases,
   races,
   subraceAbilityScoreIncreases,
   subraces,
-} from "../utils/races"
+} from "../api/races"
 
 type CharacterAbilityScoreFormValues = {
   abilities: Record<keyof typeof abilities, number>

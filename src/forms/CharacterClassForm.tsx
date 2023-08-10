@@ -4,10 +4,10 @@ import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
   classes,
-} from "../utils/classes"
+} from "../api/classes"
 import { Button, LinkButton } from "../components/Button"
 import { Checkbox, RadioGroup, Select } from "../components/Input"
-import { abilities, skills } from "../utils/abilities"
+import { abilities, skills } from "../api/abilities"
 import { useEffect } from "react"
 
 type CharacterClassFormValues = {

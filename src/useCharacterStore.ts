@@ -4,9 +4,9 @@ import {
   races,
   subraceAbilityScoreIncreases,
   subraces,
-} from "./utils/races"
-import { classSavingThrowProficiencies, classes } from "./utils/classes"
-import { abilities, skills } from "./utils/abilities"
+} from "./api/races"
+import { classSavingThrowProficiencies, classes } from "./api/classes"
+import { abilities, skills } from "./api/abilities"
 
 interface CharacterState {
   name: string

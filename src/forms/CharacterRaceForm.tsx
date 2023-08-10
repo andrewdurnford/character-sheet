@@ -5,8 +5,8 @@ import {
   races,
   subraceAbilityScoreIncreases,
   subraces,
-} from "../utils/races"
-import { abilities } from "../utils/abilities"
+} from "../api/races"
+import { abilities } from "../api/abilities"
 import { Button, LinkButton } from "../components/Button"
 import { RadioGroup } from "../components/Input"
 import React from "react"
