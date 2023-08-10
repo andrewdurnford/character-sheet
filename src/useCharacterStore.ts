@@ -8,6 +8,13 @@ import {
 import { classSavingThrowProficiencies, classes } from "./api/classes"
 import { abilities, skills } from "./api/abilities"
 
+export function proficiencyBonus(level: number) {
+  if (level % 4 === 0) {
+    return Math.floor(level / 4) + 1
+  }
+  return Math.floor(level / 4) + 2
+}
+
 interface CharacterState {
   name: string
   raceId?: keyof typeof races
@@ -52,13 +59,7 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
     set(() => ({ classId, level, skillProficiencyChoices })),
   setAbilityScoreChoices: (abilityScoreChoices) =>
     set(() => ({ abilityScoreChoices })),
-  proficiencyBonus: () => {
-    const level = get().level
-    if (level % 4 === 0) {
-      return Math.floor(level / 4) + 1
-    }
-    return Math.floor(level / 4) + 2
-  },
+  proficiencyBonus: () => proficiencyBonus(get().level),
   abilityScores: () =>
     Object.keys(abilities).reduce(
       (acc, abilityId) => {

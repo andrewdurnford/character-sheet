@@ -19,6 +19,7 @@ export function Character() {
   const raceId = useCharacterStore((state) => state.raceId)
   const classId = useCharacterStore((state) => state.classId)
   const level = useCharacterStore((state) => state.level)
+  const proficiencyBonus = useCharacterStore((state) => state.proficiencyBonus)
 
   const raceName = raceId ? races[raceId].name : null
   const className = classId ? `${classes[classId]} (${level})` : null
@@ -61,6 +62,9 @@ export function Character() {
       </div>
       <hr className="h-px border-0 bg-gray-300 sm:hidden" />
       <div className="flex flex-col gap-4">
+        <div>
+          Proficiency Bonus: <strong>+{proficiencyBonus()}</strong>
+        </div>
         <CharacterAbilities />
         <CharacterSavingThrows />
         <CharacterSkills />
@@ -101,7 +105,9 @@ function CharacterAbilities() {
             <li
               key={abilityId}
               className="ml-4"
-              style={{ listStyleType: "circle" }}
+              style={{
+                listStyleType: "disclosure-closed",
+              }}
             >
               <div className="flex justify-between gap-4">
                 <span>{abilities[abilityId as keyof typeof abilities]}</span>

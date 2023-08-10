@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacterStore } from "../useCharacterStore"
+import { proficiencyBonus, useCharacterStore } from "../useCharacterStore"
 import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
@@ -79,6 +79,10 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             </option>
           ))}
         </Select>
+        <div className="mb-[-0.5rem]">
+          Proficiency Bonus:{" "}
+          <strong>+{proficiencyBonus(watch("level"))}</strong>
+        </div>
         <RadioGroup
           label="Class"
           options={Object.entries(classes).map(([classId, name]) => ({
@@ -93,7 +97,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
           <section>
             <h2 className="mb-2 font-medium">Proficiencies</h2>
             <div>
-              <h3 className="italic">Saving Throws</h3>
+              <h3>Saving Throws</h3>
               <ul>
                 {classSavingThrowProficiencies
                   .filter((x) => x.classId === selectedId)
