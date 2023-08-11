@@ -61,13 +61,14 @@ export function CharacterAbilityScoreForm({
       <form onSubmit={methods.handleSubmit(onSubmit)}>
         <h2 className="mb-2 text-xl font-medium">Point Buy</h2>
         <div className="flex flex-col items-start gap-6">
-          <div>Points: {points}</div>
+          <p>Points: {points}</p>
           {Object.keys(abilities).map((abilityId) => (
             <AbilityScoreInput
               key={abilityId}
               abilityId={abilityId as keyof typeof abilities}
             />
           ))}
+          <p className="text-sm">*9 - 13 cost 1 point, 14-15 cost 2 points</p>
           <div className="flex gap-2">
             <Button type="submit" disabled={points > 0}>
               Save
@@ -104,11 +105,13 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
 
   const increment = () => {
     setValue(`abilities.${abilityId}`, total + 1)
-    setValue("points", points - 1)
+    // total is currently 13 or higher, requires 2 points per additional
+    setValue("points", points - (total >= 13 ? 2 : 1))
   }
   const decrement = () => {
     setValue(`abilities.${abilityId}`, total - 1)
-    setValue("points", points + 1)
+    // total is currently higher than 13, requires 2 points per additional
+    setValue("points", points + (total > 13 ? 2 : 1))
   }
 
   return (
@@ -123,7 +126,11 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
         <Button
           type="button"
           onClick={increment}
-          disabled={points === 0 || total === 15}
+          disabled={
+            points === 0 ||
+            total === 15 ||
+            (total >= 13 ? points < 2 : points < 1)
+          }
         >
           +
         </Button>
