@@ -47,6 +47,7 @@ export const characterClassSchema = z
       .min(1, { message: "Level must be between 1 and 20" })
       .max(20, { message: "Level must be between 1 and 20" }),
     select: z.number(),
+    // TODO: add filter to check proficiency is from list
     skillProficiencyChoices: z
       .union([
         z.literal("acrobatics"),
@@ -94,3 +95,57 @@ export const characterClassSchema = z
   )
 
 export type CharacterClassSchema = z.infer<typeof characterClassSchema>
+
+export const characterBackgroundSchema = z
+  .object({
+    background: z
+      .string({ required_error: "Background is required" })
+      .nonempty("Background is required"),
+    backgroundSkillProficiencyChoices: z
+      .union([
+        z.literal("acrobatics"),
+        z.literal("animal-handling"),
+        z.literal("athletics"),
+        z.literal("arcana"),
+        z.literal("deception"),
+        z.literal("athletics"),
+        z.literal("history"),
+        z.literal("deception"),
+        z.literal("insight"),
+        z.literal("history"),
+        z.literal("intimidation"),
+        z.literal("insight"),
+        z.literal("investigation"),
+        z.literal("intimidation"),
+        z.literal("medicine"),
+        z.literal("investigation"),
+        z.literal("nature"),
+        z.literal("medicine"),
+        z.literal("perception"),
+        z.literal("nature"),
+        z.literal("performance"),
+        z.literal("perception"),
+        z.literal("persuasion"),
+        z.literal("performance"),
+        z.literal("religion"),
+        z.literal("persuasion"),
+        z.literal("sleight-of-hand"),
+        z.literal("stealth"),
+        z.literal("religion"),
+        z.literal("survival"),
+        z.literal("stealth"),
+        z.literal("survival"),
+      ])
+      .array()
+      .optional(),
+  })
+  // TODO: add characteristics: personality traits, ideals, bonds, flaws
+  // TODO: submitting empty choices validates as 'Expected array, received boolean'
+  .refine((data) => data.backgroundSkillProficiencyChoices?.length === 2, {
+    message: `Must select 2 skills`,
+    path: ["backgroundSkillProficiencyChoices"],
+  })
+
+export type CharacterBackgroundSchema = z.infer<
+  typeof characterBackgroundSchema
+>

@@ -123,12 +123,22 @@ const RadioInput = React.forwardRef(
 
 export const Checkbox = React.forwardRef(
   (
-    { label, ...props }: Omit<InputProps, "type">,
+    {
+      label,
+      subLabel,
+      ...props
+    }: Omit<InputProps, "type"> & { subLabel?: string },
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => (
     <div>
       <input id={String(props.value)} type="checkbox" {...props} ref={ref} />{" "}
-      <label htmlFor={String(props.value)}>{label}</label>
+      <label
+        htmlFor={String(props.value)}
+        className={cn(subLabel && "inline-flex items-center gap-1")}
+      >
+        {label}
+        {subLabel && <span className="text-sm text-gray-400">{subLabel}</span>}
+      </label>
     </div>
   ),
 )

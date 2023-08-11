@@ -9,16 +9,18 @@ import { abilities, skills } from "../api/abilities"
 import { LinkButton } from "../components/Button"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
 import { cn } from "../utils"
+import { CharacterBackgroundForm } from "../forms/CharacterBackground"
 
 export function Character() {
   const [tab, setTab] = useState<
-    "name" | "race" | "class" | "abilities" | null
+    "name" | "race" | "class" | "background" | "abilities" | null
   >(null)
 
   const name = useCharacterStore((state) => state.name)
   const raceId = useCharacterStore((state) => state.raceId)
   const classId = useCharacterStore((state) => state.classId)
   const level = useCharacterStore((state) => state.level)
+  const background = useCharacterStore((state) => state.background)
   const proficiencyBonus = useCharacterStore((state) => state.proficiencyBonus)
 
   const raceName = raceId ? races[raceId].name : null
@@ -31,6 +33,9 @@ export function Character() {
         {tab === "race" && <CharacterRaceForm onCancel={() => setTab(null)} />}
         {tab === "class" && (
           <CharacterClassForm onCancel={() => setTab(null)} />
+        )}
+        {tab === "background" && (
+          <CharacterBackgroundForm onCancel={() => setTab(null)} />
         )}
         {tab === "abilities" && (
           <CharacterAbilityScoreForm onCancel={() => setTab(null)} />
@@ -51,6 +56,11 @@ export function Character() {
               label="Class"
               value={className}
               onCancel={() => setTab("class")}
+            />
+            <CharacterTab
+              label="Background"
+              value={background || null}
+              onCancel={() => setTab("background")}
             />
             <CharacterTab
               label="Ability Scores"

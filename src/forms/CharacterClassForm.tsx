@@ -22,6 +22,10 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   const skillProficiencyChoices = useCharacterStore(
     (state) => state.skillProficiencyChoices,
   )
+  const background = useCharacterStore((state) => state.background)
+  const backgroundSkillProficiencyChoices = useCharacterStore(
+    (state) => state.backgroundSkillProficiencyChoices,
+  )
   const setClass = useCharacterStore((state) => state.setClass)
   const {
     watch,
@@ -125,19 +129,31 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                 />
                 {filter && (
                   <ul>
-                    {filter.map((skillId) => (
-                      <Checkbox
-                        key={`${selectedId}-${skillId}`}
-                        value={skillId}
-                        label={skills[skillId].name}
-                        disabled={
-                          selectedSkillIds &&
-                          selectedSkillIds.length >= select &&
-                          !selectedSkillIds?.includes(skillId)
-                        }
-                        {...register("skillProficiencyChoices")}
-                      />
-                    ))}
+                    {filter.map((skillId) => {
+                      const backgroundIncludesSkill =
+                        !!background &&
+                        !!backgroundSkillProficiencyChoices?.includes(
+                          skillId as keyof typeof skills,
+                        )
+                      const selectedMax =
+                        selectedSkillIds &&
+                        selectedSkillIds.length >= select &&
+                        !selectedSkillIds?.includes(skillId)
+                      return (
+                        <Checkbox
+                          key={`${selectedId}-${skillId}`}
+                          value={skillId}
+                          label={skills[skillId].name}
+                          subLabel={
+                            backgroundIncludesSkill
+                              ? `background: ${background}`
+                              : undefined
+                          }
+                          disabled={selectedMax || backgroundIncludesSkill}
+                          {...register("skillProficiencyChoices")}
+                        />
+                      )
+                    })}
                   </ul>
                 )}
               </div>

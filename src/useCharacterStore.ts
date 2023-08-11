@@ -22,13 +22,20 @@ interface CharacterState {
   level: number
   // point buy
   abilityScoreChoices?: Record<keyof typeof abilities, number>
+  // TODO: rename to classSkillProficiencyChoices
   skillProficiencyChoices?: Array<keyof typeof skills>
+  background?: string
+  backgroundSkillProficiencyChoices?: Array<keyof typeof skills>
   setName: (name: string) => void
   setRace: (raceId: keyof typeof races) => void
   setClass: (
     classId: keyof typeof classes,
     level: number,
     skillProficiencyChoices?: Array<keyof typeof skills>,
+  ) => void
+  setBackground: (
+    background: string,
+    backgroundSkillProficiencyChoices?: Array<keyof typeof skills>,
   ) => void
   setAbilityScoreChoices: (
     abilityScoreChoices?: Record<keyof typeof abilities, number>,
@@ -53,10 +60,13 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
   raceId: undefined,
   classId: undefined,
   level: 1,
+  background: "Acolyte",
   setName: (name) => set(() => ({ name })),
   setRace: (raceId) => set(() => ({ raceId })),
   setClass: (classId, level, skillProficiencyChoices) =>
     set(() => ({ classId, level, skillProficiencyChoices })),
+  setBackground: (background, backgroundSkillProficiencyChoices) =>
+    set(() => ({ background, backgroundSkillProficiencyChoices })),
   setAbilityScoreChoices: (abilityScoreChoices) =>
     set(() => ({ abilityScoreChoices })),
   proficiencyBonus: () => proficiencyBonus(get().level),
