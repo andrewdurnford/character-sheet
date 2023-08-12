@@ -39,6 +39,9 @@ interface CharacterState {
   abilityScores: () => Record<Ability, { score: number; modifier: number }>
   abilityChecks: () => Record<Skill, { modifier: number; proficient: boolean }>
   savingThrows: () => Record<Ability, { modifier: number; proficient: boolean }>
+  armorClass: () => number
+  maxHitPoints: () => number
+  // TODO: currentHitPoints
 }
 
 export const useCharacter = create<CharacterState>()((set, get) => ({
@@ -122,4 +125,18 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
       },
       {} as Record<Ability, { modifier: number; proficient: boolean }>,
     ),
+  // TODO: add armor
+  armorClass: () => 10 + get().abilityScores().dexterity.modifier,
+  maxHitPoints: () => {
+    const classId = get().classId
+    const level = get().level
+    const modifier = get().abilityScores().constitution.modifier
+
+    if (!classId) return 0
+
+    const hitDice = api.classes[classId].hitDice
+
+    // calculate average for every level > 1
+    return hitDice + modifier + (hitDice / 2 + 1 + modifier) * (level - 1)
+  },
 }))

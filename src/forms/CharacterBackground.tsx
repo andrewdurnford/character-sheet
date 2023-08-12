@@ -87,7 +87,7 @@ export function CharacterBackgroundForm({
                   label={name}
                   subLabel={
                     classIncludesSkill
-                      ? `class: ${api.classes[classId]}`
+                      ? `class: ${api.classes[classId].name}`
                       : undefined
                   }
                   disabled={selectedMax || classIncludesSkill}

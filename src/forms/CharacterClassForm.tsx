@@ -88,7 +88,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         </div>
         <RadioGroup
           label="Class"
-          options={Object.entries(api.classes).map(([classId, name]) => ({
+          options={Object.entries(api.classes).map(([classId, { name }]) => ({
             label: name,
             value: classId,
           }))}

@@ -21,7 +21,7 @@ export function Character() {
   const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
 
   const raceName = raceId ? api.races[raceId].name : null
-  const className = classId ? `${api.classes[classId]} (${level})` : null
+  const className = classId ? `${api.classes[classId].name} (${level})` : null
 
   return (
     <div className="flex flex-col justify-between gap-6 sm:flex-row">
@@ -75,7 +75,7 @@ export function Character() {
         <CharacterAbilities />
         <CharacterSavingThrows />
         <CharacterSkills />
-        <WeaponAttacks />
+        <CharacterCombat />
       </div>
     </div>
   )
@@ -190,8 +190,25 @@ function CharacterSkills() {
   )
 }
 
+function CharacterCombat() {
+  const armorClass = useCharacter((s) => s.armorClass)
+  const maxHitPoints = useCharacter((s) => s.maxHitPoints)
+
+  return (
+    <section>
+      <div>
+        Armor Class: <strong>{armorClass()}</strong>
+      </div>
+      <div>
+        Max Hit Points: <strong>{maxHitPoints()}</strong>
+      </div>
+      <WeaponAttacks />
+    </section>
+  )
+}
+
 // TODO: move calculations to character store
-export function WeaponAttacks() {
+function WeaponAttacks() {
   const classId = useCharacter((state) => state.classId)
   const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
   const abilityScores = useCharacter((state) => state.abilityScores)
@@ -200,7 +217,7 @@ export function WeaponAttacks() {
 
   return (
     <section>
-      <h2 className="mb-2 font-medium">Attacks</h2>
+      <h2 className="my-2 font-medium">Attacks</h2>
       <ul>
         {api.classStartingEquipment
           .filter((x) => x.classId === classId)

@@ -85,16 +85,4 @@ export type Race =
 
 export type Subrace = "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome"
 
-export type Class =
-  | "barbarian"
-  | "bard"
-  | "cleric"
-  | "druid"
-  | "fighter"
-  | "monk"
-  | "paladin"
-  | "ranger"
-  | "rogue"
-  | "sorcerer"
-  | "warlock"
-  | "wizard"
+export type { Class } from "./classes"

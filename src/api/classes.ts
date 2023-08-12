@@ -1,19 +1,37 @@
 import { abilities, skills } from "./abilities"
 import { weapons } from "./weapons"
 
-export const classes = {
-  barbarian: "Barbarian",
-  bard: "Bard",
-  cleric: "Cleric",
-  druid: "Druid",
-  fighter: "Fighter",
-  monk: "Monk",
-  paladin: "Paladin",
-  ranger: "Ranger",
-  rogue: "Rogue",
-  sorcerer: "Sorcerer",
-  warlock: "Warlock",
-  wizard: "Wizard",
+export type Class =
+  | "barbarian"
+  | "bard"
+  | "cleric"
+  | "druid"
+  | "fighter"
+  | "monk"
+  | "paladin"
+  | "ranger"
+  | "rogue"
+  | "sorcerer"
+  | "warlock"
+  | "wizard"
+
+// prettier-ignore
+export const classes: Record<
+  Class,
+  { name: string; hitDice: 6 | 8 | 10 | 12 }
+> = {
+  barbarian: { name: "Barbarian", hitDice: 12 },
+  bard:      { name: "Bard",      hitDice: 8  },
+  cleric:    { name: "Cleric",    hitDice: 8  },
+  druid:     { name: "Druid",     hitDice: 8  },
+  fighter:   { name: "Fighter",   hitDice: 10 },
+  monk:      { name: "Monk",      hitDice: 8  },
+  paladin:   { name: "Paladin",   hitDice: 10 },
+  ranger:    { name: "Ranger",    hitDice: 10 },
+  rogue:     { name: "Rogue",     hitDice: 8  },
+  sorcerer:  { name: "Sorcerer",  hitDice: 6  },
+  warlock:   { name: "Warlock",   hitDice: 8  },
+  wizard:    { name: "Wizard",    hitDice: 6  },
 }
 
 interface ClassStartingEquipment {
