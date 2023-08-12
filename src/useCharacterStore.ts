@@ -102,9 +102,9 @@ export const useCharacterStore = create<CharacterState>()((set, get) => ({
     Object.entries(skills).reduce(
       (acc, [skillId, { abilityId }]) => {
         const proficiencyBonus = get().proficiencyBonus()
-        const proficient = !!get().skillProficiencyChoices?.some(
-          (x) => x === skillId,
-        )
+        const proficient =
+          !!get().skillProficiencyChoices?.some((x) => x === skillId) ||
+          !!get().backgroundSkillProficiencyChoices?.some((x) => x === skillId)
         const abilityModifier = get().abilityScores()[abilityId].modifier
         const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
