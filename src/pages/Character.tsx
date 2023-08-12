@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useCharacterStore } from "../useCharacterStore"
 import { races } from "../api/races"
-import { classStartingEquipment, classes } from "../api/classes"
+import {
+  classStartingEquipment,
+  classWeaponProficiencies,
+  classes,
+} from "../api/classes"
 import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
@@ -10,7 +14,7 @@ import { LinkButton } from "../components/Button"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
 import { cn } from "../utils"
 import { CharacterBackgroundForm } from "../forms/CharacterBackground"
-import { weaponDamage, weapons } from "../api/weapons"
+import { weaponData, weapons } from "../api/weapons"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -194,25 +198,39 @@ function CharacterSkills() {
   )
 }
 
+// TODO: move calculations to character store
 export function WeaponAttacks() {
   const classId = useCharacterStore((state) => state.classId)
+  const proficiencyBonus = useCharacterStore((state) => state.proficiencyBonus)
+  const abilityScores = useCharacterStore((state) => state.abilityScores)
 
   if (!classId) return null
 
-  // TODO: attack bonus
-  // TODO: proficiency
   return (
     <section>
       <h2 className="mb-2 font-medium">Attacks</h2>
       <ul>
         {classStartingEquipment
           .filter((x) => x.classId === classId)
-          .map(({ weaponId }) => (
-            <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
-              {weapons[weaponId]}, {weaponDamage[weaponId].roll.count}d
-              {weaponDamage[weaponId].roll.die} {weaponDamage[weaponId].type}
-            </li>
-          ))}
+          .map(({ weaponId }) => {
+            const weapon = weaponData[weaponId]
+            const abilityModifier =
+              abilityScores()[
+                weapon.type === "melee" ? "strength" : "dexterity"
+              ].modifier
+            const proficient = classWeaponProficiencies.some(
+              (x) => x.classId === classId && x.weapons.includes(weaponId),
+            )
+            const modifier =
+              abilityModifier + (proficient ? proficiencyBonus() : 0)
+
+            return (
+              <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
+                {weapons[weaponId]}, +{modifier}, {weapon.roll.count}d
+                {weapon.roll.die} +{abilityModifier} {weapon.damageType}
+              </li>
+            )
+          })}
       </ul>
     </section>
   )

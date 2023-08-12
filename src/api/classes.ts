@@ -45,6 +45,25 @@ export const classStartingEquipment: ClassStartingEquipment[] = [
   { classId: "wizard", weaponId: "quarterstaff" },
 ]
 
+// prettier-ignore
+export const classWeaponProficiencies: Array<{
+  classId: keyof typeof classes
+  weapons: Array<keyof typeof weapons>
+}> = [
+  { classId: 'barbarian', weapons: [], /* simple weapons, martial weapons */ },
+  { classId: 'bard',      weapons: ["crossbow-hand", "longsword", "rapier", "shortsword"], /* simple weapons */ },
+  { classId: 'cleric',    weapons: [], /* simple weapons */ },
+  { classId: 'druid',     weapons: ["club", "dagger", "dart", "javelin", "mace", "quarterstaff", "scimitar", "sickle", "sling", "spear"], },
+  { classId: 'fighter',   weapons: [], /* simple weapons, martial weapons */ },
+  { classId: 'monk',      weapons: ["shortsword"], /* simple weapons */ },
+  { classId: 'paladin',   weapons: [], /* simple weapons, martial weapons */ },
+  { classId: 'ranger',    weapons: [], /* simple weapons, martial weapons */ },
+  { classId: 'rogue',     weapons: ["crossbow-hand", "longsword", "rapier", "shortsword"], /* simple weapons */ },
+  { classId: 'sorcerer',  weapons: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"], },
+  { classId: 'warlock',   weapons: [], /* simple weapons */ },
+  { classId: 'wizard',    weapons: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"], },
+]
+
 interface ClassSkillProficiencyChoice {
   classId: keyof typeof classes
   select: number

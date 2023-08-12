@@ -5,6 +5,7 @@ import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
   classStartingEquipment,
+  classWeaponProficiencies,
   classes,
 } from "../api/classes"
 import { Button, LinkButton } from "../components/Button"
@@ -105,24 +106,11 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             <ClassStartingWeapons classId={selectedId} />
             <section>
               <h2 className="mb-2 font-medium">Proficiencies</h2>
-              <div>
-                <h3>Saving Throws</h3>
-                <ul>
-                  {classSavingThrowProficiencies
-                    .filter((x) => x.classId === selectedId)
-                    .map(({ abilityId }) => (
-                      <li
-                        key={`class-saving-throw-${abilityId}-proficiency`}
-                        className="ml-4 list-disc"
-                      >
-                        {abilities[abilityId]}
-                      </li>
-                    ))}
-                </ul>
-              </div>
+              <ClassSavingThrowProficiencies classId={selectedId} />
+              <ClassWeaponProficiencies classId={selectedId} />
               {select && (
-                <div>
-                  <div className="mb-1 mt-4 flex items-center gap-1">
+                <section>
+                  <div className="mb-1 mt-2 flex items-center gap-1">
                     <h3 className="font-medium">
                       Skills<span aria-hidden>*</span>
                     </h3>
@@ -161,7 +149,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                       })}
                     </ul>
                   )}
-                </div>
+                </section>
               )}
             </section>
           </React.Fragment>
@@ -175,11 +163,11 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   )
 }
 
-interface ClassStartingWeaponsProps {
+type ClassProps = {
   classId: keyof typeof classes
 }
 
-export function ClassStartingWeapons({ classId }: ClassStartingWeaponsProps) {
+export function ClassStartingWeapons({ classId }: ClassProps) {
   return (
     <section>
       <h2 className="mb-2 font-medium">Equipment</h2>
@@ -189,6 +177,46 @@ export function ClassStartingWeapons({ classId }: ClassStartingWeaponsProps) {
           .map(({ count, weaponId }) => (
             <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
               {weapons[weaponId]} {count && `x${count}`}
+            </li>
+          ))}
+      </ul>
+    </section>
+  )
+}
+
+function ClassSavingThrowProficiencies({ classId }: ClassProps) {
+  return (
+    <section>
+      <h3 className="italic">Saving Throws</h3>
+      <ul>
+        {classSavingThrowProficiencies
+          .filter((x) => x.classId === classId)
+          .map(({ abilityId }) => (
+            <li
+              key={`class-saving-throw-${abilityId}-proficiency`}
+              className="ml-4 list-disc"
+            >
+              {abilities[abilityId]}
+            </li>
+          ))}
+      </ul>
+    </section>
+  )
+}
+
+function ClassWeaponProficiencies({ classId }: ClassProps) {
+  return (
+    <section>
+      <h3 className="italic">Weapons</h3>
+      <ul>
+        {classWeaponProficiencies
+          .find((x) => x.classId === classId)
+          ?.weapons.map((weaponId) => (
+            <li
+              key={`class-weapon-${weaponId}-proficiency`}
+              className="ml-4 list-disc"
+            >
+              {weapons[weaponId]}
             </li>
           ))}
       </ul>
