@@ -8,6 +8,7 @@ import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
 import { LinkButton } from "../components/Button"
 import { cn } from "../utils/tailwind"
 import { Ability, Skill, api } from "../api"
+import { mod } from "../api/utils"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -235,8 +236,8 @@ function WeaponAttacks() {
 
             return (
               <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
-                {api.weapons[weaponId]}, +{modifier}, {weapon.roll.count}d
-                {weapon.roll.die} +{abilityModifier} {weapon.damageType}
+                {api.weapons[weaponId]}, {mod(modifier)}, {weapon.roll.count}d
+                {weapon.roll.die} {mod(abilityModifier)} {weapon.damageType}
               </li>
             )
           })}
