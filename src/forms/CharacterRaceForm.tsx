@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacterStore } from "../useCharacterStore"
+import { useCharacter } from "../stores/character"
 import {
   raceAbilityScoreIncreases,
   races,
@@ -11,15 +11,18 @@ import { abilities } from "../api/abilities"
 import { Button, LinkButton } from "../components/Button"
 import { RadioGroup } from "../components/Input"
 import React from "react"
-import { CharacterRaceSchema, characterRaceSchema } from "../lib/types"
+import {
+  CharacterRaceSchema,
+  characterRaceSchema,
+} from "../lib/characterRaceSchema"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
 }
 
 export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
-  const raceId = useCharacterStore((state) => state.raceId)
-  const setRace = useCharacterStore((state) => state.setRace)
+  const raceId = useCharacter((state) => state.raceId)
+  const setRace = useCharacter((state) => state.setRace)
 
   const {
     watch,

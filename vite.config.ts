@@ -8,10 +8,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./tests/setupTests.js",
+    setupFiles: "./setupTests.js",
     coverage: {
       provider: "v8",
-      exclude: ["src/utils.ts", "src/api", "src/lib/types.ts"],
+      exclude: ["src/api", "src/lib"],
     },
   },
 })

@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacterStore } from "../useCharacterStore"
+import { useCharacter } from "../stores/character"
 import { Checkbox, Error, Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
 import {
   CharacterBackgroundSchema,
   characterBackgroundSchema,
-} from "../lib/types"
+} from "../lib/characterBackgroundSchema"
 import { skills } from "../api/abilities"
 import { classes } from "../api/classes"
 
@@ -17,13 +17,13 @@ interface CharacterNameBackgroundProps {
 export function CharacterBackgroundForm({
   onCancel,
 }: CharacterNameBackgroundProps) {
-  const setBackground = useCharacterStore((state) => state.setBackground)
-  const background = useCharacterStore((state) => state.background)
-  const backgroundSkillProficiencyChoices = useCharacterStore(
+  const setBackground = useCharacter((state) => state.setBackground)
+  const background = useCharacter((state) => state.background)
+  const backgroundSkillProficiencyChoices = useCharacter(
     (state) => state.backgroundSkillProficiencyChoices,
   )
-  const classId = useCharacterStore((state) => state.classId)
-  const classSkillProficiencyChoices = useCharacterStore(
+  const classId = useCharacter((state) => state.classId)
+  const classSkillProficiencyChoices = useCharacter(
     (state) => state.skillProficiencyChoices,
   )
 

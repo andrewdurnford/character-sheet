@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { proficiencyBonus, useCharacterStore } from "../useCharacterStore"
+import { proficiencyBonus, useCharacter } from "../stores/character"
 import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
@@ -12,25 +12,28 @@ import { Button, LinkButton } from "../components/Button"
 import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
 import { abilities, skills } from "../api/abilities"
 import { useEffect } from "react"
-import { CharacterClassSchema, characterClassSchema } from "../lib/types"
 import React from "react"
 import { weapons } from "../api/weapons"
+import {
+  CharacterClassSchema,
+  characterClassSchema,
+} from "../lib/characterClassSchema"
 
 interface CharacterClassFormProps {
   onCancel: () => void
 }
 
 export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
-  const classId = useCharacterStore((state) => state.classId)
-  const level = useCharacterStore((state) => state.level)
-  const skillProficiencyChoices = useCharacterStore(
+  const classId = useCharacter((state) => state.classId)
+  const level = useCharacter((state) => state.level)
+  const skillProficiencyChoices = useCharacter(
     (state) => state.skillProficiencyChoices,
   )
-  const background = useCharacterStore((state) => state.background)
-  const backgroundSkillProficiencyChoices = useCharacterStore(
+  const background = useCharacter((state) => state.background)
+  const backgroundSkillProficiencyChoices = useCharacter(
     (state) => state.backgroundSkillProficiencyChoices,
   )
-  const setClass = useCharacterStore((state) => state.setClass)
+  const setClass = useCharacter((state) => state.setClass)
   const {
     watch,
     handleSubmit,

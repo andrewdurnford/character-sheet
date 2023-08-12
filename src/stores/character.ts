@@ -4,9 +4,9 @@ import {
   races,
   subraceAbilityScoreIncreases,
   subraces,
-} from "./api/races"
-import { classSavingThrowProficiencies, classes } from "./api/classes"
-import { abilities, skills } from "./api/abilities"
+} from "../api/races"
+import { classSavingThrowProficiencies, classes } from "../api/classes"
+import { abilities, skills } from "../api/abilities"
 
 export function proficiencyBonus(level: number) {
   if (level % 4 === 0) {
@@ -55,7 +55,7 @@ interface CharacterState {
   >
 }
 
-export const useCharacterStore = create<CharacterState>()((set, get) => ({
+export const useCharacter = create<CharacterState>()((set, get) => ({
   name: "Untitled",
   raceId: undefined,
   classId: undefined,

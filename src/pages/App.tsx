@@ -1,4 +1,4 @@
-import { Character } from "./pages/Character"
+import { Character } from "./Character"
 
 function App() {
   return (

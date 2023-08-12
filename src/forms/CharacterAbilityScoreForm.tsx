@@ -1,5 +1,5 @@
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
-import { useCharacterStore } from "../useCharacterStore"
+import { useCharacter } from "../stores/character"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
 import { abilities } from "../api/abilities"
@@ -22,8 +22,8 @@ interface CharacterAbilityScoreFormProps {
 export function CharacterAbilityScoreForm({
   onCancel,
 }: CharacterAbilityScoreFormProps) {
-  const abilityScores = useCharacterStore((state) => state.abilityScoreChoices)
-  const setAbilityScoreChoices = useCharacterStore(
+  const abilityScores = useCharacter((state) => state.abilityScoreChoices)
+  const setAbilityScoreChoices = useCharacter(
     (state) => state.setAbilityScoreChoices,
   )
 
@@ -89,7 +89,7 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
   const { watch, register, setValue } =
     useFormContext<CharacterAbilityScoreFormValues>()
 
-  const raceId = useCharacterStore((s) => s.raceId)
+  const raceId = useCharacter((s) => s.raceId)
   const subraceId = Object.entries(subraces).find(
     (x) => x[1].raceId === raceId,
   )?.[0]

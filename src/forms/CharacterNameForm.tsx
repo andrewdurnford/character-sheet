@@ -1,17 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacterStore } from "../useCharacterStore"
+import { useCharacter } from "../stores/character"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
-import { CharacterNameSchema, characterNameSchema } from "../lib/types"
+import {
+  CharacterNameSchema,
+  characterNameSchema,
+} from "../lib/characterNameSchema"
 
 interface CharacterNameFormProps {
   onCancel: () => void
 }
 
 export function CharacterNameForm({ onCancel }: CharacterNameFormProps) {
-  const name = useCharacterStore((state) => state.name)
-  const setName = useCharacterStore((state) => state.setName)
+  const name = useCharacter((state) => state.name)
+  const setName = useCharacter((state) => state.setName)
 
   const {
     handleSubmit,

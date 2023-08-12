@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useCharacterStore } from "../useCharacterStore"
+import { useCharacter } from "../stores/character"
 import { races } from "../api/races"
 import {
   classStartingEquipment,
@@ -12,7 +12,7 @@ import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../api/abilities"
 import { LinkButton } from "../components/Button"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
-import { cn } from "../utils"
+import { cn } from "../utils/tailwind"
 import { CharacterBackgroundForm } from "../forms/CharacterBackground"
 import { weaponData, weapons } from "../api/weapons"
 
@@ -20,13 +20,12 @@ export function Character() {
   const [tab, setTab] = useState<
     "name" | "race" | "class" | "background" | "abilities" | null
   >(null)
-
-  const name = useCharacterStore((state) => state.name)
-  const raceId = useCharacterStore((state) => state.raceId)
-  const classId = useCharacterStore((state) => state.classId)
-  const level = useCharacterStore((state) => state.level)
-  const background = useCharacterStore((state) => state.background)
-  const proficiencyBonus = useCharacterStore((state) => state.proficiencyBonus)
+  const name = useCharacter((state) => state.name)
+  const raceId = useCharacter((state) => state.raceId)
+  const classId = useCharacter((state) => state.classId)
+  const level = useCharacter((state) => state.level)
+  const background = useCharacter((state) => state.background)
+  const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
 
   const raceName = raceId ? races[raceId].name : null
   const className = classId ? `${classes[classId]} (${level})` : null
@@ -110,7 +109,7 @@ function CharacterTab({ label: name, value, onCancel }: CharacterTabProps) {
 }
 
 function CharacterAbilities() {
-  const abilityScores = useCharacterStore((state) => state.abilityScores)
+  const abilityScores = useCharacter((state) => state.abilityScores)
 
   return (
     <div>
@@ -141,7 +140,7 @@ function CharacterAbilities() {
 }
 
 function CharacterSavingThrows() {
-  const savingThrows = useCharacterStore((state) => state.savingThrows)
+  const savingThrows = useCharacter((state) => state.savingThrows)
 
   return (
     <div>
@@ -170,7 +169,7 @@ function CharacterSavingThrows() {
 }
 
 function CharacterSkills() {
-  const abilityChecks = useCharacterStore((state) => state.abilityChecks)
+  const abilityChecks = useCharacter((state) => state.abilityChecks)
 
   return (
     <div>
@@ -200,9 +199,9 @@ function CharacterSkills() {
 
 // TODO: move calculations to character store
 export function WeaponAttacks() {
-  const classId = useCharacterStore((state) => state.classId)
-  const proficiencyBonus = useCharacterStore((state) => state.proficiencyBonus)
-  const abilityScores = useCharacterStore((state) => state.abilityScores)
+  const classId = useCharacter((state) => state.classId)
+  const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
+  const abilityScores = useCharacter((state) => state.abilityScores)
 
   if (!classId) return null
 
