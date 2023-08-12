@@ -20,8 +20,9 @@ interface CharacterState {
   skillProficiencyChoices?: Skill[]
   background?: string
   backgroundSkillProficiencyChoices?: Skill[]
+  raceAbilityScoreIncreaseChoices?: Ability[]
   setName: (name: string) => void
-  setRace: (raceId: Race) => void
+  setRace: (raceId: Race, raceAbilityScoreIncreaseChoices?: Ability[]) => void
   setClass: (
     classId: Class,
     level: number,
@@ -47,7 +48,8 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
   level: 1,
   background: "Acolyte",
   setName: (name) => set(() => ({ name })),
-  setRace: (raceId) => set(() => ({ raceId })),
+  setRace: (raceId, raceAbilityScoreIncreaseChoices) =>
+    set(() => ({ raceId, raceAbilityScoreIncreaseChoices })),
   setClass: (classId, level, skillProficiencyChoices) =>
     set(() => ({ classId, level, skillProficiencyChoices })),
   setBackground: (background, backgroundSkillProficiencyChoices) =>
@@ -59,6 +61,11 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
     Object.keys(api.abilities).reduce(
       (acc, abilityId) => {
         const increase =
+          // calculate race ability score increase choice
+          (get().raceAbilityScoreIncreaseChoices?.some((x) => x === abilityId)
+            ? // TODO: handle increase as a dynamic number
+              1
+            : 0) +
           // calculate race ability score increase
           (api.raceAbilityScoreIncreases.find(
             (x) => x.raceId === get().raceId && x.abilityId === abilityId,

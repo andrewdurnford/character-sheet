@@ -126,7 +126,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                         const selectedMax =
                           selectedSkillIds &&
                           selectedSkillIds.length >= select &&
-                          !selectedSkillIds?.includes(skillId)
+                          !selectedSkillIds.includes(skillId)
                         return (
                           <Checkbox
                             key={`${selectedId}-${skillId}`}

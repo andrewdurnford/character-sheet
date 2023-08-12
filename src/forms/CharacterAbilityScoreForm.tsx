@@ -84,9 +84,11 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
     useFormContext<CharacterAbilityScoreFormValues>()
 
   const raceId = useCharacter((s) => s.raceId)
+  const choices = useCharacter((s) => s.raceAbilityScoreIncreaseChoices)
   const subraceId = Object.entries(api.subraces).find(
     (x) => x[1].raceId === raceId,
   )?.[0]
+  const increaseByRaceChoice = choices?.some((x) => x === abilityId)
   const increaseByRace = api.raceAbilityScoreIncreases.find(
     (x) => x.raceId === raceId && x.abilityId === abilityId,
   )?.increase
@@ -132,6 +134,9 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
           -
         </Button>
       </div>
+      {increaseByRaceChoice && raceId && (
+        <div className="mt-2">(+1 {api.races[raceId].name})</div>
+      )}
       {increaseByRace && raceId && (
         <div className="mt-2">
           (+{increaseByRace} {api.races[raceId].name})

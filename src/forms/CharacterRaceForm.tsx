@@ -2,13 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacter } from "../stores/character"
 import { Button, LinkButton } from "../components/Button"
-import { RadioGroup } from "../components/Input"
-import React from "react"
+import { Checkbox, Error, RadioGroup } from "../components/Input"
+import React, { useEffect } from "react"
 import {
   CharacterRaceSchema,
   characterRaceSchema,
 } from "../lib/characterRaceSchema"
-import { Subrace, api } from "../api"
+import { Ability, Subrace, api } from "../api"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
@@ -16,27 +16,52 @@ interface CharacterRaceFormProps {
 
 export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
   const raceId = useCharacter((state) => state.raceId)
+  const abilityScoreIncreaseChoices = useCharacter(
+    (state) => state.raceAbilityScoreIncreaseChoices,
+  )
   const setRace = useCharacter((state) => state.setRace)
 
   const {
     watch,
     handleSubmit,
     register,
+    setValue,
     formState: { errors },
   } = useForm<CharacterRaceSchema>({
     mode: "onSubmit",
     defaultValues: {
       raceId,
+      abilityScoreIncreaseChoices,
+      // hasChoice: raceAbilityScoreIncreaseChoices,
     },
     resolver: zodResolver(characterRaceSchema),
   })
   const selectedId = watch("raceId")
+  const selectedAbilities = watch("abilityScoreIncreaseChoices")
   const subraceId = Object.entries(api.subraces).find(
     (x) => x[1].raceId === selectedId,
   )?.[0] as Subrace
 
+  const abilityIncreases = api.raceAbilityScoreIncreases.filter(
+    (x) => x.raceId === selectedId && !!x.abilityId,
+  )
+  const abilityIncreaseChoices = api.raceAbilityScoreIncreases.filter(
+    (x) => x.raceId === selectedId && !x.abilityId,
+  )
+
+  useEffect(() => {
+    // increases contains a null value
+    const hasChoices =
+      api.raceAbilityScoreIncreases.filter(
+        (x) => x.raceId === selectedId && !x.abilityId,
+      ).length > 0
+    console.log(hasChoices)
+
+    setValue("hasChoice", hasChoices)
+  }, [selectedId, setValue])
+
   function onSubmit(data: CharacterRaceSchema) {
-    setRace(data.raceId)
+    setRace(data.raceId, data.abilityScoreIncreaseChoices)
     onCancel()
   }
 
@@ -48,7 +73,6 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
           options={Object.entries(api.races).map(([raceId, { name }]) => ({
             label: name,
             value: raceId,
-            disabled: raceId === "half-elf",
           }))}
           error={errors.raceId?.message}
           required
@@ -59,9 +83,9 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
             <section>
               <h3>Ability Score Increase</h3>
               <ul>
-                {api.raceAbilityScoreIncreases
-                  .filter((x) => x.raceId === selectedId)
-                  .map(({ abilityId, increase }) => (
+                {abilityIncreases.map(({ abilityId, increase }) => {
+                  if (!abilityId) return null
+                  return (
                     <li
                       key={`race-ability-score-${abilityId}-increase`}
                       className="ml-4 list-disc"
@@ -69,7 +93,45 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                       {api.abilities[abilityId]} {increase > 0 && "+"}
                       {increase}
                     </li>
-                  ))}
+                  )
+                })}
+                {abilityIncreaseChoices.length > 0 && (
+                  <section>
+                    <ul>
+                      {Object.entries(api.abilities)
+                        .filter(
+                          ([id]) =>
+                            !abilityIncreases.some((x) => x.abilityId === id),
+                        )
+                        .map(([abilityId, name]) => {
+                          const selectedMax =
+                            selectedAbilities &&
+                            selectedAbilities.length >= 2 &&
+                            !selectedAbilities.includes(abilityId as Ability)
+
+                          return (
+                            <li key={`race-ability-score-choice-${abilityId}`}>
+                              <Checkbox
+                                value={abilityId}
+                                label={`${name} +1`}
+                                disabled={selectedMax}
+                                {...register("abilityScoreIncreaseChoices")}
+                              />
+                            </li>
+                          )
+                        })}
+                    </ul>
+                    <div className="mb-1 mt-2 flex items-center gap-1">
+                      <span className="text-sm">
+                        (Choose {abilityIncreaseChoices.length})*
+                      </span>
+                    </div>
+                    <Error
+                      error={errors.abilityScoreIncreaseChoices?.message}
+                      className="mb-1"
+                    />
+                  </section>
+                )}
               </ul>
             </section>
             {subraceId && (
