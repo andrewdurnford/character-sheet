@@ -1,23 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { proficiencyBonus, useCharacter } from "../stores/character"
-import {
-  classSavingThrowProficiencies,
-  classSkillProficiencyChoices,
-  classStartingEquipment,
-  classWeaponProficiencies,
-  classes,
-} from "../api/classes"
 import { Button, LinkButton } from "../components/Button"
 import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
-import { abilities, skills } from "../api/abilities"
 import { useEffect } from "react"
 import React from "react"
-import { weapons } from "../api/weapons"
 import {
   CharacterClassSchema,
   characterClassSchema,
 } from "../lib/characterClassSchema"
+import { Class, Skill, api } from "../api"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -61,7 +53,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   }, [selectedId, classId, setValue])
 
   const { select, filter } =
-    classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
+    api.classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
 
   useEffect(() => {
     setValue("select", select ?? 0)
@@ -96,7 +88,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         </div>
         <RadioGroup
           label="Class"
-          options={Object.entries(classes).map(([classId, name]) => ({
+          options={Object.entries(api.classes).map(([classId, name]) => ({
             label: name,
             value: classId,
           }))}
@@ -129,7 +121,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                         const backgroundIncludesSkill =
                           !!background &&
                           !!backgroundSkillProficiencyChoices?.includes(
-                            skillId as keyof typeof skills,
+                            skillId as Skill,
                           )
                         const selectedMax =
                           selectedSkillIds &&
@@ -139,7 +131,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                           <Checkbox
                             key={`${selectedId}-${skillId}`}
                             value={skillId}
-                            label={skills[skillId].name}
+                            label={api.skills[skillId].name}
                             subLabel={
                               backgroundIncludesSkill
                                 ? `background: ${background}`
@@ -167,7 +159,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
 }
 
 type ClassProps = {
-  classId: keyof typeof classes
+  classId: Class
 }
 
 export function ClassStartingWeapons({ classId }: ClassProps) {
@@ -175,11 +167,11 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
     <section>
       <h2 className="mb-2 font-medium">Equipment</h2>
       <ul>
-        {classStartingEquipment
+        {api.classStartingEquipment
           .filter((x) => x.classId === classId)
           .map(({ count, weaponId }) => (
             <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
-              {weapons[weaponId]} {count && `x${count}`}
+              {api.weapons[weaponId]} {count && `x${count}`}
             </li>
           ))}
       </ul>
@@ -192,14 +184,14 @@ function ClassSavingThrowProficiencies({ classId }: ClassProps) {
     <section>
       <h3 className="italic">Saving Throws</h3>
       <ul>
-        {classSavingThrowProficiencies
+        {api.classSavingThrowProficiencies
           .filter((x) => x.classId === classId)
           .map(({ abilityId }) => (
             <li
               key={`class-saving-throw-${abilityId}-proficiency`}
               className="ml-4 list-disc"
             >
-              {abilities[abilityId]}
+              {api.abilities[abilityId]}
             </li>
           ))}
       </ul>
@@ -212,14 +204,14 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
     <section>
       <h3 className="italic">Weapons</h3>
       <ul>
-        {classWeaponProficiencies
+        {api.classWeaponProficiencies
           .find((x) => x.classId === classId)
           ?.weapons.map((weaponId) => (
             <li
               key={`class-weapon-${weaponId}-proficiency`}
               className="ml-4 list-disc"
             >
-              {weapons[weaponId]}
+              {api.weapons[weaponId]}
             </li>
           ))}
       </ul>

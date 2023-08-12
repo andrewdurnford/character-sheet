@@ -2,16 +2,10 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useCharacter } from "../stores/character"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
-import { abilities } from "../api/abilities"
-import {
-  raceAbilityScoreIncreases,
-  races,
-  subraceAbilityScoreIncreases,
-  subraces,
-} from "../api/races"
+import { Ability, Subrace, api } from "../api"
 
 type CharacterAbilityScoreFormValues = {
-  abilities: Record<keyof typeof abilities, number>
+  abilities: Record<Ability, number>
   points: number
 }
 
@@ -62,10 +56,10 @@ export function CharacterAbilityScoreForm({
         <h2 className="mb-2 text-xl font-medium">Point Buy</h2>
         <div className="flex flex-col items-start gap-6">
           <p>Points: {points}</p>
-          {Object.keys(abilities).map((abilityId) => (
+          {Object.keys(api.abilities).map((abilityId) => (
             <AbilityScoreInput
               key={abilityId}
-              abilityId={abilityId as keyof typeof abilities}
+              abilityId={abilityId as Ability}
             />
           ))}
           <p className="text-sm">*9 - 13 cost 1 point, 14-15 cost 2 points</p>
@@ -82,7 +76,7 @@ export function CharacterAbilityScoreForm({
 }
 
 interface AbilityScoreInputProps {
-  abilityId: keyof typeof abilities
+  abilityId: keyof typeof api.abilities
 }
 
 function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
@@ -90,13 +84,13 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
     useFormContext<CharacterAbilityScoreFormValues>()
 
   const raceId = useCharacter((s) => s.raceId)
-  const subraceId = Object.entries(subraces).find(
+  const subraceId = Object.entries(api.subraces).find(
     (x) => x[1].raceId === raceId,
   )?.[0]
-  const increaseByRace = raceAbilityScoreIncreases.find(
+  const increaseByRace = api.raceAbilityScoreIncreases.find(
     (x) => x.raceId === raceId && x.abilityId === abilityId,
   )?.increase
-  const increaseBySubrace = subraceAbilityScoreIncreases.find(
+  const increaseBySubrace = api.subraceAbilityScoreIncreases.find(
     (x) => x.subraceId === subraceId && x.abilityId === abilityId,
   )?.increase
 
@@ -119,7 +113,7 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
       <div className="flex items-end gap-2">
         <Input
           type="number"
-          label={abilities[abilityId]}
+          label={api.abilities[abilityId]}
           readOnly
           {...register(`abilities.${abilityId}`, { valueAsNumber: true })}
         />
@@ -140,13 +134,12 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
       </div>
       {increaseByRace && raceId && (
         <div className="mt-2">
-          (+{increaseByRace} {races[raceId].name})
+          (+{increaseByRace} {api.races[raceId].name})
         </div>
       )}
       {increaseBySubrace && subraceId && (
         <div className="mt-2">
-          (+{increaseBySubrace}{" "}
-          {subraces[subraceId as keyof typeof subraces].name})
+          (+{increaseBySubrace} {api.subraces[subraceId as Subrace].name})
         </div>
       )}
     </div>

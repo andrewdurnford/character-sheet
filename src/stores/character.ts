@@ -1,13 +1,7 @@
 import { create } from "zustand"
-import {
-  raceAbilityScoreIncreases,
-  races,
-  subraceAbilityScoreIncreases,
-  subraces,
-} from "../api/races"
-import { classSavingThrowProficiencies, classes } from "../api/classes"
-import { abilities, skills } from "../api/abilities"
+import { Ability, Class, Race, Skill, api } from "../api"
 
+// TODO: move to core logic helper functions
 export function proficiencyBonus(level: number) {
   if (level % 4 === 0) {
     return Math.floor(level / 4) + 1
@@ -17,42 +11,33 @@ export function proficiencyBonus(level: number) {
 
 interface CharacterState {
   name: string
-  raceId?: keyof typeof races
-  classId?: keyof typeof classes
+  raceId?: Race
+  classId?: Class
   level: number
   // point buy
-  abilityScoreChoices?: Record<keyof typeof abilities, number>
+  abilityScoreChoices?: Record<Ability, number>
   // TODO: rename to classSkillProficiencyChoices
-  skillProficiencyChoices?: Array<keyof typeof skills>
+  skillProficiencyChoices?: Skill[]
   background?: string
-  backgroundSkillProficiencyChoices?: Array<keyof typeof skills>
+  backgroundSkillProficiencyChoices?: Skill[]
   setName: (name: string) => void
-  setRace: (raceId: keyof typeof races) => void
+  setRace: (raceId: Race) => void
   setClass: (
-    classId: keyof typeof classes,
+    classId: Class,
     level: number,
-    skillProficiencyChoices?: Array<keyof typeof skills>,
+    skillProficiencyChoices?: Skill[],
   ) => void
   setBackground: (
     background: string,
-    backgroundSkillProficiencyChoices?: Array<keyof typeof skills>,
+    backgroundSkillProficiencyChoices?: Skill[],
   ) => void
   setAbilityScoreChoices: (
-    abilityScoreChoices?: Record<keyof typeof abilities, number>,
+    abilityScoreChoices?: Record<Ability, number>,
   ) => void
   proficiencyBonus: () => number
-  abilityScores: () => Record<
-    keyof typeof abilities,
-    { score: number; modifier: number }
-  >
-  abilityChecks: () => Record<
-    keyof typeof skills,
-    { modifier: number; proficient: boolean }
-  >
-  savingThrows: () => Record<
-    keyof typeof abilities,
-    { modifier: number; proficient: boolean }
-  >
+  abilityScores: () => Record<Ability, { score: number; modifier: number }>
+  abilityChecks: () => Record<Skill, { modifier: number; proficient: boolean }>
+  savingThrows: () => Record<Ability, { modifier: number; proficient: boolean }>
 }
 
 export const useCharacter = create<CharacterState>()((set, get) => ({
@@ -71,35 +56,35 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
     set(() => ({ abilityScoreChoices })),
   proficiencyBonus: () => proficiencyBonus(get().level),
   abilityScores: () =>
-    Object.keys(abilities).reduce(
+    Object.keys(api.abilities).reduce(
       (acc, abilityId) => {
         const increase =
           // calculate race ability score increase
-          (raceAbilityScoreIncreases.find(
+          (api.raceAbilityScoreIncreases.find(
             (x) => x.raceId === get().raceId && x.abilityId === abilityId,
           )?.increase ?? 0) +
           // calculate subrace ability score increase
-          (subraceAbilityScoreIncreases.find(
+          (api.subraceAbilityScoreIncreases.find(
             (x) =>
               x.subraceId ===
-                Object.entries(subraces).find(
+                Object.entries(api.subraces).find(
                   (x) => x[1].raceId === get().raceId,
                 )?.[0] && x.abilityId === abilityId,
           )?.increase ?? 0)
 
         const abilityScore =
-          get().abilityScoreChoices?.[abilityId as keyof typeof abilities] ?? 10
+          get().abilityScoreChoices?.[abilityId as Ability] ?? 10
 
         const score = abilityScore + increase
         const modifier = Math.floor((score - 10) / 2)
 
-        acc[abilityId as keyof typeof abilities] = { score, modifier }
+        acc[abilityId as Ability] = { score, modifier }
         return acc
       },
-      {} as Record<keyof typeof abilities, { score: number; modifier: number }>,
+      {} as Record<Ability, { score: number; modifier: number }>,
     ),
   abilityChecks: () =>
-    Object.entries(skills).reduce(
+    Object.entries(api.skills).reduce(
       (acc, [skillId, { abilityId }]) => {
         const proficiencyBonus = get().proficiencyBonus()
         const proficient =
@@ -108,32 +93,26 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
         const abilityModifier = get().abilityScores()[abilityId].modifier
         const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
-        acc[skillId as keyof typeof skills] = { modifier, proficient }
+        acc[skillId as Skill] = { modifier, proficient }
         return acc
       },
-      {} as Record<
-        keyof typeof skills,
-        { modifier: number; proficient: boolean }
-      >,
+      {} as Record<Skill, { modifier: number; proficient: boolean }>,
     ),
   savingThrows: () =>
     Object.keys(get().abilityScores()).reduce(
       (acc, abilityId) => {
         const proficiencyBonus = get().proficiencyBonus()
-        const proficient = classSavingThrowProficiencies.some(
+        const proficient = api.classSavingThrowProficiencies.some(
           (x) => x.classId === get().classId && x.abilityId === abilityId,
         )
         const abilityModifier =
-          get().abilityScores()[abilityId as keyof typeof abilities].modifier
+          get().abilityScores()[abilityId as Ability].modifier
 
         const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
-        acc[abilityId as keyof typeof abilities] = { modifier, proficient }
+        acc[abilityId as Ability] = { modifier, proficient }
         return acc
       },
-      {} as Record<
-        keyof typeof abilities,
-        { modifier: number; proficient: boolean }
-      >,
+      {} as Record<Ability, { modifier: number; proficient: boolean }>,
     ),
 }))

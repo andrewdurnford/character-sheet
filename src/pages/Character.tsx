@@ -1,20 +1,13 @@
 import { useState } from "react"
 import { useCharacter } from "../stores/character"
-import { races } from "../api/races"
-import {
-  classStartingEquipment,
-  classWeaponProficiencies,
-  classes,
-} from "../api/classes"
 import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
-import { abilities, skills } from "../api/abilities"
-import { LinkButton } from "../components/Button"
-import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
-import { cn } from "../utils/tailwind"
 import { CharacterBackgroundForm } from "../forms/CharacterBackground"
-import { weaponData, weapons } from "../api/weapons"
+import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
+import { LinkButton } from "../components/Button"
+import { cn } from "../utils/tailwind"
+import { Ability, Skill, api } from "../api"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -27,8 +20,8 @@ export function Character() {
   const background = useCharacter((state) => state.background)
   const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
 
-  const raceName = raceId ? races[raceId].name : null
-  const className = classId ? `${classes[classId]} (${level})` : null
+  const raceName = raceId ? api.races[raceId].name : null
+  const className = classId ? `${api.classes[classId]} (${level})` : null
 
   return (
     <div className="flex flex-col justify-between gap-6 sm:flex-row">
@@ -125,7 +118,7 @@ function CharacterAbilities() {
               }}
             >
               <div className="flex justify-between gap-4">
-                <span>{abilities[abilityId as keyof typeof abilities]}</span>
+                <span>{api.abilities[abilityId as Ability]}</span>
                 <div className="flex gap-2">
                   {score} ({modifier >= 0 && "+"}
                   {modifier})
@@ -154,7 +147,7 @@ function CharacterSavingThrows() {
               style={{ listStyleType: proficient ? "disc" : "circle" }}
             >
               <div className="flex justify-between gap-4">
-                {abilities[abilityId as keyof typeof abilities]}
+                {api.abilities[abilityId as Ability]}
                 <span>
                   ({modifier >= 0 && "+"}
                   {modifier})
@@ -183,7 +176,7 @@ function CharacterSkills() {
               style={{ listStyleType: proficient ? "disc" : "circle" }}
             >
               <div className="flex justify-between gap-4">
-                <span>{skills[skillId as keyof typeof skills].name}</span>
+                <span>{api.skills[skillId as Skill].name}</span>
                 <span>
                   {modifier >= 0 && "+"}
                   {modifier}
@@ -209,15 +202,15 @@ export function WeaponAttacks() {
     <section>
       <h2 className="mb-2 font-medium">Attacks</h2>
       <ul>
-        {classStartingEquipment
+        {api.classStartingEquipment
           .filter((x) => x.classId === classId)
           .map(({ weaponId }) => {
-            const weapon = weaponData[weaponId]
+            const weapon = api.weaponData[weaponId]
             const abilityModifier =
               abilityScores()[
                 weapon.type === "melee" ? "strength" : "dexterity"
               ].modifier
-            const proficient = classWeaponProficiencies.some(
+            const proficient = api.classWeaponProficiencies.some(
               (x) => x.classId === classId && x.weapons.includes(weaponId),
             )
             const modifier =
@@ -225,7 +218,7 @@ export function WeaponAttacks() {
 
             return (
               <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
-                {weapons[weaponId]}, +{modifier}, {weapon.roll.count}d
+                {api.weapons[weaponId]}, +{modifier}, {weapon.roll.count}d
                 {weapon.roll.die} +{abilityModifier} {weapon.damageType}
               </li>
             )

@@ -7,8 +7,7 @@ import {
   CharacterBackgroundSchema,
   characterBackgroundSchema,
 } from "../lib/characterBackgroundSchema"
-import { skills } from "../api/abilities"
-import { classes } from "../api/classes"
+import { Skill, api } from "../api"
 
 interface CharacterNameBackgroundProps {
   onCancel: () => void
@@ -72,16 +71,14 @@ export function CharacterBackgroundForm({
             className="mb-1"
           />
           <ul>
-            {Object.entries(skills).map(([skillId, { name }]) => {
+            {Object.entries(api.skills).map(([skillId, { name }]) => {
               const classIncludesSkill =
                 !!classId &&
-                !!classSkillProficiencyChoices?.includes(
-                  skillId as keyof typeof skills,
-                )
+                !!classSkillProficiencyChoices?.includes(skillId as Skill)
               const selectedMax =
                 selectedSkillIds &&
                 selectedSkillIds.length >= 2 &&
-                !selectedSkillIds?.includes(skillId as keyof typeof skills)
+                !selectedSkillIds?.includes(skillId as Skill)
 
               return (
                 <Checkbox
@@ -90,7 +87,7 @@ export function CharacterBackgroundForm({
                   label={name}
                   subLabel={
                     classIncludesSkill
-                      ? `class: ${classes[classId]}`
+                      ? `class: ${api.classes[classId]}`
                       : undefined
                   }
                   disabled={selectedMax || classIncludesSkill}
