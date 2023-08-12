@@ -2,7 +2,10 @@ import { useState } from "react"
 import { useCharacterStore } from "../useCharacterStore"
 import { races } from "../api/races"
 import { classes } from "../api/classes"
-import { CharacterClassForm } from "../forms/CharacterClassForm"
+import {
+  CharacterClassForm,
+  ClassStartingWeapons,
+} from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../api/abilities"
@@ -78,6 +81,7 @@ export function Character() {
         <CharacterAbilities />
         <CharacterSavingThrows />
         <CharacterSkills />
+        {classId && <ClassStartingWeapons classId={classId} />}
       </div>
     </div>
   )

@@ -1,4 +1,5 @@
 import { abilities, skills } from "./abilities"
+import { weapons } from "./weapons"
 
 export const classes = {
   barbarian: "Barbarian",
@@ -14,6 +15,35 @@ export const classes = {
   warlock: "Warlock",
   wizard: "Wizard",
 }
+
+interface ClassStartingEquipment {
+  classId: keyof typeof classes
+  weaponId: keyof typeof weapons
+  count?: number
+}
+
+// TODO: add choices and non-weapons
+export const classStartingEquipment: ClassStartingEquipment[] = [
+  { classId: "barbarian", weaponId: "greataxe" },
+  { classId: "barbarian", weaponId: "handaxe", count: 2 },
+  { classId: "barbarian", weaponId: "javelin", count: 4 },
+  { classId: "bard", weaponId: "rapier" },
+  { classId: "cleric", weaponId: "mace" },
+  { classId: "cleric", weaponId: "crossbow-light" },
+  { classId: "druid", weaponId: "scimitar" },
+  { classId: "fighter", weaponId: "longbow" },
+  { classId: "fighter", weaponId: "crossbow-light" },
+  { classId: "monk", weaponId: "shortsword" },
+  { classId: "paladin", weaponId: "javelin", count: 5 },
+  { classId: "ranger", weaponId: "shortsword", count: 2 },
+  { classId: "ranger", weaponId: "longbow" },
+  { classId: "rogue", weaponId: "rapier" },
+  { classId: "rogue", weaponId: "shortbow" },
+  { classId: "sorcerer", weaponId: "crossbow-light" },
+  { classId: "sorcerer", weaponId: "dagger", count: 2 },
+  { classId: "warlock", weaponId: "crossbow-light" },
+  { classId: "wizard", weaponId: "quarterstaff" },
+]
 
 interface ClassSkillProficiencyChoice {
   classId: keyof typeof classes

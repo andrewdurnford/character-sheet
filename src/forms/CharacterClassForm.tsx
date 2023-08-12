@@ -4,6 +4,7 @@ import { proficiencyBonus, useCharacterStore } from "../useCharacterStore"
 import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
+  classStartingEquipment,
   classes,
 } from "../api/classes"
 import { Button, LinkButton } from "../components/Button"
@@ -11,6 +12,8 @@ import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
 import { abilities, skills } from "../api/abilities"
 import { useEffect } from "react"
 import { CharacterClassSchema, characterClassSchema } from "../lib/types"
+import React from "react"
+import { weapons } from "../api/weapons"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -98,67 +101,70 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
           {...register("classId")}
         />
         {selectedId && (
-          <section>
-            <h2 className="mb-2 font-medium">Proficiencies</h2>
-            <div>
-              <h3>Saving Throws</h3>
-              <ul>
-                {classSavingThrowProficiencies
-                  .filter((x) => x.classId === selectedId)
-                  .map(({ abilityId }) => (
-                    <li
-                      key={`class-saving-throw-${abilityId}-proficiency`}
-                      className="ml-4 list-disc"
-                    >
-                      {abilities[abilityId]}
-                    </li>
-                  ))}
-              </ul>
-            </div>
-            {select && (
+          <React.Fragment>
+            <ClassStartingWeapons classId={selectedId} />
+            <section>
+              <h2 className="mb-2 font-medium">Proficiencies</h2>
               <div>
-                <div className="mb-1 mt-4 flex items-center gap-1">
-                  <h3 className="font-medium">
-                    Skills<span aria-hidden>*</span>
-                  </h3>
-                  <span className="text-sm">(Choose {select})</span>
-                </div>
-                <Error
-                  error={errors.skillProficiencyChoices?.message}
-                  className="mb-1"
-                />
-                {filter && (
-                  <ul>
-                    {filter.map((skillId) => {
-                      const backgroundIncludesSkill =
-                        !!background &&
-                        !!backgroundSkillProficiencyChoices?.includes(
-                          skillId as keyof typeof skills,
-                        )
-                      const selectedMax =
-                        selectedSkillIds &&
-                        selectedSkillIds.length >= select &&
-                        !selectedSkillIds?.includes(skillId)
-                      return (
-                        <Checkbox
-                          key={`${selectedId}-${skillId}`}
-                          value={skillId}
-                          label={skills[skillId].name}
-                          subLabel={
-                            backgroundIncludesSkill
-                              ? `background: ${background}`
-                              : undefined
-                          }
-                          disabled={selectedMax || backgroundIncludesSkill}
-                          {...register("skillProficiencyChoices")}
-                        />
-                      )
-                    })}
-                  </ul>
-                )}
+                <h3>Saving Throws</h3>
+                <ul>
+                  {classSavingThrowProficiencies
+                    .filter((x) => x.classId === selectedId)
+                    .map(({ abilityId }) => (
+                      <li
+                        key={`class-saving-throw-${abilityId}-proficiency`}
+                        className="ml-4 list-disc"
+                      >
+                        {abilities[abilityId]}
+                      </li>
+                    ))}
+                </ul>
               </div>
-            )}
-          </section>
+              {select && (
+                <div>
+                  <div className="mb-1 mt-4 flex items-center gap-1">
+                    <h3 className="font-medium">
+                      Skills<span aria-hidden>*</span>
+                    </h3>
+                    <span className="text-sm">(Choose {select})</span>
+                  </div>
+                  <Error
+                    error={errors.skillProficiencyChoices?.message}
+                    className="mb-1"
+                  />
+                  {filter && (
+                    <ul>
+                      {filter.map((skillId) => {
+                        const backgroundIncludesSkill =
+                          !!background &&
+                          !!backgroundSkillProficiencyChoices?.includes(
+                            skillId as keyof typeof skills,
+                          )
+                        const selectedMax =
+                          selectedSkillIds &&
+                          selectedSkillIds.length >= select &&
+                          !selectedSkillIds?.includes(skillId)
+                        return (
+                          <Checkbox
+                            key={`${selectedId}-${skillId}`}
+                            value={skillId}
+                            label={skills[skillId].name}
+                            subLabel={
+                              backgroundIncludesSkill
+                                ? `background: ${background}`
+                                : undefined
+                            }
+                            disabled={selectedMax || backgroundIncludesSkill}
+                            {...register("skillProficiencyChoices")}
+                          />
+                        )
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </section>
+          </React.Fragment>
         )}
         <div className="flex gap-2">
           <Button type="submit">Save</Button>
@@ -166,5 +172,26 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         </div>
       </div>
     </form>
+  )
+}
+
+interface ClassStartingWeaponsProps {
+  classId: keyof typeof classes
+}
+
+export function ClassStartingWeapons({ classId }: ClassStartingWeaponsProps) {
+  return (
+    <section>
+      <h2 className="mb-2 font-medium">Equipment</h2>
+      <ul>
+        {classStartingEquipment
+          .filter((x) => x.classId === classId)
+          .map(({ count, weaponId }) => (
+            <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
+              {weapons[weaponId]} {count && `x${count}`}
+            </li>
+          ))}
+      </ul>
+    </section>
   )
 }
