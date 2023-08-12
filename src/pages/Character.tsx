@@ -1,11 +1,8 @@
 import { useState } from "react"
 import { useCharacterStore } from "../useCharacterStore"
 import { races } from "../api/races"
-import { classes } from "../api/classes"
-import {
-  CharacterClassForm,
-  ClassStartingWeapons,
-} from "../forms/CharacterClassForm"
+import { classStartingEquipment, classes } from "../api/classes"
+import { CharacterClassForm } from "../forms/CharacterClassForm"
 import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { abilities, skills } from "../api/abilities"
@@ -13,6 +10,7 @@ import { LinkButton } from "../components/Button"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
 import { cn } from "../utils"
 import { CharacterBackgroundForm } from "../forms/CharacterBackground"
+import { weaponDamage, weapons } from "../api/weapons"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -81,7 +79,7 @@ export function Character() {
         <CharacterAbilities />
         <CharacterSavingThrows />
         <CharacterSkills />
-        {classId && <ClassStartingWeapons classId={classId} />}
+        <WeaponAttacks />
       </div>
     </div>
   )
@@ -193,5 +191,29 @@ function CharacterSkills() {
         )}
       </ul>
     </div>
+  )
+}
+
+export function WeaponAttacks() {
+  const classId = useCharacterStore((state) => state.classId)
+
+  if (!classId) return null
+
+  // TODO: attack bonus
+  // TODO: proficiency
+  return (
+    <section>
+      <h2 className="mb-2 font-medium">Attacks</h2>
+      <ul>
+        {classStartingEquipment
+          .filter((x) => x.classId === classId)
+          .map(({ weaponId }) => (
+            <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
+              {weapons[weaponId]}, {weaponDamage[weaponId].roll.count}d
+              {weaponDamage[weaponId].roll.die} {weaponDamage[weaponId].type}
+            </li>
+          ))}
+      </ul>
+    </section>
   )
 }
