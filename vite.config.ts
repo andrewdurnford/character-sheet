@@ -9,5 +9,9 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./tests/setupTests.js",
+    coverage: {
+      provider: "v8",
+      exclude: ["src/utils.ts", "src/api", "src/lib/types.ts"],
+    },
   },
 })
