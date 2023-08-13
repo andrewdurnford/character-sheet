@@ -136,8 +136,31 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
       },
       {} as Record<Ability, { modifier: number; proficient: boolean }>,
     ),
-  // TODO: add armor
-  armorClass: () => 10 + get().abilityScores().dexterity.modifier,
+  // TODO: equip different armors from inventory
+  armorClass: () => {
+    // TODO: class armor choices
+    const armorId = api.classStartingArmor.find(
+      (x) => x.classId === get().classId,
+    )?.armorId
+    const armor = !armorId ? null : api.armor[armorId]
+    const dexMod = get().abilityScores().dexterity.modifier
+
+    // TODO: add shields
+    // light -> + dex modifier
+    // medium -> + dex modifier (max 2)
+    // heavy -> no modifier
+    if (armor?.type === "light") {
+      return armor.armorClass + dexMod
+    }
+    if (armor?.type === "medium") {
+      return armor.armorClass + (dexMod > 2 ? 2 : dexMod)
+    }
+    if (armor?.type === "heavy") {
+      return armor.armorClass
+    }
+    // unarmored
+    return 10 + dexMod
+  },
   maxHitPoints: () => {
     const classId = get().classId
     const level = get().level

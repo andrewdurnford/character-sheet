@@ -1,4 +1,5 @@
 import { abilities, skills } from "./abilities"
+import { Armor } from "./equipment"
 import { weapons } from "./weapons"
 
 export type Class =
@@ -33,6 +34,24 @@ export const classes: Record<
   warlock:   { name: "Warlock",   hitDice: 8  },
   wizard:    { name: "Wizard",    hitDice: 6  },
 }
+
+interface ClassStartingArmor {
+  classId: keyof typeof classes
+  armorId: Armor
+}
+
+// TODO: add shields
+// prettier-ignore
+export const classStartingArmor: ClassStartingArmor[] = [
+  { classId: "bard",    armorId: "leather" },
+  { classId: "cleric",  armorId: "scale-mail" },
+  { classId: "druid",   armorId: "leather" },
+  { classId: "fighter", armorId: "chain-mail" },
+  { classId: "paladin", armorId: "chain-mail" },
+  { classId: "ranger",  armorId: "scale-mail" },
+  { classId: "rogue",   armorId: "leather" },
+  { classId: "warlock", armorId: "leather" },
+]
 
 interface ClassStartingEquipment {
   classId: keyof typeof classes

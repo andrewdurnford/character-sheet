@@ -5,7 +5,9 @@ import {
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
   classWeaponProficiencies,
+  classStartingArmor,
 } from "./classes"
+import { armor } from "./equipment"
 import {
   races,
   raceAbilityScoreIncreases,
@@ -18,6 +20,7 @@ export const api = {
   abilities,
   skills,
   classes,
+  classStartingArmor,
   classStartingEquipment,
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
@@ -26,6 +29,7 @@ export const api = {
   raceAbilityScoreIncreases,
   subraces,
   subraceAbilityScoreIncreases,
+  armor,
   weapons,
   weaponData,
 }
@@ -74,3 +78,4 @@ export type Skill =
 
 export type { Class } from "./classes"
 export type { Race, Subrace } from "./races"
+export type { Armor } from "./equipment"

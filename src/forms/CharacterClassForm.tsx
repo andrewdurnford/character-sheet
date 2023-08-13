@@ -166,6 +166,9 @@ type ClassProps = {
 }
 
 export function ClassStartingWeapons({ classId }: ClassProps) {
+  const armorId = api.classStartingArmor.find((x) => x.classId === classId)
+    ?.armorId
+
   return (
     <section>
       <h2 className="mb-2 font-medium">Equipment</h2>
@@ -177,6 +180,9 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
               {api.weapons[weaponId]} {count && `x${count}`}
             </li>
           ))}
+        {armorId && (
+          <li className="ml-4 list-disc">{api.armor[armorId].name} Armor</li>
+        )}
       </ul>
     </section>
   )
