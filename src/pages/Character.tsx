@@ -11,6 +11,7 @@ import { Ability, Skill, api } from "../api"
 import { mod } from "../api/utils"
 import { Input } from "../components/Input"
 import { useForm } from "react-hook-form"
+import { List } from "../components/List"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -125,13 +126,7 @@ function CharacterAbilities() {
       <ul>
         {Object.entries(abilityScores()).map(
           ([abilityId, { score, modifier }]) => (
-            <li
-              key={abilityId}
-              className="ml-4"
-              style={{
-                listStyleType: "disclosure-closed",
-              }}
-            >
+            <List key={abilityId}>
               <div className="flex justify-between gap-4">
                 <span>{api.abilities[abilityId as Ability]}</span>
                 <div className="flex gap-2">
@@ -139,7 +134,7 @@ function CharacterAbilities() {
                   {modifier})
                 </div>
               </div>
-            </li>
+            </List>
           ),
         )}
       </ul>
@@ -156,10 +151,10 @@ function CharacterSavingThrows() {
       <ul>
         {Object.entries(savingThrows()).map(
           ([abilityId, { modifier, proficient }]) => (
-            <li
+            <List
               key={abilityId}
-              className={cn("ml-4", proficient && "font-semibold")}
-              style={{ listStyleType: proficient ? "disc" : "circle" }}
+              className={cn(proficient && "font-semibold")}
+              style={proficient ? "disc" : "circle"}
             >
               <div className="flex justify-between gap-4">
                 {api.abilities[abilityId as Ability]}
@@ -168,7 +163,7 @@ function CharacterSavingThrows() {
                   {modifier})
                 </span>
               </div>
-            </li>
+            </List>
           ),
         )}
       </ul>
@@ -185,10 +180,10 @@ function CharacterSkills() {
       <ul>
         {Object.entries(abilityChecks()).map(
           ([skillId, { modifier, proficient }]) => (
-            <li
+            <List
               key={skillId}
-              className={cn("ml-4", proficient && "font-semibold")}
-              style={{ listStyleType: proficient ? "disc" : "circle" }}
+              className={cn(proficient && "font-semibold")}
+              style={proficient ? "disc" : "circle"}
             >
               <div className="flex justify-between gap-4">
                 <span>{api.skills[skillId as Skill].name}</span>
@@ -197,7 +192,7 @@ function CharacterSkills() {
                   {modifier}
                 </span>
               </div>
-            </li>
+            </List>
           ),
         )}
       </ul>
@@ -318,10 +313,10 @@ function WeaponAttacks() {
               abilityModifier + (proficient ? proficiencyBonus() : 0)
 
             return (
-              <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
+              <List key={`${classId}-${weaponId}`} style="disc">
                 {api.weapons[weaponId]}, {mod(modifier)}, {weapon.roll.count}d
                 {weapon.roll.die} {mod(abilityModifier)} {weapon.damageType}
-              </li>
+              </List>
             )
           })}
       </ul>

@@ -9,6 +9,7 @@ import {
   characterRaceSchema,
 } from "../lib/characterRaceSchema"
 import { Ability, Subrace, api } from "../api"
+import { List } from "../components/List"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
@@ -89,13 +90,13 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                 {abilityIncreases.map(({ abilityId, increase }) => {
                   if (!abilityId) return null
                   return (
-                    <li
+                    <List
                       key={`race-ability-score-${abilityId}-increase`}
-                      className="ml-4 list-disc"
+                      style="disc"
                     >
                       {api.abilities[abilityId]} {increase > 0 && "+"}
                       {increase}
-                    </li>
+                    </List>
                   )
                 })}
                 {abilityIncreaseChoices.length > 0 && (
@@ -113,14 +114,16 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                             !selectedAbilities.includes(abilityId as Ability)
 
                           return (
-                            <li key={`race-ability-score-choice-${abilityId}`}>
+                            <List
+                              key={`race-ability-score-choice-${abilityId}`}
+                            >
                               <Checkbox
                                 value={abilityId}
                                 label={`${name} +1`}
                                 disabled={selectedMax}
                                 {...register("abilityScoreIncreaseChoices")}
                               />
-                            </li>
+                            </List>
                           )
                         })}
                     </ul>
@@ -147,13 +150,13 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                     {api.subraceAbilityScoreIncreases
                       .filter((x) => x.subraceId === subraceId)
                       .map(({ abilityId, increase }) => (
-                        <li
+                        <List
                           key={`subrace-ability-score-${abilityId}-increase`}
-                          className="ml-4 list-disc"
+                          style="disc"
                         >
                           {api.abilities[abilityId]} {increase > 0 && "+"}
                           {increase}
-                        </li>
+                        </List>
                       ))}
                   </ul>
                 </div>

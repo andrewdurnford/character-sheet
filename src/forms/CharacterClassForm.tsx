@@ -14,6 +14,7 @@ import {
   characterClassSchema,
 } from "../lib/characterClassSchema"
 import { Class, Skill, api } from "../api"
+import { List } from "../components/List"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -195,12 +196,12 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
         {api.classStartingEquipment
           .filter((x) => x.classId === classId)
           .map(({ count, weaponId }) => (
-            <li key={`${classId}-${weaponId}`} className="ml-4 list-disc">
+            <List key={`${classId}-${weaponId}`} style="disc">
               {api.weapons[weaponId]} {count && `x${count}`}
-            </li>
+            </List>
           ))}
-        {armor && <li className="ml-4 list-disc">{armor.name} Armor</li>}
-        {shield && <li className="ml-4 list-disc">Shield</li>}
+        {armor && <List style="disc">{armor.name} armor</List>}
+        {shield && <List style="disc">Shield</List>}
       </ul>
     </section>
   )
@@ -214,12 +215,12 @@ function ClassSavingThrowProficiencies({ classId }: ClassProps) {
         {api.classSavingThrowProficiencies
           .filter((x) => x.classId === classId)
           .map(({ abilityId }) => (
-            <li
+            <List
               key={`class-saving-throw-${abilityId}-proficiency`}
-              className="ml-4 list-disc"
+              style="disc"
             >
               {api.abilities[abilityId]}
-            </li>
+            </List>
           ))}
       </ul>
     </section>
@@ -237,23 +238,21 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
         {weapons &&
           weapons.length > 0 &&
           weapons.map((weaponId) => (
-            <li
-              key={`class-weapon-${weaponId}-proficiency`}
-              className="ml-4 list-disc"
-            >
+            <List key={`class-weapon-${weaponId}-proficiency`} style="disc">
               {api.weapons[weaponId]}
-            </li>
+            </List>
           ))}
         {categories &&
           categories.length > 0 &&
           categories.map((category) => (
-            <li
+            <List
               key={`class-weapon-category-${category}-proficiency`}
-              className="ml-4 list-disc italic"
+              className="italic"
+              style="disc"
             >
               {category.charAt(0).toUpperCase()}
               {category.substring(1)} weapons
-            </li>
+            </List>
           ))}
       </ul>
     </section>
@@ -271,13 +270,10 @@ function ClassArmorProficiencies({ classId }: ClassProps) {
         {types &&
           types.length > 0 &&
           types.map((type) => (
-            <li
-              key={`class-armor-${type}-proficiency`}
-              className="ml-4 list-disc"
-            >
+            <List key={`class-armor-${type}-proficiency`} style="disc">
               {type.charAt(0).toUpperCase()}
               {type.substring(1)} armor
-            </li>
+            </List>
           ))}
         {shield && <li className="ml-4 list-disc">Shields</li>}
       </ul>
