@@ -38,19 +38,20 @@ export const classes: Record<
 interface ClassStartingArmor {
   classId: keyof typeof classes
   armorId: Armor
+  shield?: boolean
 }
 
 // TODO: add shields
 // prettier-ignore
 export const classStartingArmor: ClassStartingArmor[] = [
-  { classId: "bard",    armorId: "leather" },
-  { classId: "cleric",  armorId: "scale-mail" },
-  { classId: "druid",   armorId: "leather" },
-  { classId: "fighter", armorId: "chain-mail" },
-  { classId: "paladin", armorId: "chain-mail" },
-  { classId: "ranger",  armorId: "scale-mail" },
-  { classId: "rogue",   armorId: "leather" },
-  { classId: "warlock", armorId: "leather" },
+  { classId: "bard",    armorId: "leather",                 },
+  { classId: "cleric",  armorId: "scale-mail", shield: true },
+  { classId: "druid",   armorId: "leather",    shield: true },
+  { classId: "fighter", armorId: "chain-mail",              },
+  { classId: "paladin", armorId: "chain-mail", shield: true },
+  { classId: "ranger",  armorId: "scale-mail",              },
+  { classId: "rogue",   armorId: "leather",                 },
+  { classId: "warlock", armorId: "leather",                 },
 ]
 
 interface ClassStartingEquipment {
