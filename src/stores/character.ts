@@ -21,7 +21,9 @@ interface CharacterState {
   background?: string
   backgroundSkillProficiencyChoices?: Skill[]
   raceAbilityScoreIncreaseChoices?: Ability[]
+  currentHitPoints: number
   setName: (name: string) => void
+  setCurrentHitPoints: (currentHitPoints: number) => void
   setRace: (raceId: Race, raceAbilityScoreIncreaseChoices?: Ability[]) => void
   setClass: (
     classId: Class,
@@ -52,7 +54,9 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
   classId: undefined,
   level: 1,
   background: "Acolyte",
+  currentHitPoints: 0,
   setName: (name) => set(() => ({ name })),
+  setCurrentHitPoints: (currentHitPoints) => set(() => ({ currentHitPoints })),
   setRace: (raceId, raceAbilityScoreIncreaseChoices) =>
     set(() => ({ raceId, raceAbilityScoreIncreaseChoices })),
   setClass: (classId, level, skillProficiencyChoices) =>

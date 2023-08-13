@@ -5,10 +5,12 @@ import { CharacterRaceForm } from "../forms/CharacterRaceForm"
 import { CharacterNameForm } from "../forms/CharacterNameForm"
 import { CharacterBackgroundForm } from "../forms/CharacterBackground"
 import { CharacterAbilityScoreForm } from "../forms/CharacterAbilityScoreForm"
-import { LinkButton } from "../components/Button"
+import { Button, LinkButton } from "../components/Button"
 import { cn } from "../utils/tailwind"
 import { Ability, Skill, api } from "../api"
 import { mod } from "../api/utils"
+import { Input } from "../components/Input"
+import { useForm } from "react-hook-form"
 
 export function Character() {
   const [tab, setTab] = useState<
@@ -203,19 +205,83 @@ function CharacterSkills() {
   )
 }
 
+type HitPointForm = {
+  current: number
+  max: number
+}
+
 function CharacterCombat() {
   const armorClass = useCharacter((s) => s.armorClass)
+  const currentHitPoints = useCharacter((s) => s.currentHitPoints)
   const maxHitPoints = useCharacter((s) => s.maxHitPoints)
+  const setCurrentHitPoints = useCharacter((s) => s.setCurrentHitPoints)
+  const [edit, setEdit] = useState(false)
+
+  const { handleSubmit, register, watch, setValue } = useForm<HitPointForm>({
+    defaultValues: {
+      current: currentHitPoints,
+      max: maxHitPoints(),
+    },
+  })
+
+  const current = watch("current")
+
+  const increment = () => setValue("current", current + 1)
+  const decrement = () => setValue("current", current - 1)
+
+  function onSubmit(data: HitPointForm) {
+    setCurrentHitPoints(data.current)
+    setEdit(false)
+  }
 
   return (
     <section>
       <div>
         Armor Class: <strong>{armorClass()}</strong>
       </div>
-      {maxHitPoints() > 0 && (
+      {!edit ? (
         <div>
-          Max Hit Points: <strong>{maxHitPoints()}</strong>
+          Hit Points:{" "}
+          <strong
+            className={cn(
+              currentHitPoints === 0 && "text-red-400",
+              currentHitPoints > maxHitPoints() && "text-green-400",
+            )}
+          >
+            {currentHitPoints} / {maxHitPoints()}
+          </strong>{" "}
+          <LinkButton className="inline-block" onClick={() => setEdit(true)}>
+            Edit
+          </LinkButton>
         </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <div className="flex items-end gap-2">
+              <Input label="Hit Points" readOnly {...register("current")} />
+              <strong className="mb-[1px]">/ {maxHitPoints()}</strong>
+            </div>
+            <div className="mt-2 flex gap-1">
+              <Button type="button" onClick={increment}>
+                +
+              </Button>
+              <Button
+                type="button"
+                onClick={decrement}
+                disabled={current === 0}
+              >
+                -
+              </Button>
+              <Button type="submit">Confirm</Button>
+              <LinkButton
+                onClick={() => setEdit(false)}
+                className="inline-block"
+              >
+                Cancel
+              </LinkButton>
+            </div>
+          </div>
+        </form>
       )}
       <WeaponAttacks />
     </section>

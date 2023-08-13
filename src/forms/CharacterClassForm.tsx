@@ -98,6 +98,9 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         />
         {selectedId && (
           <React.Fragment>
+            <section className="mb-[-0.5rem]">
+              Hit Dice: <code>1d{api.classes[selectedId].hitDice}</code>
+            </section>
             <ClassStartingWeapons classId={selectedId} />
             <section>
               <h2 className="mb-2 font-medium">Proficiencies</h2>
