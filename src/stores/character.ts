@@ -8,6 +8,18 @@ export function proficiencyBonus(level: number) {
   }
   return Math.floor(level / 4) + 2
 }
+export function calculateMaxHitPoints(
+  classId: Class | undefined,
+  level: number,
+  modifier: number,
+) {
+  if (!classId) return 0
+
+  const hitDice = api.classes[classId].hitDice
+
+  // calculate average for every level > 1
+  return hitDice + modifier + (hitDice / 2 + 1 + modifier) * (level - 1)
+}
 
 interface CharacterState {
   name: string
@@ -161,16 +173,10 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
     }
     return base + shieldMod
   },
-  maxHitPoints: () => {
-    const classId = get().classId
-    const level = get().level
-    const modifier = get().abilityScores().constitution.modifier
-
-    if (!classId) return 0
-
-    const hitDice = api.classes[classId].hitDice
-
-    // calculate average for every level > 1
-    return hitDice + modifier + (hitDice / 2 + 1 + modifier) * (level - 1)
-  },
+  maxHitPoints: () =>
+    calculateMaxHitPoints(
+      get().classId,
+      get().level,
+      get().abilityScores().constitution.modifier,
+    ),
 }))

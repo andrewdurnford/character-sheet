@@ -1,6 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { proficiencyBonus, useCharacter } from "../stores/character"
+import {
+  calculateMaxHitPoints,
+  proficiencyBonus,
+  useCharacter,
+} from "../stores/character"
 import { Button, LinkButton } from "../components/Button"
 import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
 import { useEffect } from "react"
@@ -26,6 +30,9 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
     (state) => state.backgroundSkillProficiencyChoices,
   )
   const setClass = useCharacter((state) => state.setClass)
+  const abilityScores = useCharacter((s) => s.abilityScores)
+  const setCurrentHitPoints = useCharacter((s) => s.setCurrentHitPoints)
+
   const {
     watch,
     handleSubmit,
@@ -48,7 +55,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
   // Clear choices if class is changed
   useEffect(() => {
     if (selectedId !== classId) {
-      setValue("skillProficiencyChoices", undefined)
+      setValue("skillProficiencyChoices", [])
     }
   }, [selectedId, classId, setValue])
 
@@ -61,6 +68,16 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
 
   function onSubmit(data: CharacterClassSchema) {
     setClass(data.classId, data.level, data.skillProficiencyChoices)
+    // set current hit points to max when class changes
+    if (classId !== data.classId) {
+      setCurrentHitPoints(
+        calculateMaxHitPoints(
+          data.classId,
+          data.level,
+          abilityScores().constitution.modifier,
+        ),
+      )
+    }
     onCancel()
   }
 
