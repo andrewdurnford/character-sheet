@@ -43,9 +43,9 @@ pnpm run dev
     - [x] average
     - [ ] custom roll
 - [ ] proficiencies
-  - [ ] armor
-    - [ ] armor type
-    - [ ] shield
+  - [x] armor
+    - [x] armor type
+    - [x] shield
   - [x] weapons
     - [x] weapon
     - [x] weapon category

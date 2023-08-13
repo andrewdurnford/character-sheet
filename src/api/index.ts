@@ -6,6 +6,7 @@ import {
   classSkillProficiencyChoices,
   classWeaponProficiencies,
   classStartingArmor,
+  classArmorProficiencies,
 } from "./classes"
 import { armor } from "./equipment"
 import {
@@ -22,6 +23,7 @@ export const api = {
   classes,
   classStartingArmor,
   classStartingEquipment,
+  classArmorProficiencies,
   classSavingThrowProficiencies,
   classSkillProficiencyChoices,
   classWeaponProficiencies,

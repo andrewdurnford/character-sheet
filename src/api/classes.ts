@@ -1,5 +1,5 @@
 import { abilities, skills } from "./abilities"
-import { Armor } from "./equipment"
+import { Armor, ArmorType } from "./equipment"
 import { weapons } from "./weapons"
 
 export type Class =
@@ -80,6 +80,34 @@ export const classStartingEquipment: ClassStartingEquipment[] = [
   { classId: "sorcerer", weaponId: "dagger", count: 2 },
   { classId: "warlock", weaponId: "crossbow-light" },
   { classId: "wizard", weaponId: "quarterstaff" },
+]
+
+// TODO: armor proficiency
+// Anyone can put on a suit of armor or strap a shield to an arm. Only those
+// proficient in the armor’s use know how to wear it effectively, however. Your
+// class gives you proficiency with certain types of armor. If you wear armor
+// that you lack proficiency with, you have disadvantage on any ability check,
+// saving throw, or attack roll that involves Strength or Dexterity, and you
+// can’t cast spells.
+
+// prettier-ignore
+export const classArmorProficiencies: Array<{
+  classId: keyof typeof classes
+  types: ArmorType[]
+  shield?: boolean
+}> = [
+  { classId: 'barbarian', types: ["light", "medium"],          shield: true },
+  { classId: 'bard',      types: ["light"],                                 },
+  { classId: 'cleric',    types: ["light", "medium"],          shield: true },
+  { classId: 'druid',     types: ["light", "medium"],          shield: true }, // TODO: wooden shield
+  { classId: 'fighter',   types: ["light", "medium", "heavy"], shield: true },
+  { classId: 'monk',      types: []                                         },
+  { classId: 'paladin',   types: ["light", "medium", "heavy"], shield: true },
+  { classId: 'ranger',    types: ["light", "medium"],          shield: true },
+  { classId: 'rogue',     types: ["light"],                                 },
+  { classId: 'sorcerer',  types: []                                         },
+  { classId: 'warlock',   types: ["light"],                                 },
+  { classId: 'wizard',    types: [],                                        },
 ]
 
 // prettier-ignore

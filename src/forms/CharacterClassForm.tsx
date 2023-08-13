@@ -121,6 +121,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             <ClassStartingWeapons classId={selectedId} />
             <section>
               <h2 className="mb-2 font-medium">Proficiencies</h2>
+              <ClassArmorProficiencies classId={selectedId} />
               <ClassSavingThrowProficiencies classId={selectedId} />
               <ClassWeaponProficiencies classId={selectedId} />
               {select && (
@@ -208,7 +209,7 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
 function ClassSavingThrowProficiencies({ classId }: ClassProps) {
   return (
     <section>
-      <h3 className="italic">Saving Throws</h3>
+      <h3 className="font-medium italic">Saving Throws</h3>
       <ul>
         {api.classSavingThrowProficiencies
           .filter((x) => x.classId === classId)
@@ -231,7 +232,7 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
 
   return (
     <section>
-      <h3 className="italic">Weapons</h3>
+      <h3 className="font-medium italic">Weapons</h3>
       <ul>
         {weapons &&
           weapons.length > 0 &&
@@ -254,6 +255,31 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
               {category.substring(1)} weapons
             </li>
           ))}
+      </ul>
+    </section>
+  )
+}
+
+function ClassArmorProficiencies({ classId }: ClassProps) {
+  const { types, shield } =
+    api.classArmorProficiencies.find((x) => x.classId === classId) || {}
+
+  return (
+    <section>
+      <h3 className="font-medium italic">Armor</h3>
+      <ul>
+        {types &&
+          types.length > 0 &&
+          types.map((type) => (
+            <li
+              key={`class-armor-${type}-proficiency`}
+              className="ml-4 list-disc"
+            >
+              {type.charAt(0).toUpperCase()}
+              {type.substring(1)} armor
+            </li>
+          ))}
+        {shield && <li className="ml-4 list-disc">Shields</li>}
       </ul>
     </section>
   )
