@@ -37,6 +37,7 @@ interface CharacterState {
   ) => void
   proficiencyBonus: () => number
   initiative: () => number
+  speed: () => number
   abilityScores: () => Record<Ability, { score: number; modifier: number }>
   abilityChecks: () => Record<Skill, { modifier: number; proficient: boolean }>
   savingThrows: () => Record<Ability, { modifier: number; proficient: boolean }>
@@ -62,6 +63,10 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
     set(() => ({ abilityScoreChoices })),
   proficiencyBonus: () => proficiencyBonus(get().level),
   initiative: () => get().abilityScores().dexterity.modifier,
+  speed: () => {
+    const raceId = get().raceId
+    return raceId ? api.races[raceId].speed : 0
+  },
   abilityScores: () =>
     Object.keys(api.abilities).reduce(
       (acc, abilityId) => {

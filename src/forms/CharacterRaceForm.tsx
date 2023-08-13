@@ -81,6 +81,9 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
         {selectedId && (
           <React.Fragment>
             <section>
+              <div>Speed: {api.races[selectedId].speed} feet</div>
+            </section>
+            <section>
               <h3>Ability Score Increase</h3>
               <ul>
                 {abilityIncreases.map(({ abilityId, increase }) => {

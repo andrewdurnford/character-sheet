@@ -72,17 +72,5 @@ export type Skill =
   | "stealth"
   | "survival"
 
-export type Race =
-  | "dwarf"
-  | "elf"
-  | "halfling"
-  | "human"
-  | "dragonborn"
-  | "gnome"
-  | "half-elf"
-  | "half-orc"
-  | "tiefling"
-
-export type Subrace = "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome"
-
 export type { Class } from "./classes"
+export type { Race, Subrace } from "./races"

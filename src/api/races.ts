@@ -1,15 +1,27 @@
 import { abilities } from "./abilities"
 
-export const races = {
-  dwarf: { name: "Dwarf" },
-  elf: { name: "Elf" },
-  halfling: { name: "Halfling" },
-  human: { name: "Human" },
-  dragonborn: { name: "Dragonborn" },
-  gnome: { name: "Gnome" },
-  "half-elf": { name: "Half-Elf" },
-  "half-orc": { name: "Half-Orc" },
-  tiefling: { name: "Tiefling" },
+export type Race =
+  | "dwarf"
+  | "elf"
+  | "halfling"
+  | "human"
+  | "dragonborn"
+  | "gnome"
+  | "half-elf"
+  | "half-orc"
+  | "tiefling"
+
+// prettier-ignore
+export const races: Record<Race, {name: string, speed: number}> = {
+  dwarf:      { name: "Dwarf",      speed: 25 },
+  elf:        { name: "Elf",        speed: 30 },
+  halfling:   { name: "Halfling",   speed: 25 },
+  human:      { name: "Human",      speed: 30 },
+  dragonborn: { name: "Dragonborn", speed: 30 },
+  gnome:      { name: "Gnome",      speed: 25 },
+  "half-elf": { name: "Half-Elf",   speed: 30 },
+  "half-orc": { name: "Half-Orc",   speed: 30 },
+  tiefling:   { name: "Tiefling",   speed: 30 },
 }
 
 interface RaceAbilityScoreIncrease {
@@ -41,15 +53,9 @@ export const raceAbilityScoreIncreases: RaceAbilityScoreIncrease[] = [
   { raceId: "tiefling",   abilityId: "charisma",     increase: 1 },
 ]
 
-interface Subrace {
-  name: string
-  raceId: keyof typeof races
-}
+export type Subrace = "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome"
 
-export const subraces: Record<
-  "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome",
-  Subrace
-> = {
+export const subraces: Record<Subrace, { raceId: Race; name: string }> = {
   "hill-dwarf": { raceId: "dwarf", name: "Hill Dwarf" },
   "high-elf": { raceId: "elf", name: "High Elf" },
   lightfoot: { raceId: "halfling", name: "Lightfoot" },

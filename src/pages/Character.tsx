@@ -21,6 +21,7 @@ export function Character() {
   const background = useCharacter((state) => state.background)
   const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
   const initiative = useCharacter((state) => state.initiative)
+  const speed = useCharacter((state) => state.speed)
 
   const raceName = raceId ? api.races[raceId].name : null
   const className = classId ? `${api.classes[classId].name} (${level})` : null
@@ -78,6 +79,11 @@ export function Character() {
           <div>
             Initiative: <strong>{mod(initiative())}</strong>
           </div>
+          {speed() > 0 && (
+            <div>
+              Speed: <strong>{speed()}</strong> feet
+            </div>
+          )}
         </section>
         <CharacterAbilities />
         <CharacterSavingThrows />
