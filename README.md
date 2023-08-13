@@ -20,4 +20,66 @@ pnpm run dev
 
 ## Roadmap
 
-TODO
+### Race
+
+- [x] race
+- [ ] description
+- [x] ability score increase
+- [ ] age
+- [ ] alignment
+- [ ] size
+- [x] speed
+- [ ] languages
+- [x] subraces
+- [ ] traits\*
+
+### Class
+
+- [x] proficiency bonus
+- [x] hit points
+  - [x] hit dice
+  - [x] first level
+  - [x] higher levels
+    - [x] average
+    - [ ] custom roll
+- [ ] proficiencies
+  - [ ] armor
+    - [ ] armor type
+    - [ ] shield
+  - [ ] weapons
+    - [x] weapon
+    - [ ] weapon category
+  - [ ] tools
+  - [x] saving throws
+  - [x] skills
+- [ ] equipment
+  - [ ] armor
+    - [x] armor
+    - [x] shield
+    - [ ] armor choice
+  - [ ] gear
+  - [ ] tools
+  - [ ] weapons
+    - [x] weapon
+    - [ ] weapon choice
+    - [ ] weapon choice (if proficient)
+    - [ ] weapon category choice
+- [ ] features\*
+
+### Background
+
+- [x] background
+- [x] skill proficiencies
+- [ ] languages
+- [ ] equipment
+- [ ] characteristics
+  - [ ] personality traits
+  - [ ] ideals
+  - [ ] bonds
+  - [ ] flaws
+
+### Ability Scores
+
+- [x] point buy
+- [ ] standard array
+- [ ] custom roll
