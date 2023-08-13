@@ -9,12 +9,7 @@ import {
   classArmorProficiencies,
 } from "./classes"
 import { armor } from "./equipment"
-import {
-  races,
-  raceAbilityScoreIncreases,
-  subraces,
-  subraceAbilityScoreIncreases,
-} from "./races"
+import { races, raceIds } from "./races"
 import { weapons, weaponData } from "./weapons"
 
 export const api = {
@@ -28,9 +23,7 @@ export const api = {
   classSkillProficiencyChoices,
   classWeaponProficiencies,
   races,
-  raceAbilityScoreIncreases,
-  subraces,
-  subraceAbilityScoreIncreases,
+  raceIds,
   armor,
   weapons,
   weaponData,
@@ -79,5 +72,5 @@ export type Skill =
   | "survival"
 
 export type { Class } from "./classes"
-export type { Race, Subrace } from "./races"
+export type { Race } from "./races"
 export type { Armor } from "./equipment"

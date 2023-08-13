@@ -8,7 +8,7 @@ import {
   CharacterRaceSchema,
   characterRaceSchema,
 } from "../lib/characterRaceSchema"
-import { Ability, Subrace, api } from "../api"
+import { Ability, api } from "../api"
 import { List } from "../components/List"
 
 interface CharacterRaceFormProps {
@@ -39,26 +39,22 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
   })
   const selectedId = watch("raceId")
   const selectedAbilities = watch("abilityScoreIncreaseChoices")
-  const subraceId = Object.entries(api.subraces).find(
-    (x) => x[1].raceId === selectedId,
-  )?.[0] as Subrace
 
-  const abilityIncreases = api.raceAbilityScoreIncreases.filter(
-    (x) => x.raceId === selectedId && !!x.abilityId,
-  )
-  const abilityIncreaseChoices = api.raceAbilityScoreIncreases.filter(
-    (x) => x.raceId === selectedId && !x.abilityId,
-  )
+  const abilityIncreases = selectedId
+    ? api.races[selectedId].abilityScoreIncreases.filter((x) => !!x.abilityId)
+    : []
+  const abilityIncreaseChoices = selectedId
+    ? api.races[selectedId].abilityScoreIncreases.filter((x) => !x.abilityId)
+    : []
 
   useEffect(() => {
     // increases contains a null value
-    const hasChoices =
-      api.raceAbilityScoreIncreases.filter(
-        (x) => x.raceId === selectedId && !x.abilityId,
-      ).length > 0
-    console.log(hasChoices)
-
-    setValue("hasChoice", hasChoices)
+    if (selectedId) {
+      const hasChoices =
+        api.races[selectedId].abilityScoreIncreases.filter((x) => !x.abilityId)
+          .length > 0
+      setValue("hasChoice", hasChoices)
+    }
   }, [selectedId, setValue])
 
   function onSubmit(data: CharacterRaceSchema) {
@@ -71,8 +67,8 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
       <div className="flex flex-col items-start gap-6">
         <RadioGroup
           label="Race"
-          options={Object.entries(api.races).map(([raceId, { name }]) => ({
-            label: name,
+          options={api.raceIds.map((raceId) => ({
+            label: api.races[raceId].name,
             value: raceId,
           }))}
           error={errors.raceId?.message}
@@ -82,7 +78,7 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
         {selectedId && (
           <React.Fragment>
             <section>
-              <div>Speed: {api.races[selectedId].speed} feet</div>
+              <div>Speed: {api.races[selectedId].details.speed} feet</div>
             </section>
             <section>
               <h3>Ability Score Increase</h3>
@@ -140,24 +136,16 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
                 )}
               </ul>
             </section>
-            {subraceId && (
+            {api.races[selectedId].subrace && (
               <section>
                 <h2 className="mb-2 font-medium">Subrace</h2>
-                <h3 className="mb-2">{api.subraces[subraceId].name}</h3>
+                <h3 className="mb-2">{api.races[selectedId].subrace?.name}</h3>
                 <div>
                   <h4>Ability Score Increase</h4>
                   <ul>
-                    {api.subraceAbilityScoreIncreases
-                      .filter((x) => x.subraceId === subraceId)
-                      .map(({ abilityId, increase }) => (
-                        <List
-                          key={`subrace-ability-score-${abilityId}-increase`}
-                          style="disc"
-                        >
-                          {api.abilities[abilityId]} {increase > 0 && "+"}
-                          {increase}
-                        </List>
-                      ))}
+                    <List style="disc">
+                      {api.races[selectedId].subrace?.abilityScoreIncrease} +1
+                    </List>
                   </ul>
                 </div>
               </section>

@@ -29,6 +29,7 @@ pnpm run dev
 - [ ] alignment
 - [ ] size
 - [x] speed
+  - [ ] heavy armor
 - [ ] languages
 - [x] subraces
 - [ ] traits\*
@@ -55,8 +56,8 @@ pnpm run dev
 - [ ] equipment
   - [ ] armor
     - [x] armor
-    - [x] shield
     - [ ] armor choice
+    - [x] shield
   - [ ] gear
   - [ ] tools
   - [ ] weapons

@@ -81,11 +81,23 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
   initiative: () => get().abilityScores().dexterity.modifier,
   speed: () => {
     const raceId = get().raceId
-    return raceId ? api.races[raceId].speed : 0
+    return raceId ? api.races[raceId].details.speed : 0
   },
   abilityScores: () =>
     Object.keys(api.abilities).reduce(
       (acc, abilityId) => {
+        const raceId = get().raceId
+        const raceAbilityScoreIncrease = raceId
+          ? api.races[raceId].abilityScoreIncreases.find(
+              (x) => x.abilityId === abilityId,
+            )?.increase
+          : undefined
+        const subraceAbilityScoreIncrease = raceId
+          ? api.races[raceId].subrace?.abilityScoreIncrease === abilityId
+            ? 1
+            : undefined
+          : undefined
+
         const increase =
           // calculate race ability score increase choice
           (get().raceAbilityScoreIncreaseChoices?.some((x) => x === abilityId)
@@ -93,17 +105,9 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
               1
             : 0) +
           // calculate race ability score increase
-          (api.raceAbilityScoreIncreases.find(
-            (x) => x.raceId === get().raceId && x.abilityId === abilityId,
-          )?.increase ?? 0) +
+          (raceAbilityScoreIncrease ?? 0) +
           // calculate subrace ability score increase
-          (api.subraceAbilityScoreIncreases.find(
-            (x) =>
-              x.subraceId ===
-                Object.entries(api.subraces).find(
-                  (x) => x[1].raceId === get().raceId,
-                )?.[0] && x.abilityId === abilityId,
-          )?.increase ?? 0)
+          (subraceAbilityScoreIncrease ?? 0)
 
         const abilityScore =
           get().abilityScoreChoices?.[abilityId as Ability] ?? 10

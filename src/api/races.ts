@@ -1,4 +1,4 @@
-import { abilities } from "./abilities"
+import { Ability } from "."
 
 export type Race =
   | "dwarf"
@@ -11,66 +11,144 @@ export type Race =
   | "half-orc"
   | "tiefling"
 
-// prettier-ignore
-export const races: Record<Race, {name: string, speed: number}> = {
-  dwarf:      { name: "Dwarf",      speed: 25 },
-  elf:        { name: "Elf",        speed: 30 },
-  halfling:   { name: "Halfling",   speed: 25 },
-  human:      { name: "Human",      speed: 30 },
-  dragonborn: { name: "Dragonborn", speed: 30 },
-  gnome:      { name: "Gnome",      speed: 25 },
-  "half-elf": { name: "Half-Elf",   speed: 30 },
-  "half-orc": { name: "Half-Orc",   speed: 30 },
-  tiefling:   { name: "Tiefling",   speed: 30 },
+export const raceIds: Race[] = [
+  "dwarf",
+  "elf",
+  "halfling",
+  "human",
+  "dragonborn",
+  "gnome",
+  "half-elf",
+  "half-orc",
+  "tiefling",
+]
+
+const raceDictionary: Record<Race, string> = {
+  dwarf: "Dwarf",
+  elf: "Elf",
+  halfling: "Halfling",
+  human: "Human",
+  dragonborn: "Dragonborn",
+  gnome: "Gnome",
+  "half-elf": "Half-Elf",
+  "half-orc": "Half-Orc",
+  tiefling: "Tiefling",
 }
 
-interface RaceAbilityScoreIncrease {
-  raceId: keyof typeof races
-  abilityId: keyof typeof abilities | null // null indicates a choice
+type RaceAbilityScoreIncrease = {
+  abilityId: Ability | null
   increase: number
 }
 
-// prettier-ignore
-export const raceAbilityScoreIncreases: RaceAbilityScoreIncrease[] = [
-  { raceId: "dwarf",      abilityId: "constitution", increase: 2 },
-  { raceId: "elf",        abilityId: "dexterity",    increase: 2 },
-  { raceId: "halfling",   abilityId: "constitution", increase: 2 },
-  { raceId: "human",      abilityId: "strength",     increase: 1 },
-  { raceId: "human",      abilityId: "dexterity",    increase: 1 },
-  { raceId: "human",      abilityId: "constitution", increase: 1 },
-  { raceId: "human",      abilityId: "intelligence", increase: 1 },
-  { raceId: "human",      abilityId: "wisdom",       increase: 1 },
-  { raceId: "human",      abilityId: "charisma",     increase: 1 },
-  { raceId: "dragonborn", abilityId: "strength",     increase: 2 },
-  { raceId: "dragonborn", abilityId: "charisma",     increase: 1 },
-  { raceId: "gnome",      abilityId: "intelligence", increase: 2 },
-  { raceId: "half-elf",   abilityId: "charisma",     increase: 2 },
-  { raceId: "half-elf",   abilityId: null,           increase: 1 },
-  { raceId: "half-elf",   abilityId: null,           increase: 1 },
-  { raceId: "half-orc",   abilityId: "strength",     increase: 2 },
-  { raceId: "half-orc",   abilityId: "constitution", increase: 1 },
-  { raceId: "tiefling",   abilityId: "intelligence", increase: 2 },
-  { raceId: "tiefling",   abilityId: "charisma",     increase: 1 },
-]
-
-export type Subrace = "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome"
-
-export const subraces: Record<Subrace, { raceId: Race; name: string }> = {
-  "hill-dwarf": { raceId: "dwarf", name: "Hill Dwarf" },
-  "high-elf": { raceId: "elf", name: "High Elf" },
-  lightfoot: { raceId: "halfling", name: "Lightfoot" },
-  "rock-gnome": { raceId: "gnome", name: "Rock Gnome" },
+const raceAbilityScoreIncreases: Record<Race, RaceAbilityScoreIncrease[]> = {
+  dwarf: [{ abilityId: "constitution", increase: 2 }],
+  elf: [{ abilityId: "dexterity", increase: 2 }],
+  halfling: [{ abilityId: "constitution", increase: 2 }],
+  human: [
+    { abilityId: "strength", increase: 1 },
+    { abilityId: "dexterity", increase: 1 },
+    { abilityId: "constitution", increase: 1 },
+    { abilityId: "intelligence", increase: 1 },
+    { abilityId: "wisdom", increase: 1 },
+    { abilityId: "charisma", increase: 1 },
+  ],
+  dragonborn: [
+    { abilityId: "strength", increase: 2 },
+    { abilityId: "charisma", increase: 1 },
+  ],
+  gnome: [{ abilityId: "intelligence", increase: 2 }],
+  "half-elf": [
+    { abilityId: "charisma", increase: 2 },
+    { abilityId: null, increase: 1 },
+    { abilityId: null, increase: 1 },
+  ],
+  "half-orc": [
+    { abilityId: "strength", increase: 2 },
+    { abilityId: "constitution", increase: 1 },
+  ],
+  tiefling: [
+    { abilityId: "intelligence", increase: 2 },
+    { abilityId: "charisma", increase: 1 },
+  ],
 }
 
-interface SubraceAbilityScoreIncrease {
-  subraceId: keyof typeof subraces
-  abilityId: keyof typeof abilities
-  increase: number
+// TODO:
+// age
+// alignment
+// size
+type RaceDetails = { speed: number }
+
+const raceDetails: Record<Race, { speed: number }> = {
+  dwarf: { speed: 25 },
+  elf: { speed: 30 },
+  halfling: { speed: 25 },
+  human: { speed: 30 },
+  dragonborn: { speed: 30 },
+  gnome: { speed: 25 },
+  "half-elf": { speed: 30 },
+  "half-orc": { speed: 30 },
+  tiefling: { speed: 30 },
 }
 
-export const subraceAbilityScoreIncreases: SubraceAbilityScoreIncrease[] = [
-  { subraceId: "hill-dwarf", abilityId: "wisdom", increase: 1 },
-  { subraceId: "high-elf", abilityId: "intelligence", increase: 1 },
-  { subraceId: "lightfoot", abilityId: "charisma", increase: 1 },
-  { subraceId: "rock-gnome", abilityId: "constitution", increase: 1 },
-]
+// NOTE: each race may contain 1 subrace
+const raceSubraces: Record<Race, Subrace | null> = {
+  dwarf: "hill-dwarf",
+  elf: "high-elf",
+  halfling: null,
+  human: "lightfoot",
+  dragonborn: null,
+  gnome: "rock-gnome",
+  "half-elf": null,
+  "half-orc": null,
+  tiefling: null,
+}
+
+type Subrace = "hill-dwarf" | "high-elf" | "lightfoot" | "rock-gnome"
+
+const subraceDictionary: Record<Subrace, string> = {
+  "hill-dwarf": "Hill Dwarf",
+  "high-elf": "High Elf",
+  lightfoot: "Lightfoot",
+  "rock-gnome": "Rock Gnome",
+}
+
+// NOTE: each subrace only contails a single increase of +1
+const subraceAbilityScoreIncreases: Record<Subrace, Ability> = {
+  "hill-dwarf": "wisdom",
+  "high-elf": "intelligence",
+  lightfoot: "charisma",
+  "rock-gnome": "constitution",
+}
+
+type RaceSubrace = {
+  name: string
+  abilityScoreIncrease: Ability
+} | null
+
+type RaceTable = Record<
+  Race,
+  {
+    name: string
+    abilityScoreIncreases: RaceAbilityScoreIncrease[]
+    details: RaceDetails
+    subrace: RaceSubrace
+  }
+>
+
+export const races: RaceTable = raceIds.reduce((acc, raceId) => {
+  const subraceId = raceSubraces[raceId]
+  const subrace = !subraceId
+    ? null
+    : {
+        name: subraceDictionary[subraceId],
+        abilityScoreIncrease: subraceAbilityScoreIncreases[subraceId],
+      }
+
+  acc[raceId] = {
+    name: raceDictionary[raceId],
+    abilityScoreIncreases: raceAbilityScoreIncreases[raceId],
+    details: raceDetails[raceId],
+    subrace,
+  }
+  return acc
+}, {} as RaceTable)

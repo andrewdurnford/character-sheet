@@ -2,7 +2,7 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useCharacter } from "../stores/character"
 import { Input } from "../components/Input"
 import { Button, LinkButton } from "../components/Button"
-import { Ability, Subrace, api } from "../api"
+import { Ability, api } from "../api"
 
 type CharacterAbilityScoreFormValues = {
   abilities: Record<Ability, number>
@@ -83,19 +83,6 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
   const { watch, register, setValue } =
     useFormContext<CharacterAbilityScoreFormValues>()
 
-  const raceId = useCharacter((s) => s.raceId)
-  const choices = useCharacter((s) => s.raceAbilityScoreIncreaseChoices)
-  const subraceId = Object.entries(api.subraces).find(
-    (x) => x[1].raceId === raceId,
-  )?.[0]
-  const increaseByRaceChoice = choices?.some((x) => x === abilityId)
-  const increaseByRace = api.raceAbilityScoreIncreases.find(
-    (x) => x.raceId === raceId && x.abilityId === abilityId,
-  )?.increase
-  const increaseBySubrace = api.subraceAbilityScoreIncreases.find(
-    (x) => x.subraceId === subraceId && x.abilityId === abilityId,
-  )?.increase
-
   const points = watch("points")
   const total = watch(`abilities.${abilityId}`)
 
@@ -134,19 +121,49 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
           -
         </Button>
       </div>
-      {increaseByRaceChoice && raceId && (
-        <div className="mt-2">(+1 {api.races[raceId].name})</div>
-      )}
-      {increaseByRace && raceId && (
-        <div className="mt-2">
-          (+{increaseByRace} {api.races[raceId].name})
-        </div>
-      )}
-      {increaseBySubrace && subraceId && (
-        <div className="mt-2">
-          (+{increaseBySubrace} {api.subraces[subraceId as Subrace].name})
-        </div>
-      )}
+      <div className="flex flex-col gap-2">
+        <IncreaseByRaceChoice abilityId={abilityId} />
+        <IncreaseByRace abilityId={abilityId} />
+        <IncreaseBySubrace abilityId={abilityId} />
+      </div>
     </div>
   )
+}
+
+function IncreaseByRaceChoice({ abilityId }: AbilityScoreInputProps) {
+  const raceId = useCharacter((s) => s.raceId)
+  const choices = useCharacter((s) => s.raceAbilityScoreIncreaseChoices)
+
+  if (!raceId || !choices?.includes(abilityId)) return null
+
+  return <div>(+1 {api.races[raceId].name})</div>
+}
+
+function IncreaseByRace({ abilityId }: AbilityScoreInputProps) {
+  const raceId = useCharacter((s) => s.raceId)
+
+  if (!raceId) return null
+
+  const { increase } =
+    api.races[raceId].abilityScoreIncreases.find(
+      (x) => x.abilityId === abilityId,
+    ) || {}
+
+  if (!increase) return null
+
+  return (
+    <div>
+      (+{increase} {api.races[raceId].name})
+    </div>
+  )
+}
+
+function IncreaseBySubrace({ abilityId }: AbilityScoreInputProps) {
+  const raceId = useCharacter((s) => s.raceId)
+
+  if (!raceId) return null
+
+  if (api.races[raceId].subrace?.abilityScoreIncrease !== abilityId) return null
+
+  return <div>+1 {api.races[raceId].subrace?.name}</div>
 }
