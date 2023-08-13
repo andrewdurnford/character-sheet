@@ -20,6 +20,7 @@ export function Character() {
   const level = useCharacter((state) => state.level)
   const background = useCharacter((state) => state.background)
   const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
+  const initiative = useCharacter((state) => state.initiative)
 
   const raceName = raceId ? api.races[raceId].name : null
   const className = classId ? `${api.classes[classId].name} (${level})` : null
@@ -70,9 +71,14 @@ export function Character() {
       </div>
       <hr className="h-px border-0 bg-gray-300 sm:hidden" />
       <div className="flex flex-col gap-4">
-        <div>
-          Proficiency Bonus: <strong>+{proficiencyBonus()}</strong>
-        </div>
+        <section>
+          <div>
+            Proficiency Bonus: <strong>+{proficiencyBonus()}</strong>
+          </div>
+          <div>
+            Initiative: <strong>{mod(initiative())}</strong>
+          </div>
+        </section>
         <CharacterAbilities />
         <CharacterSavingThrows />
         <CharacterSkills />
@@ -200,9 +206,11 @@ function CharacterCombat() {
       <div>
         Armor Class: <strong>{armorClass()}</strong>
       </div>
-      <div>
-        Max Hit Points: <strong>{maxHitPoints()}</strong>
-      </div>
+      {maxHitPoints() > 0 && (
+        <div>
+          Max Hit Points: <strong>{maxHitPoints()}</strong>
+        </div>
+      )}
       <WeaponAttacks />
     </section>
   )
