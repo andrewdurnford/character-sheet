@@ -309,7 +309,10 @@ function WeaponAttacks() {
                 weapon.type === "melee" ? "strength" : "dexterity"
               ].modifier
             const proficient = api.classWeaponProficiencies.some(
-              (x) => x.classId === classId && x.weapons.includes(weaponId),
+              (x) =>
+                x.classId === classId &&
+                (x.weapons.includes(weaponId) ||
+                  x.categories.includes(weapon.category)),
             )
             const modifier =
               abilityModifier + (proficient ? proficiencyBonus() : 0)

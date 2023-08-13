@@ -50,53 +50,58 @@ type Roll = {
 
 type DamageType = "bludgeoning" | "piercing" | "slashing"
 
+type WeaponCategory = "simple" | "martial"
+
+type WeaponType = "melee" | "ranged"
+
 type Weapon = {
   roll: Roll
   damageType: DamageType
-  type: "melee" | "ranged"
+  type: WeaponType
+  category: WeaponCategory
 }
 
 // prettier-ignore
 export const weaponData: Record<keyof typeof weapons, Weapon> = {
   // simple melee
-  club:           { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'melee' },
-  dagger:         { roll: { count: 1, die: 4 }, damageType: "piercing",    type: 'melee' },
-  greatclub:      { roll: { count: 1, die: 8 }, damageType: "bludgeoning", type: 'melee' },
-  handaxe:        { roll: { count: 1, die: 6 }, damageType: "slashing",    type: 'melee' },
-  javelin:        { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'melee' },
-  "light-hammer": { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'melee' },
-  mace:           { roll: { count: 1, die: 6 }, damageType: "bludgeoning", type: 'melee' },
-  quarterstaff:   { roll: { count: 1, die: 6 }, damageType: "bludgeoning", type: 'melee' },
-  sickle:         { roll: { count: 1, die: 4 }, damageType: "slashing",    type: 'melee' },
-  spear:          { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'melee' },
+  club:           { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
+  dagger:         { roll: { count: 1, die: 4 }, damageType: "piercing",    type: 'melee', category: 'simple' },
+  greatclub:      { roll: { count: 1, die: 8 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
+  handaxe:        { roll: { count: 1, die: 6 }, damageType: "slashing",    type: 'melee', category: 'simple' },
+  javelin:        { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'melee', category: 'simple' },
+  "light-hammer": { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
+  mace:           { roll: { count: 1, die: 6 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
+  quarterstaff:   { roll: { count: 1, die: 6 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
+  sickle:         { roll: { count: 1, die: 4 }, damageType: "slashing",    type: 'melee', category: 'simple' },
+  spear:          { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'melee', category: 'simple' },
   // simple ranged
-  "crossbow-light": { roll: { count: 1, die: 8 }, damageType: "piercing",    type: 'ranged' },
-  dart:             { roll: { count: 1, die: 4 }, damageType: "piercing",    type: 'ranged' },
-  shortbow:         { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'ranged' },
-  sling:            { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'ranged' },
+  "crossbow-light": { roll: { count: 1, die: 8 }, damageType: "piercing",    type: 'ranged', category: 'simple' },
+  dart:             { roll: { count: 1, die: 4 }, damageType: "piercing",    type: 'ranged', category: 'simple' },
+  shortbow:         { roll: { count: 1, die: 6 }, damageType: "piercing",    type: 'ranged', category: 'simple' },
+  sling:            { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'ranged', category: 'simple' },
   // martial melee
-  battleaxe:   { roll: { count: 1, die: 8 },  damageType: "slashing",    type: 'melee' },
-  flail:       { roll: { count: 1, die: 8 },  damageType: "bludgeoning", type: 'melee' },
-  glaive:      { roll: { count: 1, die: 10 }, damageType: "slashing",    type: 'melee' },
-  greataxe:    { roll: { count: 1, die: 12 }, damageType: "slashing",    type: 'melee' },
-  greatsword:  { roll: { count: 2, die: 6 },  damageType: "slashing",    type: 'melee' },
-  halberd:     { roll: { count: 1, die: 10 }, damageType: "slashing",    type: 'melee' },
-  lance:       { roll: { count: 1, die: 12 }, damageType: "bludgeoning", type: 'melee' },
-  longsword:   { roll: { count: 1, die: 8 },  damageType: "slashing",    type: 'melee' },
-  maul:        { roll: { count: 2, die: 6 },  damageType: "bludgeoning", type: 'melee' },
-  morningstar: { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee' },
-  pike:        { roll: { count: 1, die: 10 }, damageType: "piercing",    type: 'melee' },
-  rapier:      { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee' },
-  scimitar:    { roll: { count: 1, die: 6 },  damageType: "slashing",    type: 'melee' },
-  shortsword:  { roll: { count: 1, die: 6 },  damageType: "piercing",    type: 'melee' },
-  trident:     { roll: { count: 1, die: 6 },  damageType: "piercing",    type: 'melee' },
-  "war-pick":  { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee' },
-  warhammer:   { roll: { count: 1, die: 8 },  damageType: "bludgeoning", type: 'melee' },
-  whip:        { roll: { count: 1, die: 4 },  damageType: "slashing",    type: 'melee' },
+  battleaxe:   { roll: { count: 1, die: 8 },  damageType: "slashing",    type: 'melee', category: 'martial' },
+  flail:       { roll: { count: 1, die: 8 },  damageType: "bludgeoning", type: 'melee', category: 'martial' },
+  glaive:      { roll: { count: 1, die: 10 }, damageType: "slashing",    type: 'melee', category: 'martial' },
+  greataxe:    { roll: { count: 1, die: 12 }, damageType: "slashing",    type: 'melee', category: 'martial' },
+  greatsword:  { roll: { count: 2, die: 6 },  damageType: "slashing",    type: 'melee', category: 'martial' },
+  halberd:     { roll: { count: 1, die: 10 }, damageType: "slashing",    type: 'melee', category: 'martial' },
+  lance:       { roll: { count: 1, die: 12 }, damageType: "bludgeoning", type: 'melee', category: 'martial' },
+  longsword:   { roll: { count: 1, die: 8 },  damageType: "slashing",    type: 'melee', category: 'martial' },
+  maul:        { roll: { count: 2, die: 6 },  damageType: "bludgeoning", type: 'melee', category: 'martial' },
+  morningstar: { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee', category: 'martial' },
+  pike:        { roll: { count: 1, die: 10 }, damageType: "piercing",    type: 'melee', category: 'martial' },
+  rapier:      { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee', category: 'martial' },
+  scimitar:    { roll: { count: 1, die: 6 },  damageType: "slashing",    type: 'melee', category: 'martial' },
+  shortsword:  { roll: { count: 1, die: 6 },  damageType: "piercing",    type: 'melee', category: 'martial' },
+  trident:     { roll: { count: 1, die: 6 },  damageType: "piercing",    type: 'melee', category: 'martial' },
+  "war-pick":  { roll: { count: 1, die: 8 },  damageType: "piercing",    type: 'melee', category: 'martial' },
+  warhammer:   { roll: { count: 1, die: 8 },  damageType: "bludgeoning", type: 'melee', category: 'martial' },
+  whip:        { roll: { count: 1, die: 4 },  damageType: "slashing",    type: 'melee', category: 'martial' },
   // martial ranged
   // blowgun - 1 piercing
-  "crossbow-hand":  { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged' },
-  "crossbow-heavy": { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged' },
-  longbow:          { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged' },
+  "crossbow-hand":  { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged', category: 'martial' },
+  "crossbow-heavy": { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged', category: 'martial' },
+  longbow:          { roll: { count: 1, die: 4 }, damageType: "piercing", type: 'ranged', category: 'martial' },
   // net - null
 }

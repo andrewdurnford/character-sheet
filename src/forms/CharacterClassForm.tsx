@@ -226,18 +226,32 @@ function ClassSavingThrowProficiencies({ classId }: ClassProps) {
 }
 
 function ClassWeaponProficiencies({ classId }: ClassProps) {
+  const { weapons, categories } =
+    api.classWeaponProficiencies.find((x) => x.classId === classId) || {}
+
   return (
     <section>
       <h3 className="italic">Weapons</h3>
       <ul>
-        {api.classWeaponProficiencies
-          .find((x) => x.classId === classId)
-          ?.weapons.map((weaponId) => (
+        {weapons &&
+          weapons.length > 0 &&
+          weapons.map((weaponId) => (
             <li
               key={`class-weapon-${weaponId}-proficiency`}
               className="ml-4 list-disc"
             >
               {api.weapons[weaponId]}
+            </li>
+          ))}
+        {categories &&
+          categories.length > 0 &&
+          categories.map((category) => (
+            <li
+              key={`class-weapon-category-${category}-proficiency`}
+              className="ml-4 list-disc italic"
+            >
+              {category.charAt(0).toUpperCase()}
+              {category.substring(1)} weapons
             </li>
           ))}
       </ul>

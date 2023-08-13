@@ -46,9 +46,9 @@ pnpm run dev
   - [ ] armor
     - [ ] armor type
     - [ ] shield
-  - [ ] weapons
+  - [x] weapons
     - [x] weapon
-    - [ ] weapon category
+    - [x] weapon category
   - [ ] tools
   - [x] saving throws
   - [x] skills
