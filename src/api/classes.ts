@@ -1,6 +1,6 @@
-import { abilities, skills } from "./abilities"
+import { Ability, Skill } from "./abilities"
 import { Armor, ArmorType } from "./equipment"
-import { weapons } from "./weapons"
+import { Weapon, WeaponCategory } from "./weapons"
 
 export type Class =
   | "barbarian"
@@ -16,318 +16,344 @@ export type Class =
   | "warlock"
   | "wizard"
 
-// prettier-ignore
-export const classes: Record<
+export const _classIds: Class[] = [
+  "barbarian",
+  "bard",
+  "cleric",
+  "druid",
+  "fighter",
+  "monk",
+  "paladin",
+  "ranger",
+  "rogue",
+  "sorcerer",
+  "warlock",
+  "wizard",
+]
+
+const classDictionary: Record<Class, string> = {
+  barbarian: "Barbarian",
+  bard: "Bard",
+  cleric: "Cleric",
+  druid: "Druid",
+  fighter: "Fighter",
+  monk: "Monk",
+  paladin: "Paladin",
+  ranger: "Ranger",
+  rogue: "Rogue",
+  sorcerer: "Sorcerer",
+  warlock: "Warlock",
+  wizard: "Wizard",
+}
+
+type HitDice = 6 | 8 | 10 | 12
+
+const classDetails: Record<Class, { hitDice: HitDice }> = {
+  barbarian: { hitDice: 12 },
+  bard: { hitDice: 8 },
+  cleric: { hitDice: 8 },
+  druid: { hitDice: 8 },
+  fighter: { hitDice: 10 },
+  monk: { hitDice: 8 },
+  paladin: { hitDice: 10 },
+  ranger: { hitDice: 10 },
+  rogue: { hitDice: 8 },
+  sorcerer: { hitDice: 6 },
+  warlock: { hitDice: 8 },
+  wizard: { hitDice: 6 },
+}
+
+// TODO: add armor choices
+const startingArmor: Record<Class, Armor | null> = {
+  barbarian: null,
+  bard: "leather",
+  cleric: "scale-mail",
+  druid: "leather",
+  fighter: "chain-mail",
+  monk: null,
+  paladin: "chain-mail",
+  ranger: "scale-mail",
+  rogue: "leather",
+  sorcerer: null,
+  warlock: "leather",
+  wizard: null,
+}
+
+// TODO: include shield in equipment choices
+const startingShields: Class[] = ["cleric", "druid", "paladin"]
+
+// TODO: change to an array of choices
+// TODO: fix multiples of weapons
+const startingWeapons: Record<Class, Weapon[]> = {
+  barbarian: ["greataxe", "handaxe", "javelin"], // 2 handaxes, 4 javelins
+  bard: ["rapier"],
+  cleric: ["mace", "crossbow-light"],
+  druid: ["scimitar"],
+  fighter: ["longbow", "crossbow-light"],
+  monk: ["shortsword"],
+  paladin: ["javelin", "javelin"], // 4 javelins
+  ranger: ["shortsword", "shortsword", "longbow"],
+  rogue: ["rapier", "shortbow"],
+  sorcerer: ["crossbow-light", "dagger", "dagger"],
+  warlock: ["crossbow-light"],
+  wizard: ["quarterstaff"],
+}
+
+/**
+ * TODO: armor proficiency
+ * Anyone can put on a suit of armor or strap a shield to an arm. Only those
+ * proficient in the armor’s use know how to wear it effectively, however. Your
+ * class gives you proficiency with certain types of armor. If you wear armor
+ * that you lack proficiency with, you have disadvantage on any ability check,
+ * saving throw, or attack roll that involves Strength or Dexterity, and you
+ * can’t cast spells.
+ */
+const armorProficiencies: Record<Class, ArmorType[]> = {
+  barbarian: ["light", "medium"],
+  bard: ["light"],
+  cleric: ["light", "medium"],
+  druid: ["light", "medium"],
+  fighter: ["light", "medium", "heavy"],
+  monk: [],
+  paladin: ["light", "medium", "heavy"],
+  ranger: ["light", "medium"],
+  rogue: ["light"],
+  sorcerer: [],
+  warlock: ["light"],
+  wizard: [],
+}
+
+const shieldProficiencies: Class[] = [
+  "barbarian",
+  "cleric",
+  "druid",
+  "fighter",
+  "paladin",
+  "ranger",
+]
+
+const weaponProficiencies: Record<Class, Weapon[]> = {
+  barbarian: [],
+  bard: ["crossbow-hand", "longsword", "rapier", "shortsword"],
+  cleric: [],
+  // prettier-ignore
+  druid: ["club", "dagger", "dart", "javelin", "mace", "quarterstaff", "scimitar", "sickle", "sling", "spear"],
+  fighter: [],
+  monk: ["shortsword"],
+  paladin: [],
+  ranger: [],
+  rogue: ["crossbow-hand", "longsword", "rapier", "shortsword"],
+  sorcerer: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"],
+  warlock: [],
+  wizard: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"],
+}
+
+const weaponCategoryProficiencies: Record<Class, WeaponCategory[]> = {
+  barbarian: ["simple", "martial"],
+  bard: ["simple"],
+  cleric: ["simple"],
+  druid: [],
+  fighter: ["simple", "martial"],
+  monk: ["simple"],
+  paladin: ["simple", "martial"],
+  ranger: ["simple", "martial"],
+  rogue: ["simple"],
+  sorcerer: [],
+  warlock: ["simple"],
+  wizard: [],
+}
+
+const savingThrowProficiencies: Record<Class, Ability[]> = {
+  barbarian: ["strength", "constitution"],
+  bard: ["dexterity", "charisma"],
+  cleric: ["wisdom", "charisma"],
+  druid: ["intelligence", "wisdom"],
+  fighter: ["strength", "constitution"],
+  monk: ["strength", "dexterity"],
+  paladin: ["wisdom", "charisma"],
+  ranger: ["strength", "dexterity"],
+  rogue: ["dexterity", "intelligence"],
+  sorcerer: ["constitution", "charisma"],
+  warlock: ["wisdom", "charisma"],
+  wizard: ["intelligence", "wisdom"],
+}
+
+const skillProficiencyChoices: Record<Class, number> = {
+  barbarian: 2,
+  bard: 3,
+  cleric: 2,
+  druid: 2,
+  fighter: 2,
+  monk: 2,
+  paladin: 2,
+  ranger: 3,
+  rogue: 4,
+  sorcerer: 2,
+  warlock: 2,
+  wizard: 2,
+}
+
+const skillProficiencyFilter: Record<Class, Skill[]> = {
+  barbarian: [
+    "animal-handling",
+    "athletics",
+    "intimidation",
+    "nature",
+    "perception",
+    "survival",
+  ],
+  bard: [
+    "acrobatics",
+    "animal-handling",
+    "arcana",
+    "athletics",
+    "deception",
+    "history",
+    "insight",
+    "intimidation",
+    "investigation",
+    "medicine",
+    "nature",
+    "perception",
+    "performance",
+    "persuasion",
+    "religion",
+    "sleight-of-hand",
+    "stealth",
+    "survival",
+  ],
+  cleric: ["history", "insight", "medicine", "persuasion", "religion"],
+  druid: [
+    "arcana",
+    "animal-handling",
+    "insight",
+    "medicine",
+    "nature",
+    "perception",
+    "religion",
+    "survival",
+  ],
+  fighter: [
+    "acrobatics",
+    "animal-handling",
+    "athletics",
+    "history",
+    "insight",
+    "intimidation",
+    "perception",
+    "survival",
+  ],
+  monk: [
+    "acrobatics",
+    "athletics",
+    "history",
+    "insight",
+    "religion",
+    "stealth",
+  ],
+  paladin: [
+    "athletics",
+    "insight",
+    "intimidation",
+    "medicine",
+    "persuasion",
+    "religion",
+  ],
+  ranger: [
+    "animal-handling",
+    "athletics",
+    "insight",
+    "investigation",
+    "nature",
+    "perception",
+    "stealth",
+    "survival",
+  ],
+  rogue: [
+    "acrobatics",
+    "athletics",
+    "deception",
+    "insight",
+    "intimidation",
+    "investigation",
+    "perception",
+    "performance",
+    "persuasion",
+    "sleight-of-hand",
+    "stealth",
+  ],
+  sorcerer: [
+    "arcana",
+    "deception",
+    "insight",
+    "intimidation",
+    "persuasion",
+    "religion",
+  ],
+  warlock: [
+    "arcana",
+    "deception",
+    "history",
+    "intimidation",
+    "investigation",
+    "nature",
+    "religion",
+  ],
+  wizard: [
+    "arcana",
+    "history",
+    "insight",
+    "investigation",
+    "medicine",
+    "religion",
+  ],
+}
+
+type ClassTable = Record<
   Class,
-  { name: string; hitDice: 6 | 8 | 10 | 12 }
-> = {
-  barbarian: { name: "Barbarian", hitDice: 12 },
-  bard:      { name: "Bard",      hitDice: 8  },
-  cleric:    { name: "Cleric",    hitDice: 8  },
-  druid:     { name: "Druid",     hitDice: 8  },
-  fighter:   { name: "Fighter",   hitDice: 10 },
-  monk:      { name: "Monk",      hitDice: 8  },
-  paladin:   { name: "Paladin",   hitDice: 10 },
-  ranger:    { name: "Ranger",    hitDice: 10 },
-  rogue:     { name: "Rogue",     hitDice: 8  },
-  sorcerer:  { name: "Sorcerer",  hitDice: 6  },
-  warlock:   { name: "Warlock",   hitDice: 8  },
-  wizard:    { name: "Wizard",    hitDice: 6  },
-}
+  {
+    name: string
+    hitDice: HitDice
+    proficiencies: {
+      armor: ArmorType[]
+      shield: boolean
+      weapons: Weapon[]
+      weaponCategories: WeaponCategory[]
+      // tools: Tool[],
+      savingThrows: Ability[]
+      skills: {
+        select: number
+        filter: Skill[]
+      }
+    }
+    startingEquipment: {
+      armorId: Armor | null
+      shield: boolean
+      weapons: Weapon[]
+    }
+  }
+>
 
-interface ClassStartingArmor {
-  classId: keyof typeof classes
-  armorId: Armor
-  shield?: boolean
-}
-
-// prettier-ignore
-export const classStartingArmor: ClassStartingArmor[] = [
-  { classId: "bard",    armorId: "leather",                 },
-  { classId: "cleric",  armorId: "scale-mail", shield: true },
-  { classId: "druid",   armorId: "leather",    shield: true },
-  { classId: "fighter", armorId: "chain-mail",              },
-  { classId: "paladin", armorId: "chain-mail", shield: true },
-  { classId: "ranger",  armorId: "scale-mail",              },
-  { classId: "rogue",   armorId: "leather",                 },
-  { classId: "warlock", armorId: "leather",                 },
-]
-
-interface ClassStartingEquipment {
-  classId: keyof typeof classes
-  weaponId: keyof typeof weapons
-  count?: number
-}
-
-// TODO: add choices and non-weapons
-export const classStartingEquipment: ClassStartingEquipment[] = [
-  { classId: "barbarian", weaponId: "greataxe" },
-  { classId: "barbarian", weaponId: "handaxe", count: 2 },
-  { classId: "barbarian", weaponId: "javelin", count: 4 },
-  { classId: "bard", weaponId: "rapier" },
-  { classId: "cleric", weaponId: "mace" },
-  { classId: "cleric", weaponId: "crossbow-light" },
-  { classId: "druid", weaponId: "scimitar" },
-  { classId: "fighter", weaponId: "longbow" },
-  { classId: "fighter", weaponId: "crossbow-light" },
-  { classId: "monk", weaponId: "shortsword" },
-  { classId: "paladin", weaponId: "javelin", count: 5 },
-  { classId: "ranger", weaponId: "shortsword", count: 2 },
-  { classId: "ranger", weaponId: "longbow" },
-  { classId: "rogue", weaponId: "rapier" },
-  { classId: "rogue", weaponId: "shortbow" },
-  { classId: "sorcerer", weaponId: "crossbow-light" },
-  { classId: "sorcerer", weaponId: "dagger", count: 2 },
-  { classId: "warlock", weaponId: "crossbow-light" },
-  { classId: "wizard", weaponId: "quarterstaff" },
-]
-
-// TODO: armor proficiency
-// Anyone can put on a suit of armor or strap a shield to an arm. Only those
-// proficient in the armor’s use know how to wear it effectively, however. Your
-// class gives you proficiency with certain types of armor. If you wear armor
-// that you lack proficiency with, you have disadvantage on any ability check,
-// saving throw, or attack roll that involves Strength or Dexterity, and you
-// can’t cast spells.
-
-// prettier-ignore
-export const classArmorProficiencies: Array<{
-  classId: keyof typeof classes
-  types: ArmorType[]
-  shield?: boolean
-}> = [
-  { classId: 'barbarian', types: ["light", "medium"],          shield: true },
-  { classId: 'bard',      types: ["light"],                                 },
-  { classId: 'cleric',    types: ["light", "medium"],          shield: true },
-  { classId: 'druid',     types: ["light", "medium"],          shield: true }, // TODO: wooden shield
-  { classId: 'fighter',   types: ["light", "medium", "heavy"], shield: true },
-  { classId: 'monk',      types: []                                         },
-  { classId: 'paladin',   types: ["light", "medium", "heavy"], shield: true },
-  { classId: 'ranger',    types: ["light", "medium"],          shield: true },
-  { classId: 'rogue',     types: ["light"],                                 },
-  { classId: 'sorcerer',  types: []                                         },
-  { classId: 'warlock',   types: ["light"],                                 },
-  { classId: 'wizard',    types: [],                                        },
-]
-
-// prettier-ignore
-export const classWeaponProficiencies: Array<{
-  classId: keyof typeof classes
-  categories: Array<'simple' | 'martial'>
-  weapons: Array<keyof typeof weapons>
-}> = [
-  { classId: 'barbarian', categories: ["simple", "martial"], weapons: [], },
-  { classId: 'bard',      categories: ["simple"],            weapons: ["crossbow-hand", "longsword", "rapier", "shortsword"], },
-  { classId: 'cleric',    categories: ["simple"],            weapons: [], },
-  { classId: 'druid',     categories: [],                    weapons: ["club", "dagger", "dart", "javelin", "mace", "quarterstaff", "scimitar", "sickle", "sling", "spear"], },
-  { classId: 'fighter',   categories: ["simple", "martial"], weapons: [], },
-  { classId: 'monk',      categories: ["simple"],            weapons: ["shortsword"], },
-  { classId: 'paladin',   categories: ["simple", "martial"], weapons: [], },
-  { classId: 'ranger',    categories: ["simple", "martial"], weapons: [], },
-  { classId: 'rogue',     categories: ["simple"],            weapons: ["crossbow-hand", "longsword", "rapier", "shortsword"], },
-  { classId: 'sorcerer',  categories: [],                    weapons: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"], },
-  { classId: 'warlock',   categories: ["simple"],            weapons: [], },
-  { classId: 'wizard',    categories: [],                    weapons: ["dagger", "dart", "sling", "quarterstaff", "crossbow-light"], },
-]
-
-interface ClassSkillProficiencyChoice {
-  classId: keyof typeof classes
-  select: number
-  filter: Array<keyof typeof skills>
-}
-
-export const classSkillProficiencyChoices: ClassSkillProficiencyChoice[] = [
-  {
-    classId: "barbarian",
-    select: 2,
-    filter: [
-      "animal-handling",
-      "athletics",
-      "intimidation",
-      "nature",
-      "perception",
-      "survival",
-    ],
-  },
-  {
-    classId: "bard",
-    select: 3,
-    filter: [
-      "acrobatics",
-      "animal-handling",
-      "arcana",
-      "athletics",
-      "deception",
-      "history",
-      "insight",
-      "intimidation",
-      "investigation",
-      "medicine",
-      "nature",
-      "perception",
-      "performance",
-      "persuasion",
-      "religion",
-      "sleight-of-hand",
-      "stealth",
-      "survival",
-    ],
-  },
-  {
-    classId: "cleric",
-    select: 2,
-    filter: ["history", "insight", "medicine", "persuasion", "religion"],
-  },
-  {
-    classId: "druid",
-    select: 2,
-    filter: [
-      "arcana",
-      "animal-handling",
-      "insight",
-      "medicine",
-      "nature",
-      "perception",
-      "religion",
-      "survival",
-    ],
-  },
-  {
-    classId: "fighter",
-    select: 2,
-    filter: [
-      "acrobatics",
-      "animal-handling",
-      "athletics",
-      "history",
-      "insight",
-      "intimidation",
-      "perception",
-      "survival",
-    ],
-  },
-  {
-    classId: "monk",
-    select: 2,
-    filter: [
-      "acrobatics",
-      "athletics",
-      "history",
-      "insight",
-      "religion",
-      "stealth",
-    ],
-  },
-  {
-    classId: "paladin",
-    select: 2,
-    filter: [
-      "athletics",
-      "insight",
-      "intimidation",
-      "medicine",
-      "persuasion",
-      "religion",
-    ],
-  },
-  {
-    classId: "ranger",
-    select: 3,
-    filter: [
-      "animal-handling",
-      "athletics",
-      "insight",
-      "investigation",
-      "nature",
-      "perception",
-      "stealth",
-      "survival",
-    ],
-  },
-  {
-    classId: "rogue",
-    select: 4,
-    filter: [
-      "acrobatics",
-      "athletics",
-      "deception",
-      "insight",
-      "intimidation",
-      "investigation",
-      "perception",
-      "performance",
-      "persuasion",
-      "sleight-of-hand",
-      "stealth",
-    ],
-  },
-  {
-    classId: "sorcerer",
-    select: 2,
-    filter: [
-      "arcana",
-      "deception",
-      "insight",
-      "intimidation",
-      "persuasion",
-      "religion",
-    ],
-  },
-  {
-    classId: "warlock",
-    select: 2,
-    filter: [
-      "arcana",
-      "deception",
-      "history",
-      "intimidation",
-      "investigation",
-      "nature",
-      "religion",
-    ],
-  },
-  {
-    classId: "wizard",
-    select: 2,
-    filter: [
-      "arcana",
-      "history",
-      "insight",
-      "investigation",
-      "medicine",
-      "religion",
-    ],
-  },
-]
-
-interface ClassSavingThrowProficiency {
-  classId: keyof typeof classes
-  abilityId: keyof typeof abilities
-}
-
-export const classSavingThrowProficiencies: ClassSavingThrowProficiency[] = [
-  { classId: "barbarian", abilityId: "strength" },
-  { classId: "barbarian", abilityId: "constitution" },
-  { classId: "bard", abilityId: "dexterity" },
-  { classId: "bard", abilityId: "charisma" },
-  { classId: "cleric", abilityId: "wisdom" },
-  { classId: "cleric", abilityId: "charisma" },
-  { classId: "druid", abilityId: "intelligence" },
-  { classId: "druid", abilityId: "wisdom" },
-  { classId: "fighter", abilityId: "strength" },
-  { classId: "fighter", abilityId: "constitution" },
-  { classId: "monk", abilityId: "strength" },
-  { classId: "monk", abilityId: "dexterity" },
-  { classId: "paladin", abilityId: "wisdom" },
-  { classId: "paladin", abilityId: "charisma" },
-  { classId: "ranger", abilityId: "strength" },
-  { classId: "ranger", abilityId: "dexterity" },
-  { classId: "rogue", abilityId: "dexterity" },
-  { classId: "rogue", abilityId: "intelligence" },
-  { classId: "sorcerer", abilityId: "constitution" },
-  { classId: "sorcerer", abilityId: "charisma" },
-  { classId: "warlock", abilityId: "wisdom" },
-  { classId: "warlock", abilityId: "charisma" },
-  { classId: "wizard", abilityId: "intelligence" },
-  { classId: "wizard", abilityId: "wisdom" },
-]
+export const classes: ClassTable = _classIds.reduce((acc, classId) => {
+  acc[classId] = {
+    name: classDictionary[classId],
+    hitDice: classDetails[classId].hitDice,
+    proficiencies: {
+      armor: armorProficiencies[classId],
+      shield: shieldProficiencies.includes(classId),
+      weapons: weaponProficiencies[classId],
+      weaponCategories: weaponCategoryProficiencies[classId],
+      savingThrows: savingThrowProficiencies[classId],
+      skills: {
+        select: skillProficiencyChoices[classId],
+        filter: skillProficiencyFilter[classId],
+      },
+    },
+    startingEquipment: {
+      armorId: startingArmor[classId],
+      shield: startingShields.includes(classId),
+      weapons: startingWeapons[classId],
+    },
+  }
+  return acc
+}, {} as ClassTable)

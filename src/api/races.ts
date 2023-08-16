@@ -11,7 +11,7 @@ export type Race =
   | "half-orc"
   | "tiefling"
 
-export const raceIds: Race[] = [
+export const _raceIds: Race[] = [
   "dwarf",
   "elf",
   "halfling",
@@ -78,7 +78,7 @@ const raceAbilityScoreIncreases: Record<Race, RaceAbilityScoreIncrease[]> = {
 // size
 type RaceDetails = { speed: number }
 
-const raceDetails: Record<Race, { speed: number }> = {
+const raceDetails: Record<Race, RaceDetails> = {
   dwarf: { speed: 25 },
   elf: { speed: 30 },
   halfling: { speed: 25 },
@@ -135,7 +135,7 @@ type RaceTable = Record<
   }
 >
 
-export const races: RaceTable = raceIds.reduce((acc, raceId) => {
+export const races: RaceTable = _raceIds.reduce((acc, raceId) => {
   const subraceId = raceSubraces[raceId]
   const subrace = !subraceId
     ? null

@@ -1,3 +1,40 @@
+export type Weapon =
+  | "club"
+  | "dagger"
+  | "greatclub"
+  | "handaxe"
+  | "javelin"
+  | "light-hammer"
+  | "mace"
+  | "quarterstaff"
+  | "sickle"
+  | "spear"
+  | "crossbow-light"
+  | "dart"
+  | "shortbow"
+  | "sling"
+  | "battleaxe"
+  | "flail"
+  | "glaive"
+  | "greataxe"
+  | "greatsword"
+  | "halberd"
+  | "lance"
+  | "longsword"
+  | "maul"
+  | "morningstar"
+  | "pike"
+  | "rapier"
+  | "scimitar"
+  | "shortsword"
+  | "trident"
+  | "war-pick"
+  | "warhammer"
+  | "whip"
+  | "crossbow-hand"
+  | "crossbow-heavy"
+  | "longbow"
+
 export const weapons = {
   // simple melee
   club: "Club",
@@ -48,21 +85,20 @@ type Roll = {
   die: 4 | 6 | 8 | 10 | 12 | 20
 }
 
-type DamageType = "bludgeoning" | "piercing" | "slashing"
-
-type WeaponCategory = "simple" | "martial"
-
-type WeaponType = "melee" | "ranged"
-
-type Weapon = {
-  roll: Roll
-  damageType: DamageType
-  type: WeaponType
-  category: WeaponCategory
-}
+export type WeaponCategory = "simple" | "martial"
+export type WeaponType = "melee" | "ranged"
+export type DamageType = "bludgeoning" | "piercing" | "slashing"
 
 // prettier-ignore
-export const weaponData: Record<keyof typeof weapons, Weapon> = {
+export const weaponData: Record<
+  keyof typeof weapons,
+  {
+    roll: Roll
+    damageType: DamageType
+    type: WeaponType
+    category: WeaponCategory
+  }
+> = {
   // simple melee
   club:           { roll: { count: 1, die: 4 }, damageType: "bludgeoning", type: 'melee', category: 'simple' },
   dagger:         { roll: { count: 1, die: 4 }, damageType: "piercing",    type: 'melee', category: 'simple' },

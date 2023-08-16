@@ -138,10 +138,13 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
   savingThrows: () =>
     Object.keys(get().abilityScores()).reduce(
       (acc, abilityId) => {
+        const classId = get().classId
         const proficiencyBonus = get().proficiencyBonus()
-        const proficient = api.classSavingThrowProficiencies.some(
-          (x) => x.classId === get().classId && x.abilityId === abilityId,
-        )
+        const proficient =
+          !!classId &&
+          api.classes[classId].proficiencies.savingThrows.includes(
+            abilityId as Ability,
+          )
         const abilityModifier =
           get().abilityScores()[abilityId as Ability].modifier
 
@@ -154,11 +157,17 @@ export const useCharacter = create<CharacterState>()((set, get) => ({
     ),
   // TODO: equip different armors from inventory
   armorClass: () => {
-    // TODO: class armor choices
-    const { armorId, shield } =
-      api.classStartingArmor.find((x) => x.classId === get().classId) || {}
-    const armor = !armorId ? null : api.armor[armorId]
+    const classId = get().classId
     const dexMod = get().abilityScores().dexterity.modifier
+
+    if (!classId) {
+      return 10 + dexMod
+    }
+
+    // TODO: class armor choices
+    const { armorId, shield } = api.classes[classId].startingEquipment
+
+    const armor = !armorId ? null : api.armor[armorId]
     const shieldMod = shield ? 2 : 0
 
     // unarmored -> 10 + dex mod

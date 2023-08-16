@@ -1,4 +1,12 @@
-export const abilities = {
+export type Ability =
+  | "strength"
+  | "dexterity"
+  | "constitution"
+  | "intelligence"
+  | "wisdom"
+  | "charisma"
+
+export const abilities: Record<Ability, string> = {
   strength: "Strength",
   dexterity: "Dexterity",
   constitution: "Constitution",
@@ -7,7 +15,7 @@ export const abilities = {
   charisma: "Charisma",
 }
 
-export const skills: Record<
+export type Skill =
   | "acrobatics"
   | "animal-handling"
   | "athletics"
@@ -39,9 +47,9 @@ export const skills: Record<
   | "religion"
   | "survival"
   | "stealth"
-  | "survival",
-  { name: string; abilityId: keyof typeof abilities }
-> = {
+  | "survival"
+
+export const skills: Record<Skill, { name: string; abilityId: Ability }> = {
   acrobatics: { name: "Acrobatics", abilityId: "dexterity" },
   "animal-handling": { name: "Animal Handling", abilityId: "wisdom" },
   arcana: { name: "Arcana", abilityId: "intelligence" },

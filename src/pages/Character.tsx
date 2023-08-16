@@ -286,8 +286,8 @@ function CharacterCombat() {
 // TODO: move calculations to character store
 function WeaponAttacks() {
   const classId = useCharacter((state) => state.classId)
-  const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
   const abilityScores = useCharacter((state) => state.abilityScores)
+  const proficiencyBonus = useCharacter((state) => state.proficiencyBonus)
 
   if (!classId) return null
 
@@ -295,30 +295,26 @@ function WeaponAttacks() {
     <section>
       <h2 className="my-2 font-medium">Attacks</h2>
       <ul>
-        {api.classStartingEquipment
-          .filter((x) => x.classId === classId)
-          .map(({ weaponId }) => {
-            const weapon = api.weaponData[weaponId]
-            const abilityModifier =
-              abilityScores()[
-                weapon.type === "melee" ? "strength" : "dexterity"
-              ].modifier
-            const proficient = api.classWeaponProficiencies.some(
-              (x) =>
-                x.classId === classId &&
-                (x.weapons.includes(weaponId) ||
-                  x.categories.includes(weapon.category)),
+        {api.classes[classId].startingEquipment.weapons.map((weaponId) => {
+          const weapon = api.weaponData[weaponId]
+          const abilityModifier =
+            abilityScores()[weapon.type === "melee" ? "strength" : "dexterity"]
+              .modifier
+          const proficient =
+            api.classes[classId].proficiencies.weapons.includes(weaponId) ||
+            api.classes[classId].proficiencies.weaponCategories.includes(
+              weapon.category,
             )
-            const modifier =
-              abilityModifier + (proficient ? proficiencyBonus() : 0)
+          const modifier =
+            abilityModifier + (proficient ? proficiencyBonus() : 0)
 
-            return (
-              <List key={`${classId}-${weaponId}`} style="disc">
-                {api.weapons[weaponId]}, {mod(modifier)}, {weapon.roll.count}d
-                {weapon.roll.die} {mod(abilityModifier)} {weapon.damageType}
-              </List>
-            )
-          })}
+          return (
+            <List key={`${classId}-${weaponId}`} style="disc">
+              {api.weapons[weaponId]}, {mod(modifier)}, {weapon.roll.count}d
+              {weapon.roll.die} {mod(abilityModifier)} {weapon.damageType}
+            </List>
+          )
+        })}
       </ul>
     </section>
   )

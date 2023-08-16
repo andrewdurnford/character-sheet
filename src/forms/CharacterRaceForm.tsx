@@ -67,7 +67,7 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
       <div className="flex flex-col items-start gap-6">
         <RadioGroup
           label="Race"
-          options={api.raceIds.map((raceId) => ({
+          options={api._raceIds.map((raceId) => ({
             label: api.races[raceId].name,
             value: raceId,
           }))}

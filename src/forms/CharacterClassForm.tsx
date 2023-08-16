@@ -60,8 +60,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
     }
   }, [selectedId, classId, setValue])
 
-  const { select, filter } =
-    api.classSkillProficiencyChoices.find((x) => x.classId === selectedId) || {}
+  const { select, filter } = api.classes[selectedId]?.proficiencies.skills || {}
 
   useEffect(() => {
     setValue("select", select ?? 0)
@@ -185,22 +184,18 @@ type ClassProps = {
 }
 
 export function ClassStartingWeapons({ classId }: ClassProps) {
-  const classArmor = api.classStartingArmor.find((x) => x.classId === classId)
-  const armor = !classArmor ? null : api.armor[classArmor.armorId]
-  const shield = !!classArmor?.shield
+  const { armorId, shield } = api.classes[classId].startingEquipment
 
   return (
     <section>
       <h2 className="mb-2 font-medium">Starting Equipment</h2>
       <ul>
-        {api.classStartingEquipment
-          .filter((x) => x.classId === classId)
-          .map(({ count, weaponId }) => (
-            <List key={`${classId}-${weaponId}`} style="disc">
-              {api.weapons[weaponId]} {count && `x${count}`}
-            </List>
-          ))}
-        {armor && <List style="disc">{armor.name} armor</List>}
+        {api.classes[classId].startingEquipment.weapons.map((weaponId) => (
+          <List key={`${classId}-${weaponId}`} style="disc">
+            {api.weapons[weaponId]} {/* {count && `x${count}`} */}
+          </List>
+        ))}
+        {armorId && <List style="disc">{api.armor[armorId].name} armor</List>}
         {shield && <List style="disc">Shield</List>}
       </ul>
     </section>
@@ -212,24 +207,21 @@ function ClassSavingThrowProficiencies({ classId }: ClassProps) {
     <section>
       <h3 className="font-medium italic">Saving Throws</h3>
       <ul>
-        {api.classSavingThrowProficiencies
-          .filter((x) => x.classId === classId)
-          .map(({ abilityId }) => (
-            <List
-              key={`class-saving-throw-${abilityId}-proficiency`}
-              style="disc"
-            >
-              {api.abilities[abilityId]}
-            </List>
-          ))}
+        {api.classes[classId].proficiencies.savingThrows.map((abilityId) => (
+          <List
+            key={`class-saving-throw-${abilityId}-proficiency`}
+            style="disc"
+          >
+            {api.abilities[abilityId]}
+          </List>
+        ))}
       </ul>
     </section>
   )
 }
 
 function ClassWeaponProficiencies({ classId }: ClassProps) {
-  const { weapons, categories } =
-    api.classWeaponProficiencies.find((x) => x.classId === classId) || {}
+  const { weapons, weaponCategories } = api.classes[classId].proficiencies
 
   return (
     <section>
@@ -242,16 +234,15 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
               {api.weapons[weaponId]}
             </List>
           ))}
-        {categories &&
-          categories.length > 0 &&
-          categories.map((category) => (
+        {weaponCategories.length > 0 &&
+          weaponCategories.map((weaponCategory) => (
             <List
-              key={`class-weapon-category-${category}-proficiency`}
+              key={`class-weapon-category-${weaponCategory}-proficiency`}
               className="italic"
               style="disc"
             >
-              {category.charAt(0).toUpperCase()}
-              {category.substring(1)} weapons
+              {weaponCategory.charAt(0).toUpperCase()}
+              {weaponCategory.substring(1)} weapons
             </List>
           ))}
       </ul>
@@ -260,19 +251,17 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
 }
 
 function ClassArmorProficiencies({ classId }: ClassProps) {
-  const { types, shield } =
-    api.classArmorProficiencies.find((x) => x.classId === classId) || {}
+  const { armor, shield } = api.classes[classId].proficiencies
 
   return (
     <section>
       <h3 className="font-medium italic">Armor</h3>
       <ul>
-        {types &&
-          types.length > 0 &&
-          types.map((type) => (
-            <List key={`class-armor-${type}-proficiency`} style="disc">
-              {type.charAt(0).toUpperCase()}
-              {type.substring(1)} armor
+        {armor.length > 0 &&
+          armor.map((armorType) => (
+            <List key={`class-armor-${armorType}-proficiency`} style="disc">
+              {armorType.charAt(0).toUpperCase()}
+              {armorType.substring(1)} armor
             </List>
           ))}
         {shield && <li className="ml-4 list-disc">Shields</li>}
