@@ -22,7 +22,7 @@ export function calculateMaxHitPoints(
 }
 
 interface CharacterState {
-  name: string
+  name?: string
   raceId?: Race
   classId?: Class
   level: number
@@ -61,11 +61,7 @@ interface CharacterState {
 }
 
 export const useCharacter = create<CharacterState>()((set, get) => ({
-  name: "Untitled",
-  raceId: undefined,
-  classId: undefined,
   level: 1,
-  background: "Acolyte",
   currentHitPoints: 0,
   setName: (name) => set(() => ({ name })),
   setCurrentHitPoints: (currentHitPoints) => set(() => ({ currentHitPoints })),

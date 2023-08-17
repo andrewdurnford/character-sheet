@@ -4,33 +4,31 @@ import {
   calculateMaxHitPoints,
   proficiencyBonus,
   useCharacter,
-} from "../stores/character"
-import { Button, LinkButton } from "../components/Button"
-import { Checkbox, Error, RadioGroup, Select } from "../components/Input"
+} from "../../stores/character"
+import { Button, LinkButton } from "../../components/Button"
+import { Checkbox, Error, RadioGroup, Select } from "../../components/Input"
 import { useEffect } from "react"
 import React from "react"
 import {
   CharacterClassSchema,
   characterClassSchema,
-} from "../lib/characterClassSchema"
-import { Class, Skill, api } from "../api"
-import { List } from "../components/List"
+} from "../../lib/characterClassSchema"
+import { Class, Skill, api } from "../../api"
+import { List } from "../../components/List"
 
 interface CharacterClassFormProps {
   onCancel: () => void
 }
 
 export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
-  const classId = useCharacter((state) => state.classId)
-  const level = useCharacter((state) => state.level)
-  const skillProficiencyChoices = useCharacter(
-    (state) => state.skillProficiencyChoices,
-  )
-  const background = useCharacter((state) => state.background)
+  const classId = useCharacter((s) => s.classId)
+  const level = useCharacter((s) => s.level)
+  const skillProficiencyChoices = useCharacter((s) => s.skillProficiencyChoices)
+  const background = useCharacter((s) => s.background)
   const backgroundSkillProficiencyChoices = useCharacter(
-    (state) => state.backgroundSkillProficiencyChoices,
+    (s) => s.backgroundSkillProficiencyChoices,
   )
-  const setClass = useCharacter((state) => state.setClass)
+  const setClass = useCharacter((s) => s.setClass)
   const abilityScores = useCharacter((s) => s.abilityScores)
   const setCurrentHitPoints = useCharacter((s) => s.setCurrentHitPoints)
 

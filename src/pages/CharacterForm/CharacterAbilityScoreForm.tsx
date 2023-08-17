@@ -1,8 +1,8 @@
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
-import { useCharacter } from "../stores/character"
-import { Input } from "../components/Input"
-import { Button, LinkButton } from "../components/Button"
-import { Ability, api } from "../api"
+import { useCharacter } from "../../stores/character"
+import { Input } from "../../components/Input"
+import { Button, LinkButton } from "../../components/Button"
+import { Ability, api } from "../../api"
 
 type CharacterAbilityScoreFormValues = {
   abilities: Record<Ability, number>
@@ -16,10 +16,8 @@ interface CharacterAbilityScoreFormProps {
 export function CharacterAbilityScoreForm({
   onCancel,
 }: CharacterAbilityScoreFormProps) {
-  const abilityScores = useCharacter((state) => state.abilityScoreChoices)
-  const setAbilityScoreChoices = useCharacter(
-    (state) => state.setAbilityScoreChoices,
-  )
+  const abilityScores = useCharacter((s) => s.abilityScoreChoices)
+  const setAbilityScoreChoices = useCharacter((s) => s.setAbilityScoreChoices)
 
   const defaultValues = abilityScores
     ? {

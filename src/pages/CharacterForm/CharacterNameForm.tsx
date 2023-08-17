@@ -1,20 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacter } from "../stores/character"
-import { Input } from "../components/Input"
-import { Button, LinkButton } from "../components/Button"
+import { useCharacter } from "../../stores/character"
+import { Input } from "../../components/Input"
+import { Button, LinkButton } from "../../components/Button"
 import {
   CharacterNameSchema,
   characterNameSchema,
-} from "../lib/characterNameSchema"
+} from "../../lib/characterNameSchema"
 
 interface CharacterNameFormProps {
   onCancel: () => void
 }
 
 export function CharacterNameForm({ onCancel }: CharacterNameFormProps) {
-  const name = useCharacter((state) => state.name)
-  const setName = useCharacter((state) => state.setName)
+  const name = useCharacter((s) => s.name)
+  const setName = useCharacter((s) => s.setName)
 
   const {
     handleSubmit,
@@ -38,6 +38,7 @@ export function CharacterNameForm({ onCancel }: CharacterNameFormProps) {
       <div className="flex flex-col items-start gap-6">
         <Input
           label="Name"
+          placeholder="Untitled"
           error={errors?.name?.message}
           {...register("name")}
           required

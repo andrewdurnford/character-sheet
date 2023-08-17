@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { useCharacter } from "../stores/character"
-import { Checkbox, Error, Input } from "../components/Input"
-import { Button, LinkButton } from "../components/Button"
+import { useCharacter } from "../../stores/character"
+import { Checkbox, Error, Input } from "../../components/Input"
+import { Button, LinkButton } from "../../components/Button"
 import {
   CharacterBackgroundSchema,
   characterBackgroundSchema,
-} from "../lib/characterBackgroundSchema"
-import { Skill, api } from "../api"
+} from "../../lib/characterBackgroundSchema"
+import { Skill, api } from "../../api"
 
 interface CharacterNameBackgroundProps {
   onCancel: () => void
@@ -16,14 +16,14 @@ interface CharacterNameBackgroundProps {
 export function CharacterBackgroundForm({
   onCancel,
 }: CharacterNameBackgroundProps) {
-  const setBackground = useCharacter((state) => state.setBackground)
-  const background = useCharacter((state) => state.background)
+  const setBackground = useCharacter((s) => s.setBackground)
+  const background = useCharacter((s) => s.background)
   const backgroundSkillProficiencyChoices = useCharacter(
-    (state) => state.backgroundSkillProficiencyChoices,
+    (s) => s.backgroundSkillProficiencyChoices,
   )
-  const classId = useCharacter((state) => state.classId)
+  const classId = useCharacter((s) => s.classId)
   const classSkillProficiencyChoices = useCharacter(
-    (state) => state.skillProficiencyChoices,
+    (s) => s.skillProficiencyChoices,
   )
 
   const {
@@ -54,6 +54,7 @@ export function CharacterBackgroundForm({
       <div className="flex flex-col items-start gap-6">
         <Input
           label="Background"
+          placeholder="Acolyte"
           error={errors?.background?.message}
           {...register("background")}
           required
