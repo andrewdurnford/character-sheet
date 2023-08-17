@@ -1,10 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import {
-  calculateMaxHitPoints,
-  proficiencyBonus,
-  useCharacter,
-} from "../../stores/character"
+import { useCharacter } from "../../stores/character"
+import { getMaxHitPoints, getProficiencyBonus } from "../../stores/utils"
 import { Button, LinkButton } from "../../components/Button"
 import { Checkbox, Error, RadioGroup, Select } from "../../components/Input"
 import { useEffect } from "react"
@@ -67,10 +64,11 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
 
   function onSubmit(data: CharacterClassSchema) {
     setClass(data.classId, data.level, data.skillProficiencyChoices)
+
     // set current hit points to max when class changes
     if (classId !== data.classId) {
       setCurrentHitPoints(
-        calculateMaxHitPoints(
+        getMaxHitPoints(
           data.classId,
           data.level,
           abilityScores().constitution.modifier,
@@ -100,7 +98,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         </Select>
         <div className="mb-[-0.5rem]">
           Proficiency Bonus:{" "}
-          <strong>+{proficiencyBonus(watch("level"))}</strong>
+          <strong>+{getProficiencyBonus(watch("level"))}</strong>
         </div>
         <RadioGroup
           label="Class"

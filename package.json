@@ -15,7 +15,8 @@
     "react-hook-form": "^7.45.2",
     "tailwind-merge": "^1.14.0",
     "zod": "^3.21.4",
-    "zustand": "^4.4.0"
+    "zustand": "^4.4.0",
+    "zustand-middleware-computed-state": "^0.1.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.17.0",
