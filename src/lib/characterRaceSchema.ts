@@ -30,7 +30,7 @@ export const characterRaceSchema = z
     (data) =>
       data.hasChoice ? data.abilityScoreIncreaseChoices?.length === 2 : true,
     {
-      message: `Must select 2 abilities`,
+      message: "Select 2 additional abilities",
       path: ["abilityScoreIncreaseChoices"],
     },
   )

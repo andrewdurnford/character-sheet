@@ -94,8 +94,8 @@ const raceDetails: Record<Race, RaceDetails> = {
 const raceSubraces: Record<Race, Subrace | null> = {
   dwarf: "hill-dwarf",
   elf: "high-elf",
-  halfling: null,
-  human: "lightfoot",
+  halfling: "lightfoot",
+  human: null,
   dragonborn: null,
   gnome: "rock-gnome",
   "half-elf": null,

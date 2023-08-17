@@ -7,7 +7,7 @@ export function CharacterAbilities() {
 
   return (
     <div>
-      <h2 className="font-medium">Abilities</h2>
+      <h2 className="font-bold">Abilities</h2>
       <ul>
         {Object.entries(abilityScores()).map(
           ([abilityId, { score, modifier }]) => (

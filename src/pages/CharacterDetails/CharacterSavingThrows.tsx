@@ -8,7 +8,7 @@ export function CharacterSavingThrows() {
 
   return (
     <div>
-      <h2 className="font-medium">Saving Throws</h2>
+      <h2 className="font-bold">Saving Throws</h2>
       <ul>
         {Object.entries(savingThrows()).map(
           ([abilityId, { modifier, proficient }]) => (

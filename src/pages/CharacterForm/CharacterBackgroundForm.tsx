@@ -62,7 +62,7 @@ export function CharacterBackgroundForm({
         {/* TODO: refactor into reusable component with class form */}
         <div>
           <div className="mb-1 flex items-center gap-1">
-            <h3 className="font-medium">
+            <h3 className="font-bold">
               Skill Proficiencies<span aria-hidden>*</span>
             </h3>
             <span className="text-sm">(Choose 2)</span>

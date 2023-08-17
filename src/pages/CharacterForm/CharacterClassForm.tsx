@@ -15,6 +15,7 @@ import {
 } from "../../lib/characterClassSchema"
 import { Class, Skill, api } from "../../api"
 import { List } from "../../components/List"
+import { titleCase } from "../../api/utils"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -118,14 +119,14 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
             </section>
             <ClassStartingWeapons classId={selectedId} />
             <section>
-              <h2 className="mb-2 font-medium">Proficiencies</h2>
+              <h2 className="mb-2 font-bold">Proficiencies</h2>
               <ClassArmorProficiencies classId={selectedId} />
               <ClassSavingThrowProficiencies classId={selectedId} />
               <ClassWeaponProficiencies classId={selectedId} />
               {select && (
                 <section>
                   <div className="mb-1 mt-2 flex items-center gap-1">
-                    <h3 className="font-medium">
+                    <h3 className="font-bold">
                       Skills<span aria-hidden>*</span>
                     </h3>
                     <span className="text-sm">(Choose {select})</span>
@@ -186,7 +187,7 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
 
   return (
     <section>
-      <h2 className="mb-2 font-medium">Starting Equipment</h2>
+      <h2 className="mb-2 font-bold">Starting Equipment</h2>
       <ul>
         {api.classes[classId].startingEquipment.weapons.map((weaponId) => (
           <List key={`${classId}-${weaponId}`} style="disc">
@@ -203,7 +204,7 @@ export function ClassStartingWeapons({ classId }: ClassProps) {
 function ClassSavingThrowProficiencies({ classId }: ClassProps) {
   return (
     <section>
-      <h3 className="font-medium italic">Saving Throws</h3>
+      <h3 className="font-bold italic">Saving Throws</h3>
       <ul>
         {api.classes[classId].proficiencies.savingThrows.map((abilityId) => (
           <List
@@ -223,7 +224,7 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
 
   return (
     <section>
-      <h3 className="font-medium italic">Weapons</h3>
+      <h3 className="font-bold italic">Weapons</h3>
       <ul>
         {weapons &&
           weapons.length > 0 &&
@@ -239,8 +240,7 @@ function ClassWeaponProficiencies({ classId }: ClassProps) {
               className="italic"
               style="disc"
             >
-              {weaponCategory.charAt(0).toUpperCase()}
-              {weaponCategory.substring(1)} weapons
+              {titleCase(weaponCategory)} weapons
             </List>
           ))}
       </ul>
@@ -253,13 +253,12 @@ function ClassArmorProficiencies({ classId }: ClassProps) {
 
   return (
     <section>
-      <h3 className="font-medium italic">Armor</h3>
+      <h3 className="font-bold italic">Armor</h3>
       <ul>
         {armor.length > 0 &&
           armor.map((armorType) => (
             <List key={`class-armor-${armorType}-proficiency`} style="disc">
-              {armorType.charAt(0).toUpperCase()}
-              {armorType.substring(1)} armor
+              {titleCase(armorType)} armor
             </List>
           ))}
         {shield && <li className="ml-4 list-disc">Shields</li>}

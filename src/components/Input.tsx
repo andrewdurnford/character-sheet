@@ -9,7 +9,7 @@ type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
 export function Label({ children, required, className, ...props }: LabelProps) {
   return (
     <React.Fragment>
-      <label {...props} className={cn("inline-block font-medium", className)}>
+      <label {...props} className={cn("inline-block font-bold", className)}>
         {children}
       </label>
       {required && <span aria-hidden="true">*</span>}

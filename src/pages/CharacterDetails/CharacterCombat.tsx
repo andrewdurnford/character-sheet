@@ -127,7 +127,7 @@ function WeaponAttacks() {
 
   return (
     <section>
-      <h2 className="my-2 font-medium">Attacks</h2>
+      <h2 className="my-2 font-bold">Attacks</h2>
       <ul>
         {api.classes[classId].startingEquipment.weapons.map((weaponId) => {
           const weapon = api.weaponData[weaponId]

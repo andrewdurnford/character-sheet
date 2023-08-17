@@ -51,7 +51,7 @@ export function CharacterAbilityScoreForm({
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        <h2 className="mb-2 text-xl font-medium">Point Buy</h2>
+        <h2 className="mb-2 text-xl font-bold">Point Buy</h2>
         <div className="flex flex-col items-start gap-6">
           <p>Points: {points}</p>
           {Object.keys(api.abilities).map((abilityId) => (

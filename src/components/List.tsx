@@ -10,7 +10,7 @@ export function List({ className, children, style, ...props }: ListProps) {
   return (
     <li
       {...props}
-      className={cn(style && "ml-4", className)}
+      className={cn(style && "ml-[18px]", className)}
       style={{ listStyleType: style }}
     >
       {children}

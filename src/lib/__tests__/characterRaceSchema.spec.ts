@@ -5,7 +5,7 @@ import {
 } from "../characterRaceSchema"
 
 test("pass with race", () => {
-  const data: CharacterRaceSchema = { raceId: "dwarf" }
+  const data: CharacterRaceSchema = { raceId: "dwarf", hasChoice: false }
   const result = characterRaceSchema.safeParse(
     data,
   ) as SafeParseError<CharacterRaceSchema>

@@ -8,7 +8,7 @@ export function CharacterSkills() {
 
   return (
     <div>
-      <h2 className="font-medium">Skills</h2>
+      <h2 className="font-bold">Skills</h2>
       <ul>
         {Object.entries(abilityChecks()).map(
           ([skillId, { modifier, proficient }]) => (
