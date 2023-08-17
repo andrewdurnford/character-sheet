@@ -1,5 +1,5 @@
 import { Ability, Class, Skill, api } from "../api"
-import { CharacterState } from "./character"
+import { CharacterState } from "../stores/character"
 
 export function abilityScores(
   state: CharacterState,

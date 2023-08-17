@@ -9,7 +9,7 @@ import {
   proficiencyBonus,
   savingThrows,
   speed,
-} from "./utils"
+} from "../utils/core"
 
 export type CharacterState = {
   name?: string

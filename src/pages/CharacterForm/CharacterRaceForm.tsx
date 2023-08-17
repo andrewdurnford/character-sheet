@@ -10,7 +10,7 @@ import {
 } from "../../lib/characterRaceSchema"
 import { Ability, api } from "../../api"
 import { List } from "../../components/List"
-import { titleCase } from "../../api/utils"
+import { titleCase } from "../../utils/string"
 
 interface CharacterRaceFormProps {
   onCancel: () => void

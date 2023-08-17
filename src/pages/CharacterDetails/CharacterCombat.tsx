@@ -6,7 +6,7 @@ import { Input } from "../../components/Input"
 import { cn } from "../../utils/tailwind"
 import { api } from "../../api"
 import { List } from "../../components/List"
-import { mod } from "../../api/utils"
+import { mod } from "../../utils/string"
 
 type HitPointForm = {
   current: number

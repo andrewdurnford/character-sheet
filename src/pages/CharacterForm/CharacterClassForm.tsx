@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacter } from "../../stores/character"
-import { getMaxHitPoints, getProficiencyBonus } from "../../stores/utils"
+import { getMaxHitPoints, getProficiencyBonus } from "../../utils/core"
 import { Button, LinkButton } from "../../components/Button"
 import { Checkbox, Error, RadioGroup, Select } from "../../components/Input"
 import { useEffect } from "react"
@@ -12,7 +12,7 @@ import {
 } from "../../lib/characterClassSchema"
 import { Class, Skill, api } from "../../api"
 import { List } from "../../components/List"
-import { titleCase } from "../../api/utils"
+import { titleCase } from "../../utils/string"
 
 interface CharacterClassFormProps {
   onCancel: () => void
