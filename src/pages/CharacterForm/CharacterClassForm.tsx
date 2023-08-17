@@ -259,7 +259,7 @@ function ClassArmorProficiencies({ classId }: ClassProps) {
               {titleCase(armorType)} armor
             </List>
           ))}
-        {shield && <li className="ml-4 list-disc">Shields</li>}
+        {shield && <List style="disc">Shields</List>}
       </ul>
     </section>
   )
