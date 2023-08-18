@@ -46,7 +46,7 @@ export const characterBackgroundSchema = z
   // TODO: add characteristics: personality traits, ideals, bonds, flaws
   // TODO: submitting empty choices validates as 'Expected array, received boolean'
   .refine((data) => data.backgroundSkillProficiencyChoices?.length === 2, {
-    message: `Must select 2 skills`,
+    message: `Select 2 skills`,
     path: ["backgroundSkillProficiencyChoices"],
   })
 

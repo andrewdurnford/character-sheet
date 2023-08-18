@@ -1,6 +1,7 @@
 import React from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 import { cn } from "../utils/tailwind"
+import { List } from "./List"
 
 type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
   required?: boolean
@@ -106,6 +107,60 @@ export const RadioGroup = React.forwardRef(
         />
       ))}
     </div>
+  ),
+)
+
+type ChecklistProps = Omit<InputProps, "type"> & {
+  select?: number
+  selectCount?: number
+  error?: string
+  options: {
+    label: string
+    subLabel?: string
+    value: string
+    disabled?: boolean
+  }[]
+}
+
+export const Checklist = React.forwardRef(
+  (
+    {
+      label,
+      select,
+      selectCount,
+      error,
+      options,
+      required,
+      ...props
+    }: ChecklistProps,
+    ref: React.ForwardedRef<HTMLInputElement>,
+  ) => (
+    <section>
+      <h3 className="mb-1 font-bold">
+        {label}
+        {required && <span aria-hidden="true">*</span>}
+      </h3>
+      <ul>
+        {options.map(({ label, subLabel, value, disabled }) => (
+          <List key={value}>
+            <Checkbox
+              value={value}
+              label={label}
+              subLabel={subLabel}
+              disabled={disabled}
+              {...props}
+              ref={ref}
+            />
+          </List>
+        ))}
+      </ul>
+      {select && (
+        <p className="mt-2 flex items-center gap-1 text-sm">
+          (Select {select}){select === selectCount && " ✅"}
+        </p>
+      )}
+      <Error error={error} className="mt-1" />
+    </section>
   ),
 )
 

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacter } from "../../stores/character"
-import { Checkbox, Error, Input } from "../../components/Input"
+import { Checklist, Input } from "../../components/Input"
 import { Button, LinkButton } from "../../components/Button"
 import {
   CharacterBackgroundSchema,
@@ -39,7 +39,7 @@ export function CharacterBackgroundForm({
     },
     resolver: zodResolver(characterBackgroundSchema),
   })
-  const selectedSkillIds = watch("backgroundSkillProficiencyChoices")
+  const choices = watch("backgroundSkillProficiencyChoices")
 
   function onSubmit({
     background,
@@ -59,45 +59,29 @@ export function CharacterBackgroundForm({
           {...register("background")}
           required
         />
-        {/* TODO: refactor into reusable component with class form */}
-        <div>
-          <div className="mb-1 flex items-center gap-1">
-            <h3 className="font-bold">
-              Skill Proficiencies<span aria-hidden>*</span>
-            </h3>
-            <span className="text-sm">(Choose 2)</span>
-          </div>
-          <Error
-            error={errors.backgroundSkillProficiencyChoices?.message}
-            className="mb-1"
-          />
-          <ul>
-            {api._skillIds.map((skillId) => {
-              const { name } = api.skills[skillId]
-              const classIncludesSkill =
-                !!classId && !!classSkillProficiencyChoices?.includes(skillId)
-              const selectedMax =
-                selectedSkillIds &&
-                selectedSkillIds.length >= 2 &&
-                !selectedSkillIds?.includes(skillId)
+        <Checklist
+          required
+          label="Skill Proficiencies"
+          select={2}
+          selectCount={choices?.length}
+          options={api._skillIds.map((skillId) => {
+            const classIncludesSkill =
+              !!classId && !!classSkillProficiencyChoices?.includes(skillId)
+                ? `class: ${api.classes[classId].name}`
+                : undefined
+            const selectedMax =
+              choices && choices.length >= 2 && !choices?.includes(skillId)
 
-              return (
-                <Checkbox
-                  key={skillId}
-                  value={skillId}
-                  label={name}
-                  subLabel={
-                    classIncludesSkill
-                      ? `class: ${api.classes[classId].name}`
-                      : undefined
-                  }
-                  disabled={selectedMax || classIncludesSkill}
-                  {...register("backgroundSkillProficiencyChoices")}
-                />
-              )
-            })}
-          </ul>
-        </div>
+            return {
+              value: skillId,
+              label: api.skills[skillId].name,
+              subLabel: classIncludesSkill,
+              disabled: selectedMax || !!classIncludesSkill,
+            }
+          })}
+          error={errors.backgroundSkillProficiencyChoices?.message}
+          {...register("backgroundSkillProficiencyChoices")}
+        />
         <div className="flex gap-2">
           <Button type="submit">Save</Button>
           <LinkButton onClick={onCancel}>Cancel</LinkButton>

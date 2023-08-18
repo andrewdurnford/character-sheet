@@ -24,7 +24,7 @@ test("fail when choices are undefined", () => {
   ) as SafeParseError<CharacterBackgroundSchema>
 
   expect(result.success).toBe(false)
-  expect(result.error.issues[0].message).toBe("Must select 2 skills")
+  expect(result.error.issues[0].message).toBe("Select 2 skills")
 })
 
 test("fail when choices less than 2", () => {
@@ -37,7 +37,7 @@ test("fail when choices less than 2", () => {
   ) as SafeParseError<CharacterBackgroundSchema>
 
   expect(result.success).toBe(false)
-  expect(result.error.issues[0].message).toBe("Must select 2 skills")
+  expect(result.error.issues[0].message).toBe("Select 2 skills")
 })
 
 test("fail when choices more than 2", () => {
@@ -54,7 +54,7 @@ test("fail when choices more than 2", () => {
   ) as SafeParseError<CharacterBackgroundSchema>
 
   expect(result.success).toBe(false)
-  expect(result.error.issues[0].message).toBe("Must select 2 skills")
+  expect(result.error.issues[0].message).toBe("Select 2 skills")
 })
 
 test("pass when choices equal 2", () => {

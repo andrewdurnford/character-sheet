@@ -3,7 +3,7 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useCharacter } from "../../stores/character"
 import { getMaxHitPoints, getProficiencyBonus } from "../../utils/core"
 import { Button, LinkButton } from "../../components/Button"
-import { Checkbox, Error, RadioGroup, Select } from "../../components/Input"
+import { Checklist, RadioGroup, Select } from "../../components/Input"
 import { useEffect } from "react"
 import {
   CharacterClassSchema,
@@ -143,6 +143,10 @@ function ClassHitPoints() {
 }
 
 function ClassProficiencies() {
+  const { watch } = useFormContext<CharacterClassSchema>()
+  const classId = watch("classId")
+  if (!classId) return null
+
   return (
     <section className="flex flex-col gap-6">
       <Divider />
@@ -166,7 +170,7 @@ function ClassArmorProficiencies() {
 
   return (
     <section>
-      <h3 className="font-bold italic">Armor</h3>
+      <h3 className="font-bold">Armor</h3>
       <ul>
         {armor.length > 0 &&
           armor.map((armorType) => (
@@ -189,7 +193,7 @@ function ClassWeaponProficiencies() {
 
   return (
     <section>
-      <h3 className="font-bold italic">Weapons</h3>
+      <h3 className="font-bold">Weapons</h3>
       <ul>
         {weapons &&
           weapons.length > 0 &&
@@ -220,7 +224,7 @@ function ClassSavingThrowProficiencies() {
 
   return (
     <section>
-      <h3 className="font-bold italic">Saving Throws</h3>
+      <h3 className="font-bold">Saving Throws</h3>
       <ul>
         {api.classes[classId].proficiencies.savingThrows.map((abilityId) => (
           <List
@@ -264,46 +268,29 @@ function ClassSkillProficiencies() {
 
   return (
     <section>
-      {select && (
-        <section>
-          <h3 className="mb-1 font-bold italic">
-            Skills<span aria-hidden>*</span>
-          </h3>
-          <ul>
-            {filter.map((skillId) => {
-              const backgroundIncludesSkill =
-                !!background && !!backgroundSkills?.includes(skillId)
-              const selectedMax =
-                choices &&
-                choices.length >= select &&
-                !choices.includes(skillId)
-              return (
-                <Checkbox
-                  key={`${classId}-${skillId}`}
-                  value={skillId}
-                  label={api.skills[skillId].name}
-                  subLabel={
-                    backgroundIncludesSkill
-                      ? `background: ${background}`
-                      : undefined
-                  }
-                  disabled={selectedMax || backgroundIncludesSkill}
-                  {...register("skillProficiencyChoices")}
-                />
-              )
-            })}
-          </ul>
-          <div className="mb-1 mt-2 flex items-center gap-1">
-            <span className="text-sm">
-              (Select {select}){select === choices?.length && " ✅"}
-            </span>
-          </div>
-          <Error
-            error={errors.skillProficiencyChoices?.message}
-            className="mb-1"
-          />
-        </section>
-      )}
+      <Checklist
+        required
+        label="Skills"
+        select={select}
+        selectCount={choices?.length}
+        options={filter.map((skillId) => {
+          const backgroundIncludesSkill =
+            !!background && !!backgroundSkills?.includes(skillId)
+              ? `background: ${background}`
+              : undefined
+          const selectedMax =
+            choices && choices.length >= select && !choices.includes(skillId)
+
+          return {
+            value: skillId,
+            label: api.skills[skillId].name,
+            subLabel: backgroundIncludesSkill,
+            disabled: selectedMax || !!backgroundIncludesSkill,
+          }
+        })}
+        error={errors.skillProficiencyChoices?.message}
+        {...register("skillProficiencyChoices")}
+      />
     </section>
   )
 }

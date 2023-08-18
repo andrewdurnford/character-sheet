@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import { useCharacter } from "../../stores/character"
 import { Button, LinkButton } from "../../components/Button"
-import { Checkbox, Error, RadioGroup } from "../../components/Input"
+import { Checklist, RadioGroup } from "../../components/Input"
 import { useEffect } from "react"
 import {
   CharacterRaceSchema,
@@ -10,7 +10,7 @@ import {
 } from "../../lib/characterRaceSchema"
 import { api } from "../../api"
 import { List } from "../../components/List"
-import { titleCase } from "../../utils/string"
+import { mod, titleCase } from "../../utils/string"
 import { Divider } from "../../components/Divider"
 
 interface CharacterRaceFormProps {
@@ -53,6 +53,7 @@ export function CharacterRaceForm({ onCancel }: CharacterRaceFormProps) {
           />
           <RaceDetails />
           <AbilityScoreIncrease />
+          <AbilityScoreIncreaseChoice />
           <Subrace />
           <div className="flex gap-2">
             <Button type="submit">Save</Button>
@@ -79,6 +80,35 @@ function RaceDetails() {
 }
 
 function AbilityScoreIncrease() {
+  const { watch } = useFormContext<CharacterRaceSchema>()
+
+  const raceId = watch("raceId")
+
+  if (!raceId) return null
+
+  return (
+    <section>
+      <h3 className="mb-1 font-bold">Ability Score Increase</h3>
+      <ul>
+        {api.races[raceId].abilityScoreIncreases.map(
+          ({ abilityId, increase }) => {
+            if (!abilityId) return null
+            return (
+              <List
+                key={`race-ability-score-${abilityId}-increase`}
+                style="disc"
+              >
+                {api.abilities[abilityId]} {mod(increase)}
+              </List>
+            )
+          },
+        )}
+      </ul>
+    </section>
+  )
+}
+
+function AbilityScoreIncreaseChoice() {
   const abilityChoices = useCharacter((s) => s.raceAbilityScoreIncreaseChoices)
 
   const {
@@ -112,72 +142,35 @@ function AbilityScoreIncrease() {
   const abilityIncreaseChoices = api.races[raceId].abilityScoreIncreases.filter(
     (x) => !x.abilityId,
   )
-  const hasAbilityIncreaseChoices = abilityIncreaseChoices.length > 0
+
+  if (abilityIncreaseChoices.length < 1) return null
 
   return (
-    <section>
-      <h3 className="mb-1 font-bold">
-        Ability Score Increase{hasAbilityIncreaseChoices && "*"}
-      </h3>
-      <ul>
-        {!hasAbilityIncreaseChoices &&
-          abilityIncreases.map(({ abilityId, increase }) => {
-            if (!abilityId) return null
-            return (
-              <List
-                key={`race-ability-score-${abilityId}-increase`}
-                style="disc"
-              >
-                {api.abilities[abilityId]} {increase > 0 && "+"}
-                {increase}
-              </List>
-            )
-          })}
-        {hasAbilityIncreaseChoices && (
-          <section>
-            <ul>
-              {api._abilityIds.map((abilityId) => {
-                const name = api.abilities[abilityId]
-                const selectedMax =
-                  selectedAbilities &&
-                  selectedAbilities.length >= 2 &&
-                  !selectedAbilities.includes(abilityId)
-                const existingIncrease = abilityIncreases.find(
-                  (x) => x.abilityId === abilityId,
-                )
+    <Checklist
+      required
+      label="Ability Score Increase Choice"
+      select={abilityIncreaseChoices.length}
+      selectCount={selectedAbilities?.length}
+      options={api._abilityIds
+        .filter(
+          (abilityId) =>
+            !abilityIncreases.some((x) => x.abilityId === abilityId),
+        )
+        .map((abilityId) => {
+          const selectedMax =
+            selectedAbilities &&
+            selectedAbilities.length >= 2 &&
+            !selectedAbilities.includes(abilityId)
 
-                const label = existingIncrease
-                  ? `${name} +${existingIncrease.increase}`
-                  : `${name} +1`
-
-                return (
-                  <List key={`race-ability-score-choice-${abilityId}`}>
-                    <Checkbox
-                      value={abilityId}
-                      label={label}
-                      disabled={selectedMax || !!existingIncrease}
-                      defaultChecked={!!existingIncrease}
-                      {...register("abilityScoreIncreaseChoices")}
-                    />
-                  </List>
-                )
-              })}
-            </ul>
-            <div className="mb-1 mt-2 flex items-center gap-1">
-              <span className="text-sm">
-                (Select {abilityIncreaseChoices.length})
-                {selectedAbilities?.length === abilityIncreaseChoices.length &&
-                  " ✅"}
-              </span>
-            </div>
-            <Error
-              error={errors.abilityScoreIncreaseChoices?.message}
-              className="mb-1"
-            />
-          </section>
-        )}
-      </ul>
-    </section>
+          return {
+            value: abilityId,
+            label: `${api.abilities[abilityId]} +1`,
+            disabled: selectedMax,
+          }
+        })}
+      error={errors.abilityScoreIncreaseChoices?.message}
+      {...register("abilityScoreIncreaseChoices")}
+    />
   )
 }
 
