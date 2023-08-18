@@ -65,7 +65,7 @@ export const characterClassSchema = z
   .refine(
     (data) => data.select === data.skillProficiencyChoices?.length,
     (data) => ({
-      message: `Must select ${data.select} skills`,
+      message: `Select ${data.select} skills`,
       path: ["skillProficiencyChoices"],
     }),
   )

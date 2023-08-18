@@ -11,6 +11,7 @@ import {
 import { api } from "../../api"
 import { List } from "../../components/List"
 import { titleCase } from "../../utils/string"
+import { Divider } from "../../components/Divider"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
@@ -164,9 +165,9 @@ function AbilityScoreIncrease() {
             </ul>
             <div className="mb-1 mt-2 flex items-center gap-1">
               <span className="text-sm">
-                (Select {abilityIncreaseChoices.length}){" "}
+                (Select {abilityIncreaseChoices.length})
                 {selectedAbilities?.length === abilityIncreaseChoices.length &&
-                  "✅"}
+                  " ✅"}
               </span>
             </div>
             <Error
@@ -190,7 +191,7 @@ function Subrace() {
 
   return (
     <section className="flex flex-col gap-6">
-      <hr className="h-px border-0 bg-gray-300" />
+      <Divider />
       <div>
         <label className="mb-1 block font-bold">Subrace</label>
         <input type="radio" defaultChecked /> {subrace.name}
