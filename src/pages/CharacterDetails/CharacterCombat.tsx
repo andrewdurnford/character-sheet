@@ -24,20 +24,20 @@ export function CharacterCombat() {
   return (
     <section>
       <div>
-        Proficiency Bonus: <strong>+{proficiencyBonus()}</strong>
+        Proficiency Bonus: <strong>+{proficiencyBonus}</strong>
       </div>
       <div>
-        Initiative: <strong>{mod(initiative())}</strong>
+        Initiative: <strong>{mod(initiative)}</strong>
       </div>
-      {speed() > 0 && (
+      {speed > 0 && (
         <div>
-          Speed: <strong>{speed()}</strong> feet
+          Speed: <strong>{speed}</strong> feet
         </div>
       )}
       <div>
-        Armor Class: <strong>{armorClass()}</strong>
+        Armor Class: <strong>{armorClass}</strong>
       </div>
-      {maxHitPoints() > 0 && <HitPoints />}
+      {maxHitPoints > 0 && <HitPoints />}
       <WeaponAttacks />
     </section>
   )
@@ -52,7 +52,7 @@ function HitPoints() {
   const { handleSubmit, register, watch, setValue } = useForm<HitPointForm>({
     defaultValues: {
       current: currentHitPoints,
-      max: maxHitPoints(),
+      max: maxHitPoints,
     },
   })
 
@@ -75,10 +75,10 @@ function HitPoints() {
           <strong
             className={cn(
               currentHitPoints === 0 && "text-red-500",
-              currentHitPoints > maxHitPoints() && "text-green-400",
+              currentHitPoints > maxHitPoints && "text-green-400",
             )}
           >
-            {currentHitPoints} / {maxHitPoints()}
+            {currentHitPoints} / {maxHitPoints}
           </strong>{" "}
           <LinkButton className="inline-block" onClick={() => setEdit(true)}>
             Edit
@@ -89,7 +89,7 @@ function HitPoints() {
           <div>
             <div className="flex items-end gap-2">
               <Input label="Hit Points" readOnly {...register("current")} />
-              <strong className="mb-[1px]">/ {maxHitPoints()}</strong>
+              <strong className="mb-[1px]">/ {maxHitPoints}</strong>
             </div>
             <div className="mt-2 flex gap-1">
               <Button type="button" onClick={increment}>
@@ -132,15 +132,14 @@ function WeaponAttacks() {
         {api.classes[classId].startingEquipment.weapons.map((weaponId) => {
           const weapon = api.weaponData[weaponId]
           const abilityModifier =
-            abilityScores()[weapon.type === "melee" ? "strength" : "dexterity"]
+            abilityScores[weapon.type === "melee" ? "strength" : "dexterity"]
               .modifier
           const proficient =
             api.classes[classId].proficiencies.weapons.includes(weaponId) ||
             api.classes[classId].proficiencies.weaponCategories.includes(
               weapon.category,
             )
-          const modifier =
-            abilityModifier + (proficient ? proficiencyBonus() : 0)
+          const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
           return (
             <List key={`${classId}-${weaponId}`} style="disc">

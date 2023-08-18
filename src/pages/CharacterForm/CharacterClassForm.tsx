@@ -10,7 +10,7 @@ import {
   CharacterClassSchema,
   characterClassSchema,
 } from "../../lib/characterClassSchema"
-import { Class, Skill, api } from "../../api"
+import { Class, api } from "../../api"
 import { List } from "../../components/List"
 import { titleCase } from "../../utils/string"
 
@@ -71,7 +71,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         getMaxHitPoints(
           data.classId,
           data.level,
-          abilityScores().constitution.modifier,
+          abilityScores.constitution.modifier,
         ),
       )
     }
@@ -102,10 +102,13 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
         </div>
         <RadioGroup
           label="Class"
-          options={Object.entries(api.classes).map(([classId, { name }]) => ({
-            label: name,
-            value: classId,
-          }))}
+          options={api._classIds.map((classId) => {
+            const { name } = api.classes[classId]
+            return {
+              label: name,
+              value: classId,
+            }
+          })}
           error={errors?.classId?.message}
           required
           {...register("classId")}
@@ -138,9 +141,7 @@ export function CharacterClassForm({ onCancel }: CharacterClassFormProps) {
                       {filter.map((skillId) => {
                         const backgroundIncludesSkill =
                           !!background &&
-                          !!backgroundSkillProficiencyChoices?.includes(
-                            skillId as Skill,
-                          )
+                          !!backgroundSkillProficiencyChoices?.includes(skillId)
                         const selectedMax =
                           selectedSkillIds &&
                           selectedSkillIds.length >= select &&

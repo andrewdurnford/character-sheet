@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { computed } from "zustand-middleware-computed-state"
+import computed from "zustand-computed"
 import { Ability, Class, Race, Skill } from "../api"
 import {
   abilityChecks,
@@ -42,40 +42,32 @@ export type CharacterState = {
 }
 
 type ComputedState = {
-  abilityScores: () => Record<Ability, { score: number; modifier: number }>
-  abilityChecks: () => Record<Skill, { modifier: number; proficient: boolean }>
-  savingThrows: () => Record<Ability, { modifier: number; proficient: boolean }>
-  proficiencyBonus: () => number
-  initiative: () => number
-  speed: () => number
-  armorClass: () => number
-  maxHitPoints: () => number
+  abilityScores: Record<Ability, { score: number; modifier: number }>
+  abilityChecks: Record<Skill, { modifier: number; proficient: boolean }>
+  savingThrows: Record<Ability, { modifier: number; proficient: boolean }>
+  proficiencyBonus: number
+  initiative: number
+  speed: number
+  armorClass: number
+  maxHitPoints: number
 }
-
-type SetType = (
-  partial:
-    | CharacterState
-    | Partial<CharacterState>
-    | ((state: CharacterState) => CharacterState | Partial<CharacterState>),
-  replace?: boolean | undefined,
-) => void
 
 function computedState(state: CharacterState) {
   return {
-    abilityScores: () => abilityScores(state),
-    abilityChecks: () => abilityChecks(state),
-    savingThrows: () => savingThrows(state),
-    proficiencyBonus: () => proficiencyBonus(state),
-    initiative: () => abilityScores(state).dexterity.modifier,
-    speed: () => speed(state),
-    armorClass: () => armorClass(state),
-    maxHitPoints: () => maxHitPoints(state),
+    abilityScores: abilityScores(state),
+    abilityChecks: abilityChecks(state),
+    savingThrows: savingThrows(state),
+    proficiencyBonus: proficiencyBonus(state),
+    initiative: abilityScores(state).dexterity.modifier,
+    speed: speed(state),
+    armorClass: armorClass(state),
+    maxHitPoints: maxHitPoints(state),
   }
 }
 
-export const useCharacter = create<CharacterState & ComputedState>(
+export const useCharacter = create<CharacterState & ComputedState>()(
   computed<CharacterState, ComputedState>(
-    (set: SetType) => ({
+    (set) => ({
       level: 1,
       currentHitPoints: 0,
       setName: (name) => set(() => ({ name })),

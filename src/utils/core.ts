@@ -4,7 +4,7 @@ import { CharacterState } from "../stores/character"
 export function abilityScores(
   state: CharacterState,
 ): Record<Ability, { score: number; modifier: number }> {
-  return Object.keys(api.abilities).reduce(
+  return api._abilityIds.reduce(
     (acc, abilityId) => {
       const raceId = state.raceId
       const raceAbilityScoreIncrease = raceId
@@ -29,13 +29,12 @@ export function abilityScores(
         // calculate subrace ability score increase
         (subraceAbilityScoreIncrease ?? 0)
 
-      const abilityScore =
-        state.abilityScoreChoices?.[abilityId as Ability] ?? 10
+      const abilityScore = state.abilityScoreChoices?.[abilityId] ?? 10
 
       const score = abilityScore + increase
       const modifier = Math.floor((score - 10) / 2)
 
-      acc[abilityId as Ability] = { score, modifier }
+      acc[abilityId] = { score, modifier }
       return acc
     },
     {} as Record<Ability, { score: number; modifier: number }>,
@@ -45,8 +44,9 @@ export function abilityScores(
 export function abilityChecks(
   state: CharacterState,
 ): Record<Skill, { modifier: number; proficient: boolean }> {
-  return Object.entries(api.skills).reduce(
-    (acc, [skillId, { abilityId }]) => {
+  return api._skillIds.reduce(
+    (acc, skillId) => {
+      const { abilityId } = api.skills[skillId]
       const bonus = proficiencyBonus(state)
       const proficient =
         !!state.skillProficiencyChoices?.some((x) => x === skillId) ||
@@ -54,7 +54,7 @@ export function abilityChecks(
       const abilityModifier = abilityScores(state)[abilityId].modifier
       const modifier = abilityModifier + (proficient ? bonus : 0)
 
-      acc[skillId as Skill] = { modifier, proficient }
+      acc[skillId] = { modifier, proficient }
       return acc
     },
     {} as Record<Skill, { modifier: number; proficient: boolean }>,
@@ -64,21 +64,18 @@ export function abilityChecks(
 export function savingThrows(
   state: CharacterState,
 ): Record<Ability, { modifier: number; proficient: boolean }> {
-  return Object.keys(abilityScores(state)).reduce(
+  return api._abilityIds.reduce(
     (acc, abilityId) => {
       const classId = state.classId
       const bonus = proficiencyBonus(state)
       const proficient =
         !!classId &&
-        api.classes[classId].proficiencies.savingThrows.includes(
-          abilityId as Ability,
-        )
-      const abilityModifier =
-        abilityScores(state)[abilityId as Ability].modifier
+        api.classes[classId].proficiencies.savingThrows.includes(abilityId)
+      const abilityModifier = abilityScores(state)[abilityId].modifier
 
       const modifier = abilityModifier + (proficient ? bonus : 0)
 
-      acc[abilityId as Ability] = { modifier, proficient }
+      acc[abilityId] = { modifier, proficient }
       return acc
     },
     {} as Record<Ability, { modifier: number; proficient: boolean }>,

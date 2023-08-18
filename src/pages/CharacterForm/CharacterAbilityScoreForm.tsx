@@ -54,11 +54,8 @@ export function CharacterAbilityScoreForm({
         <h2 className="mb-2 text-xl font-bold">Point Buy</h2>
         <div className="flex flex-col items-start gap-6">
           <p>Points: {points}</p>
-          {Object.keys(api.abilities).map((abilityId) => (
-            <AbilityScoreInput
-              key={abilityId}
-              abilityId={abilityId as Ability}
-            />
+          {api._abilityIds.map((abilityId) => (
+            <AbilityScoreInput key={abilityId} abilityId={abilityId} />
           ))}
           <p className="text-sm">*9 - 13 cost 1 point, 14-15 cost 2 points</p>
           <div className="flex gap-2">

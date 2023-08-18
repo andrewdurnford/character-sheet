@@ -6,6 +6,15 @@ export type Ability =
   | "wisdom"
   | "charisma"
 
+export const _abilityIds: Ability[] = [
+  "strength",
+  "dexterity",
+  "constitution",
+  "intelligence",
+  "wisdom",
+  "charisma",
+]
+
 export const abilities: Record<Ability, string> = {
   strength: "Strength",
   dexterity: "Dexterity",
@@ -18,36 +27,43 @@ export const abilities: Record<Ability, string> = {
 export type Skill =
   | "acrobatics"
   | "animal-handling"
-  | "athletics"
   | "arcana"
-  | "deception"
   | "athletics"
-  | "history"
   | "deception"
-  | "insight"
   | "history"
-  | "intimidation"
   | "insight"
-  | "investigation"
   | "intimidation"
-  | "medicine"
   | "investigation"
-  | "nature"
   | "medicine"
-  | "perception"
   | "nature"
-  | "performance"
   | "perception"
-  | "persuasion"
   | "performance"
-  | "religion"
   | "persuasion"
+  | "religion"
   | "sleight-of-hand"
   | "stealth"
-  | "religion"
   | "survival"
-  | "stealth"
-  | "survival"
+
+export const _skillIds: Skill[] = [
+  "acrobatics",
+  "animal-handling",
+  "arcana",
+  "athletics",
+  "deception",
+  "history",
+  "insight",
+  "intimidation",
+  "investigation",
+  "medicine",
+  "nature",
+  "perception",
+  "performance",
+  "persuasion",
+  "religion",
+  "sleight-of-hand",
+  "stealth",
+  "survival",
+]
 
 export const skills: Record<Skill, { name: string; abilityId: Ability }> = {
   acrobatics: { name: "Acrobatics", abilityId: "dexterity" },

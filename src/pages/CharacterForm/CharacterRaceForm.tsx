@@ -8,7 +8,7 @@ import {
   CharacterRaceSchema,
   characterRaceSchema,
 } from "../../lib/characterRaceSchema"
-import { Ability, api } from "../../api"
+import { api } from "../../api"
 import { List } from "../../components/List"
 import { titleCase } from "../../utils/string"
 
@@ -135,11 +135,12 @@ function AbilityScoreIncrease() {
         {hasAbilityIncreaseChoices && (
           <section>
             <ul>
-              {Object.entries(api.abilities).map(([abilityId, name]) => {
+              {api._abilityIds.map((abilityId) => {
+                const name = api.abilities[abilityId]
                 const selectedMax =
                   selectedAbilities &&
                   selectedAbilities.length >= 2 &&
-                  !selectedAbilities.includes(abilityId as Ability)
+                  !selectedAbilities.includes(abilityId)
                 const existingIncrease = abilityIncreases.find(
                   (x) => x.abilityId === abilityId,
                 )

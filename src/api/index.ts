@@ -1,4 +1,4 @@
-import { abilities, skills } from "./abilities"
+import { _abilityIds, _skillIds, abilities, skills } from "./abilities"
 import { classes, _classIds } from "./classes"
 import { armor } from "./equipment"
 import { races, _raceIds } from "./races"
@@ -12,6 +12,8 @@ export const api = {
   armor,
   weapons,
   weaponData,
+  _abilityIds,
+  _skillIds,
   _raceIds,
   _classIds,
 }
