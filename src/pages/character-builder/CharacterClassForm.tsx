@@ -13,6 +13,7 @@ import { api } from "../../api"
 import { List } from "../../components/List"
 import { titleCase } from "../../utils/string"
 import { Divider } from "../../components/Divider"
+import React from "react"
 
 interface CharacterClassFormProps {
   onCancel: () => void
@@ -135,9 +136,7 @@ function ClassHitPoints() {
 
   return (
     <section>
-      <section>
-        <strong>Hit Dice:</strong> <code>1d{api.classes[classId].hitDice}</code>
-      </section>
+      <strong>Hit Dice:</strong> <code>1d{api.classes[classId].hitDice}</code>
     </section>
   )
 }
@@ -148,16 +147,16 @@ function ClassProficiencies() {
   if (!classId) return null
 
   return (
-    <section className="flex flex-col gap-6">
+    <React.Fragment>
       <Divider />
-      <div className="flex flex-col gap-2">
+      <section className="flex flex-col gap-2">
         <h2 className="font-bold">Proficiencies</h2>
         <ClassArmorProficiencies />
         <ClassSavingThrowProficiencies />
         <ClassWeaponProficiencies />
         <ClassSkillProficiencies />
-      </div>
-    </section>
+      </section>
+    </React.Fragment>
   )
 }
 
@@ -298,10 +297,10 @@ function ClassSkillProficiencies() {
 // TODO: add equipment choices
 function ClassStartingEquipment() {
   return (
-    <section className="flex flex-col gap-6">
+    <React.Fragment>
       <Divider />
       <ClassStartingWeapons />
-    </section>
+    </React.Fragment>
   )
 }
 

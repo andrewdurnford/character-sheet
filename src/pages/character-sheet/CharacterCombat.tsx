@@ -8,13 +8,14 @@ import { api } from "../../api"
 import { List } from "../../components/List"
 import { mod } from "../../utils/string"
 import React from "react"
-import { Divider } from "../../components/Divider"
 
 type HitPointForm = {
   current: number
   max: number
 }
 
+// TODO: update to `src/pages/character-sheet/CharacterSummary/index.tsx` and
+// move all subcomponents into directory
 export function CharacterCombat() {
   const initiative = useCharacter((s) => s.initiative)
   const speed = useCharacter((s) => s.speed)
@@ -23,7 +24,6 @@ export function CharacterCombat() {
 
   return (
     <React.Fragment>
-      <Divider />
       <section className="flex gap-2">
         <div className="flex flex-1 flex-col items-center justify-between gap-2 rounded border border-black px-2 py-3">
           <code>{armorClass}</code>

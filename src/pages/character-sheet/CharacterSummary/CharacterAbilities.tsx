@@ -1,6 +1,6 @@
-import { api } from "../../api"
-import { useCharacter } from "../../stores/character"
-import { mod } from "../../utils/string"
+import { api } from "../../../api"
+import { useCharacter } from "../../../stores/character"
+import { mod } from "../../../utils/string"
 
 export function CharacterAbilities() {
   const abilityScores = useCharacter((s) => s.abilityScores)

@@ -8,7 +8,7 @@ import { Button } from "../../components/Button"
 import { useCharacter } from "../../stores/character"
 import { api } from "../../api"
 
-export function CharacterForm() {
+export function CharacterBuilder() {
   const [tab, setTab] = useState<
     "name" | "race" | "class" | "background" | "abilities" | null
   >(null)

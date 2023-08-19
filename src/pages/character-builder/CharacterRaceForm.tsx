@@ -12,6 +12,7 @@ import { api } from "../../api"
 import { List } from "../../components/List"
 import { mod, titleCase } from "../../utils/string"
 import { Divider } from "../../components/Divider"
+import React from "react"
 
 interface CharacterRaceFormProps {
   onCancel: () => void
@@ -183,7 +184,7 @@ function Subrace() {
   if (!subrace) return null
 
   return (
-    <section className="flex flex-col gap-6">
+    <React.Fragment>
       <Divider />
       <div>
         <label className="mb-1 block font-bold">Subrace</label>
@@ -195,6 +196,6 @@ function Subrace() {
           <List style="disc">{titleCase(subrace.abilityScoreIncrease)} +1</List>
         </ul>
       </div>
-    </section>
+    </React.Fragment>
   )
 }

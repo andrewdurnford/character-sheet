@@ -1,8 +1,8 @@
-import { api } from "../../api"
-import { List } from "../../components/List"
-import { useCharacter } from "../../stores/character"
-import { mod } from "../../utils/string"
-import { cn } from "../../utils/tailwind"
+import { api } from "../../../api"
+import { List } from "../../../components/List"
+import { useCharacter } from "../../../stores/character"
+import { mod } from "../../../utils/string"
+import { cn } from "../../../utils/tailwind"
 
 export function CharacterSavingThrows() {
   const savingThrows = useCharacter((s) => s.savingThrows)
