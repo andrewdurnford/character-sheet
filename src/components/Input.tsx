@@ -55,6 +55,34 @@ export const Input = React.forwardRef(
   ),
 )
 
+type TextAreaProps = UseFormRegisterReturn &
+  React.InputHTMLAttributes<HTMLTextAreaElement> & {
+    label: string
+    error?: string
+    required?: boolean
+  }
+
+export const TextArea = React.forwardRef(
+  (
+    { className, label, error, required, ...props }: TextAreaProps,
+    ref: React.ForwardedRef<HTMLTextAreaElement>,
+  ) => (
+    <div className={className}>
+      <Label htmlFor={props.name} required={required}>
+        {label}
+      </Label>
+      <Error error={error} />
+      <textarea
+        id={props.name}
+        className="mt-1 block w-full rounded border border-black bg-white px-1"
+        rows={6}
+        {...props}
+        ref={ref}
+      />
+    </div>
+  ),
+)
+
 type SelectProps = UseFormRegisterReturn &
   React.SelectHTMLAttributes<HTMLSelectElement> & {
     label: string

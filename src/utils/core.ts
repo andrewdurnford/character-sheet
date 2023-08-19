@@ -1,6 +1,14 @@
 import { Ability, Class, Skill, api } from "../api"
 import { CharacterState } from "../stores/character"
 
+export type Characteristics = {
+  trait1?: string
+  trait2?: string
+  ideals?: string
+  bonds?: string
+  flaws?: string
+}
+
 export function abilityScores(
   state: CharacterState,
 ): Record<Ability, { score: number; modifier: number }> {

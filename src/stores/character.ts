@@ -2,6 +2,7 @@ import { create } from "zustand"
 import computed from "zustand-computed"
 import { Ability, Class, Race, Skill } from "../api"
 import {
+  Characteristics,
   abilityChecks,
   abilityScores,
   armorClass,
@@ -21,6 +22,7 @@ export type CharacterState = {
   // TODO: rename to classSkillProficiencyChoices
   skillProficiencyChoices?: Skill[]
   background?: string
+  backgroundCharacteristics?: Characteristics
   backgroundSkillProficiencyChoices?: Skill[]
   raceAbilityScoreIncreaseChoices?: Ability[]
   currentHitPoints: number
@@ -34,6 +36,7 @@ export type CharacterState = {
   ) => void
   setBackground: (
     background: string,
+    backgroundCharacteristics?: Characteristics,
     backgroundSkillProficiencyChoices?: Skill[],
   ) => void
   setAbilityScoreChoices: (
@@ -77,8 +80,16 @@ export const useCharacter = create<CharacterState & ComputedState>()(
         set(() => ({ raceId, raceAbilityScoreIncreaseChoices })),
       setClass: (classId, level, skillProficiencyChoices) =>
         set(() => ({ classId, level, skillProficiencyChoices })),
-      setBackground: (background, backgroundSkillProficiencyChoices) =>
-        set(() => ({ background, backgroundSkillProficiencyChoices })),
+      setBackground: (
+        background,
+        backgroundCharacteristics,
+        backgroundSkillProficiencyChoices,
+      ) =>
+        set(() => ({
+          background,
+          backgroundCharacteristics,
+          backgroundSkillProficiencyChoices,
+        })),
       setAbilityScoreChoices: (abilityScoreChoices) =>
         set(() => ({ abilityScoreChoices })),
     }),

@@ -5,6 +5,13 @@ export const characterBackgroundSchema = z
     background: z
       .string({ required_error: "Background is required" })
       .nonempty("Background is required"),
+    backgroundCharacteristics: z.object({
+      trait1: z.string().optional(),
+      trait2: z.string().optional(),
+      ideals: z.string().optional(),
+      bonds: z.string().optional(),
+      flaws: z.string().optional(),
+    }),
     backgroundSkillProficiencyChoices: z
       .union([
         z.literal("acrobatics"),

@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useCharacter } from "../../stores/character"
-import { Checklist, Input } from "../../components/Input"
+import { Checklist, Input, TextArea } from "../../components/Input"
 import { Button, LinkButton } from "../../components/Button"
 import {
   CharacterBackgroundSchema,
@@ -18,6 +18,9 @@ export function CharacterBackgroundForm({
 }: CharacterNameBackgroundProps) {
   const setBackground = useCharacter((s) => s.setBackground)
   const background = useCharacter((s) => s.background)
+  const backgroundCharacteristics = useCharacter(
+    (s) => s.backgroundCharacteristics,
+  )
   const backgroundSkillProficiencyChoices = useCharacter(
     (s) => s.backgroundSkillProficiencyChoices,
   )
@@ -35,6 +38,7 @@ export function CharacterBackgroundForm({
     mode: "onSubmit",
     defaultValues: {
       background,
+      backgroundCharacteristics,
       backgroundSkillProficiencyChoices,
     },
     resolver: zodResolver(characterBackgroundSchema),
@@ -43,9 +47,14 @@ export function CharacterBackgroundForm({
 
   function onSubmit({
     background,
+    backgroundCharacteristics,
     backgroundSkillProficiencyChoices,
   }: CharacterBackgroundSchema) {
-    setBackground(background, backgroundSkillProficiencyChoices)
+    setBackground(
+      background,
+      backgroundCharacteristics,
+      backgroundSkillProficiencyChoices,
+    )
     onCancel()
   }
 
@@ -58,6 +67,26 @@ export function CharacterBackgroundForm({
           error={errors?.background?.message}
           {...register("background")}
           required
+        />
+        <TextArea
+          label="Trait 1"
+          {...register("backgroundCharacteristics.trait1")}
+        />
+        <TextArea
+          label="Trait 2"
+          {...register("backgroundCharacteristics.trait2")}
+        />
+        <TextArea
+          label="Ideals"
+          {...register("backgroundCharacteristics.ideals")}
+        />
+        <TextArea
+          label="Bonds"
+          {...register("backgroundCharacteristics.bonds")}
+        />
+        <TextArea
+          label="Flaws"
+          {...register("backgroundCharacteristics.flaws")}
         />
         <Checklist
           required
