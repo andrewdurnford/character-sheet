@@ -160,5 +160,5 @@ function IncreaseBySubrace({ abilityId }: AbilityScoreInputProps) {
 
   if (api.races[raceId].subrace?.abilityScoreIncrease !== abilityId) return null
 
-  return <div>+1 {api.races[raceId].subrace?.name}</div>
+  return <div>(+1 {api.races[raceId].subrace?.name})</div>
 }

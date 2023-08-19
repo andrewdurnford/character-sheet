@@ -7,6 +7,8 @@ import { cn } from "../../utils/tailwind"
 import { api } from "../../api"
 import { List } from "../../components/List"
 import { mod } from "../../utils/string"
+import React from "react"
+import { Divider } from "../../components/Divider"
 
 type HitPointForm = {
   current: number
@@ -14,32 +16,31 @@ type HitPointForm = {
 }
 
 export function CharacterCombat() {
-  // TODO: proficiency should be in stats sections
-  const proficiencyBonus = useCharacter((s) => s.proficiencyBonus)
   const initiative = useCharacter((s) => s.initiative)
   const speed = useCharacter((s) => s.speed)
   const armorClass = useCharacter((s) => s.armorClass)
   const maxHitPoints = useCharacter((s) => s.maxHitPoints)
 
   return (
-    <section>
-      <div>
-        Proficiency Bonus: <strong>+{proficiencyBonus}</strong>
-      </div>
-      <div>
-        Initiative: <strong>{mod(initiative)}</strong>
-      </div>
-      {speed > 0 && (
-        <div>
-          Speed: <strong>{speed}</strong> feet
+    <React.Fragment>
+      <Divider />
+      <section className="flex gap-2">
+        <div className="flex flex-1 flex-col items-center justify-between gap-2 rounded border border-black px-2 py-3">
+          <code>{armorClass}</code>
+          <span className="text-center text-xs uppercase">Armor Class</span>
         </div>
-      )}
-      <div>
-        Armor Class: <strong>{armorClass}</strong>
-      </div>
+        <div className="flex flex-1 flex-col items-center justify-between gap-2 rounded border border-black px-2 py-3">
+          <code>{mod(initiative)}</code>
+          <span className="text-center text-xs uppercase">Initiative</span>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-between gap-2 rounded border border-black px-2 py-3">
+          <code>{speed} feet</code>
+          <span className="text-center text-xs uppercase">Speed</span>
+        </div>
+      </section>
       {maxHitPoints > 0 && <HitPoints />}
       <WeaponAttacks />
-    </section>
+    </React.Fragment>
   )
 }
 
@@ -68,27 +69,33 @@ function HitPoints() {
 
   return (
     <div>
-      <div></div>
       {!edit ? (
         <div>
-          Hit Points:{" "}
-          <strong
-            className={cn(
-              currentHitPoints === 0 && "text-red-500",
-              currentHitPoints > maxHitPoints && "text-green-400",
-            )}
-          >
-            {currentHitPoints} / {maxHitPoints}
-          </strong>{" "}
-          <LinkButton className="inline-block" onClick={() => setEdit(true)}>
-            Edit
-          </LinkButton>
+          <h2 className="font-bold">Hit Points</h2>
+          <div className="flex items-center gap-1">
+            <code
+              className={cn(
+                currentHitPoints === 0 && "text-red-500",
+                currentHitPoints > maxHitPoints && "text-green-500",
+              )}
+            >
+              {currentHitPoints}/{maxHitPoints}
+            </code>
+            <Button className="text-xs" onClick={() => setEdit(true)}>
+              Edit
+            </Button>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <div className="flex items-end gap-2">
-              <Input label="Hit Points" readOnly {...register("current")} />
+              <Input
+                label="Hit Points"
+                required
+                readOnly
+                {...register("current")}
+              />
               <strong className="mb-[1px]">/ {maxHitPoints}</strong>
             </div>
             <div className="mt-2 flex gap-1">
@@ -125,9 +132,19 @@ function WeaponAttacks() {
 
   if (!classId) return null
 
+  const grid = {
+    display: "grid",
+    gridTemplateColumns: "3fr 2fr 3fr",
+  }
+
   return (
     <section>
-      <h2 className="my-2 font-bold">Attacks</h2>
+      <h2 className="mb-1 font-bold">Attacks</h2>
+      <p style={grid} className="mb-1 text-xs uppercase">
+        <span>Name</span>
+        <span>Atk Bonus</span>
+        <span>Damage/Type</span>
+      </p>
       <ul>
         {api.classes[classId].startingEquipment.weapons.map((weaponId) => {
           const weapon = api.weaponData[weaponId]
@@ -142,9 +159,18 @@ function WeaponAttacks() {
           const modifier = abilityModifier + (proficient ? proficiencyBonus : 0)
 
           return (
-            <List key={`${classId}-${weaponId}`} style="disc">
-              {api.weapons[weaponId]}, {mod(modifier)}, {weapon.roll.count}d
-              {weapon.roll.die} {mod(abilityModifier)} {weapon.damageType}
+            <List key={`${classId}-${weaponId}`}>
+              <div style={grid}>
+                <span>{api.weapons[weaponId]}</span>
+                <span>{mod(modifier)}</span>
+                <span>
+                  <code>
+                    {weapon.roll.count}d{weapon.roll.die}
+                    {mod(abilityModifier)}
+                  </code>{" "}
+                  <span className="text-sm">{weapon.damageType}</span>
+                </span>
+              </div>
             </List>
           )
         })}

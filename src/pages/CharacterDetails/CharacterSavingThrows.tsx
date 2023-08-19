@@ -1,6 +1,7 @@
 import { api } from "../../api"
 import { List } from "../../components/List"
 import { useCharacter } from "../../stores/character"
+import { mod } from "../../utils/string"
 import { cn } from "../../utils/tailwind"
 
 export function CharacterSavingThrows() {
@@ -8,7 +9,7 @@ export function CharacterSavingThrows() {
 
   return (
     <div>
-      <h2 className="font-bold">Saving Throws</h2>
+      <h2 className="mb-1 font-bold">Saving Throws</h2>
       <ul>
         {api._abilityIds.map((abilityId) => {
           const { modifier, proficient } = savingThrows[abilityId]
@@ -21,8 +22,7 @@ export function CharacterSavingThrows() {
               <div className="flex justify-between gap-4">
                 {api.abilities[abilityId]}
                 <span>
-                  ({modifier >= 0 && "+"}
-                  {modifier})
+                  <code>{mod(modifier)}</code>
                 </span>
               </div>
             </List>
