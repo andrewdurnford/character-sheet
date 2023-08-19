@@ -99,7 +99,7 @@ function AbilityScoreIncrease() {
                 key={`race-ability-score-${abilityId}-increase`}
                 style="disc"
               >
-                {api.abilities[abilityId]} {mod(increase)}
+                {api.abilities[abilityId]} <code>{mod(increase)}</code>
               </List>
             )
           },
@@ -193,7 +193,9 @@ function Subrace() {
       <div>
         <h3 className="font-bold">Ability Score Increase</h3>
         <ul>
-          <List style="disc">{titleCase(subrace.abilityScoreIncrease)} +1</List>
+          <List style="disc">
+            {titleCase(subrace.abilityScoreIncrease)} <code>+1</code>
+          </List>
         </ul>
       </div>
     </React.Fragment>

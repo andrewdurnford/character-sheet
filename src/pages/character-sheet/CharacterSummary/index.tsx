@@ -9,7 +9,7 @@ export function CharacterSummary() {
   return (
     <section className="flex gap-4">
       <CharacterAbilities />
-      <div className="flex flex-1 flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <div>
           <span className="font-bold">Proficiency Bonus:</span>{" "}
           <code>+{proficiencyBonus}</code>

@@ -124,7 +124,8 @@ function LevelDetails() {
 
   return (
     <section>
-      <strong>Proficiency Bonus:</strong> +{getProficiencyBonus(level)}
+      <strong>Proficiency Bonus:</strong>{" "}
+      <code>+{getProficiencyBonus(level)}</code>
     </section>
   )
 }

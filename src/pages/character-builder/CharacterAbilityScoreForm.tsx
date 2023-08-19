@@ -102,7 +102,6 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
           {...register(`abilities.${abilityId}`, { valueAsNumber: true })}
         />
         <Button
-          type="button"
           onClick={increment}
           disabled={
             points === 0 ||
@@ -112,7 +111,7 @@ function AbilityScoreInput({ abilityId }: AbilityScoreInputProps) {
         >
           +
         </Button>
-        <Button type="button" onClick={decrement} disabled={total === 8}>
+        <Button onClick={decrement} disabled={total === 8}>
           -
         </Button>
       </div>

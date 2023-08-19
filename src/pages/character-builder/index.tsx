@@ -83,7 +83,7 @@ function CharacterTab({ label: name, value, onCancel }: CharacterTabProps) {
       <span aria-hidden="true">{value ? "✅" : "❌"}</span>
       <span>{name}:</span>
       {value && <strong>{value}</strong>}
-      <Button onClick={onCancel} className="text-xs">
+      <Button onClick={onCancel} size="xs">
         Edit
       </Button>
     </div>
@@ -110,8 +110,9 @@ function Reset() {
 
   return (
     <Button
+      size="xs"
       onClick={resetCharacter}
-      className="inline-block self-start border-red-600 bg-transparent text-xs text-red-600"
+      className="self-start border-red-600 bg-transparent text-red-600"
     >
       Reset
     </Button>

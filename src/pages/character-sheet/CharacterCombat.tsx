@@ -81,7 +81,7 @@ function HitPoints() {
             >
               {currentHitPoints}/{maxHitPoints}
             </code>
-            <Button className="text-xs" onClick={() => setEdit(true)}>
+            <Button size="xs" onClick={() => setEdit(true)}>
               Edit
             </Button>
           </div>
@@ -99,16 +99,12 @@ function HitPoints() {
               <strong className="mb-[1px]">/ {maxHitPoints}</strong>
             </div>
             <div className="mt-2 flex gap-1">
-              <Button type="button" onClick={increment}>
-                +
-              </Button>
-              <Button
-                type="button"
-                onClick={decrement}
-                disabled={current === 0}
-              >
+              <Button onClick={increment}>+</Button>
+              <Button onClick={decrement} disabled={current === 0}>
                 -
               </Button>
+            </div>
+            <div className="mt-2 flex gap-1">
               <Button type="submit">Confirm</Button>
               <LinkButton
                 onClick={() => setEdit(false)}
@@ -162,7 +158,7 @@ function WeaponAttacks() {
             <List key={`${classId}-${weaponId}`}>
               <div style={grid}>
                 <span>{api.weapons[weaponId]}</span>
-                <span>{mod(modifier)}</span>
+                <code>{mod(modifier)}</code>
                 <span>
                   <code>
                     {weapon.roll.count}d{weapon.roll.die}
