@@ -45,6 +45,7 @@ export function CharacterBuilder() {
 
   return (
     <div className="flex flex-col gap-4">
+      <Reset />
       <CharacterTab label="Name" value={name} onCancel={() => setTab("name")} />
       <CharacterTab
         label="Race"
@@ -86,5 +87,33 @@ function CharacterTab({ label: name, value, onCancel }: CharacterTabProps) {
         Edit
       </Button>
     </div>
+  )
+}
+
+function Reset() {
+  const setAbilityScoreChoices = useCharacter((s) => s.setAbilityScoreChoices)
+  const setBackground = useCharacter((s) => s.setBackground)
+  const setClass = useCharacter((s) => s.setClass)
+  const setCurrentHitPoints = useCharacter((s) => s.setCurrentHitPoints)
+  const setName = useCharacter((s) => s.setName)
+  const setRace = useCharacter((s) => s.setRace)
+
+  // TODO: move this to a character store method
+  const resetCharacter = () => {
+    setAbilityScoreChoices(undefined)
+    setCurrentHitPoints(0)
+    setRace(undefined, undefined)
+    setClass(undefined, 1, undefined)
+    setBackground(undefined, undefined, undefined)
+    setName(undefined)
+  }
+
+  return (
+    <Button
+      onClick={resetCharacter}
+      className="inline-block self-start border-red-600 bg-transparent text-xs text-red-600"
+    >
+      Reset
+    </Button>
   )
 }

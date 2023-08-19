@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { persist, createJSONStorage } from "zustand/middleware"
 import computed from "zustand-computed"
 import { Ability, Class, Race, Skill } from "../api"
 import {
@@ -26,16 +27,16 @@ export type CharacterState = {
   backgroundSkillProficiencyChoices?: Skill[]
   raceAbilityScoreIncreaseChoices?: Ability[]
   currentHitPoints: number
-  setName: (name: string) => void
-  setCurrentHitPoints: (currentHitPoints: number) => void
-  setRace: (raceId: Race, raceAbilityScoreIncreaseChoices?: Ability[]) => void
+  setName: (name?: string) => void
+  setCurrentHitPoints: (currentHitPoints?: number) => void
+  setRace: (raceId?: Race, raceAbilityScoreIncreaseChoices?: Ability[]) => void
   setClass: (
-    classId: Class,
-    level: number,
+    classId?: Class,
+    level?: number,
     skillProficiencyChoices?: Skill[],
   ) => void
   setBackground: (
-    background: string,
+    background?: string,
     backgroundCharacteristics?: Characteristics,
     backgroundSkillProficiencyChoices?: Skill[],
   ) => void
@@ -55,7 +56,7 @@ type ComputedState = {
   maxHitPoints: number
 }
 
-function computedState(state: CharacterState) {
+function computedState(state: CharacterState): ComputedState {
   return {
     abilityScores: abilityScores(state),
     abilityChecks: abilityChecks(state),
@@ -68,31 +69,37 @@ function computedState(state: CharacterState) {
   }
 }
 
-export const useCharacter = create<CharacterState & ComputedState>()(
-  computed<CharacterState, ComputedState>(
-    (set) => ({
-      level: 1,
-      currentHitPoints: 0,
-      setName: (name) => set(() => ({ name })),
-      setCurrentHitPoints: (currentHitPoints) =>
-        set(() => ({ currentHitPoints })),
-      setRace: (raceId, raceAbilityScoreIncreaseChoices) =>
-        set(() => ({ raceId, raceAbilityScoreIncreaseChoices })),
-      setClass: (classId, level, skillProficiencyChoices) =>
-        set(() => ({ classId, level, skillProficiencyChoices })),
-      setBackground: (
-        background,
-        backgroundCharacteristics,
-        backgroundSkillProficiencyChoices,
-      ) =>
-        set(() => ({
+export const useCharacter = create<CharacterState>()(
+  persist(
+    computed(
+      (set) => ({
+        level: 1,
+        currentHitPoints: 0,
+        setName: (name) => set(() => ({ name })),
+        setCurrentHitPoints: (currentHitPoints) =>
+          set(() => ({ currentHitPoints })),
+        setRace: (raceId, raceAbilityScoreIncreaseChoices) =>
+          set(() => ({ raceId, raceAbilityScoreIncreaseChoices })),
+        setClass: (classId, level, skillProficiencyChoices) =>
+          set(() => ({ classId, level, skillProficiencyChoices })),
+        setBackground: (
           background,
           backgroundCharacteristics,
           backgroundSkillProficiencyChoices,
-        })),
-      setAbilityScoreChoices: (abilityScoreChoices) =>
-        set(() => ({ abilityScoreChoices })),
-    }),
-    computedState,
+        ) =>
+          set(() => ({
+            background,
+            backgroundCharacteristics,
+            backgroundSkillProficiencyChoices,
+          })),
+        setAbilityScoreChoices: (abilityScoreChoices) =>
+          set(() => ({ abilityScoreChoices })),
+      }),
+      computedState,
+    ),
+    {
+      name: "character",
+      storage: createJSONStorage(() => sessionStorage),
+    },
   ),
 )
