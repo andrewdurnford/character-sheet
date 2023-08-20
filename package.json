@@ -8,11 +8,14 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@hookform/resolvers": "^3.2.0",
     "clsx": "^2.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
+    "react-markdown": "^8.0.7",
+    "remark-gfm": "^3.0.1",
     "tailwind-merge": "^1.14.0",
     "zod": "^3.21.4",
     "zustand": "^4.4.0",

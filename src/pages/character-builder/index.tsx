@@ -7,11 +7,14 @@ import { CharacterRaceForm } from "./CharacterRaceForm"
 import { Button } from "../../components/Button"
 import { useCharacter } from "../../stores/character"
 import { api } from "../../api"
+import { Modal } from "../../components/Modal"
+import { Rulebook } from "../rulebook"
 
 export function CharacterBuilder() {
   const [tab, setTab] = useState<
     "name" | "race" | "class" | "background" | "abilities" | null
   >(null)
+  const [isRulebookOpen, setIsRulebookOpen] = useState(false)
 
   const raceId = useCharacter((s) => s.raceId)
   const classId = useCharacter((s) => s.classId)
@@ -45,6 +48,9 @@ export function CharacterBuilder() {
 
   return (
     <div className="flex flex-col gap-4">
+      <Button onClick={() => setIsRulebookOpen(true)} className="self-start">
+        Rulebook
+      </Button>
       <Reset />
       <CharacterTab label="Name" value={name} onCancel={() => setTab("name")} />
       <CharacterTab
@@ -67,6 +73,11 @@ export function CharacterBuilder() {
         value={abilitiesName}
         onCancel={() => setTab("abilities")}
       />
+      {isRulebookOpen && (
+        <Modal open={isRulebookOpen} onClose={() => setIsRulebookOpen(false)}>
+          <Rulebook onClose={() => setIsRulebookOpen(false)} />
+        </Modal>
+      )}
     </div>
   )
 }
