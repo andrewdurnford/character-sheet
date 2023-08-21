@@ -8,6 +8,8 @@ import { api } from "../../api"
 import { List } from "../../components/List"
 import { mod } from "../../utils/string"
 import React from "react"
+import { Modal } from "../../components/Modal"
+import { Rulebook } from "../rulebook"
 
 type HitPointForm = {
   current: number
@@ -44,8 +46,11 @@ export function CharacterCombat() {
   )
 }
 
+// TODO: update form to a 'damage' button that subtracts hit points, and handles
+// temporary hit points, death saves, and instant death.
 function HitPoints() {
-  const [edit, setEdit] = useState(false)
+  const [modal, setModal] = useState<"edit" | "info" | null>(null)
+
   const currentHitPoints = useCharacter((s) => s.currentHitPoints)
   const maxHitPoints = useCharacter((s) => s.maxHitPoints)
   const setCurrentHitPoints = useCharacter((s) => s.setCurrentHitPoints)
@@ -64,12 +69,12 @@ function HitPoints() {
 
   function onSubmit(data: HitPointForm) {
     setCurrentHitPoints(data.current)
-    setEdit(false)
+    setModal(null)
   }
 
   return (
     <div>
-      {!edit ? (
+      {!modal ? (
         <div>
           <h2 className="font-bold">Hit Points</h2>
           <div className="flex items-center gap-1">
@@ -81,40 +86,59 @@ function HitPoints() {
             >
               {currentHitPoints}/{maxHitPoints}
             </code>
-            <Button size="xs" onClick={() => setEdit(true)}>
+            <Button size="xs" onClick={() => setModal("edit")}>
               Edit
             </Button>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <div className="flex items-end gap-2">
-              <Input
-                label="Hit Points"
-                required
-                readOnly
-                {...register("current")}
-              />
-              <strong className="mb-[1px]">/ {maxHitPoints}</strong>
-            </div>
-            <div className="mt-2 flex gap-1">
-              <Button onClick={increment}>+</Button>
-              <Button onClick={decrement} disabled={current === 0}>
-                -
-              </Button>
-            </div>
-            <div className="mt-2 flex gap-1">
-              <Button type="submit">Confirm</Button>
-              <LinkButton
-                onClick={() => setEdit(false)}
-                className="inline-block"
-              >
-                Cancel
-              </LinkButton>
-            </div>
-          </div>
-        </form>
+        <Modal open={!!modal} onClose={() => setModal(null)}>
+          {modal === "edit" ? (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div>
+                <header className="mb-2 flex items-center gap-2">
+                  <h1 className="text-2xl font-bold">Hit Points</h1>
+                  <button type="button" onClick={() => setModal("info")}>
+                    ⓘ
+                  </button>
+                  <Button onClick={() => setModal(null)} className="ml-auto">
+                    Close
+                  </Button>
+                </header>
+                <div className="flex items-end gap-2">
+                  <Input
+                    label="Hit Points"
+                    required
+                    readOnly
+                    {...register("current")}
+                  />
+                  <strong className="mb-[1px]">/ {maxHitPoints}</strong>
+                </div>
+                <div className="mt-2 flex gap-1">
+                  <Button onClick={increment}>+</Button>
+                  <Button onClick={decrement} disabled={current === 0}>
+                    -
+                  </Button>
+                </div>
+                <div className="mt-2 flex gap-1">
+                  <Button type="submit">Confirm</Button>
+                  <LinkButton
+                    onClick={() => setModal(null)}
+                    className="inline-block"
+                  >
+                    Cancel
+                  </LinkButton>
+                </div>
+              </div>
+            </form>
+          ) : (
+            <Rulebook
+              defaultPage="damage-and-healing"
+              hasBack={false}
+              onClose={() => setModal("edit")}
+            />
+          )}
+        </Modal>
       )}
     </div>
   )
