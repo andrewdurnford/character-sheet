@@ -1,7 +1,6 @@
 import React from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 import { cn } from "../utils/tailwind"
-import { List } from "./List"
 
 type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> & {
   required?: boolean
@@ -119,11 +118,11 @@ export const RadioGroup = React.forwardRef(
     { label, error, options, required, ...props }: RadioProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => (
-    <div>
-      <Label htmlFor={props.name} required={required} className="mb-1">
+    <fieldset>
+      <legend className="mb-1 font-bold">
         {label}
-      </Label>
-      <Error error={error} />
+        {required && <span aria-hidden="true">*</span>}
+      </legend>
       {options.map(({ label, value, disabled }) => (
         <RadioInput
           key={value}
@@ -134,7 +133,8 @@ export const RadioGroup = React.forwardRef(
           ref={ref}
         />
       ))}
-    </div>
+      <Error error={error} />
+    </fieldset>
   ),
 )
 
@@ -163,32 +163,31 @@ export const Checklist = React.forwardRef(
     }: ChecklistProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) => (
-    <section>
-      <h3 className="mb-1 font-bold">
+    <fieldset>
+      <legend className="mb-1 font-bold">
         {label}
         {required && <span aria-hidden="true">*</span>}
-      </h3>
-      <ul>
-        {options.map(({ label, subLabel, value, disabled }) => (
-          <List key={value}>
-            <Checkbox
-              value={value}
-              label={label}
-              subLabel={subLabel}
-              disabled={disabled}
-              {...props}
-              ref={ref}
-            />
-          </List>
-        ))}
-      </ul>
+      </legend>
+
+      {options.map(({ label, subLabel, value, disabled }) => (
+        <Checkbox
+          key={value}
+          value={value}
+          label={label}
+          subLabel={subLabel}
+          disabled={disabled}
+          {...props}
+          ref={ref}
+        />
+      ))}
+
       {select && (
         <p className="mt-2 flex items-center gap-1 text-sm">
           (Select {select}){select === selectCount && " ✅"}
         </p>
       )}
       <Error error={error} className="mt-1" />
-    </section>
+    </fieldset>
   ),
 )
 
